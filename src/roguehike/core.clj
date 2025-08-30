@@ -1,4 +1,5 @@
 (ns roguehike.core
+  (:gen-class)
   (:require [lanterna.screen :as s]
             [clojure.string :as string]
             [clojure.math :as math]))
