@@ -19,8 +19,8 @@
 
 ; Utility functions
 (defn create-screen
-  [resized-fn]
-  (dosync (ref-set screen (s/get-screen :auto)))
+  [terminal-type resized-fn]
+  (dosync (ref-set screen (s/get-screen terminal-type)))
   (s/start @screen)
   ; for some reason, this works better than setting :resize-listener argument
   ; to get-screen
@@ -212,7 +212,8 @@
   ; we need to re-render the screen
   (render))
 
-(defn -main [& _]
-  (create-screen handle-resize)
+(defn -main [& args]
+  ; first argument is terminal type: auto/swing/text/unix/cygwin
+  (create-screen (keyword (or (first args) "auto")) handle-resize)
   (create-world)
   (game-loop))
