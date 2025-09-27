@@ -101,7 +101,9 @@
                      (< screen-x right-corner)
                      (some? square))
               square
-              " ")))))))
+              (if (= world-y (dec (count @world-row-widths)))
+                "_"
+                " "))))))))
 
 (defn render
   "Draw the world and the player on the screen."
