@@ -93,17 +93,12 @@
             left-corner (- center-x (quot screen-width 2))
             right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
         ; special case for the top
-        (if (= screen-x left-corner)
-          (mirror-map-edge (@world [width world-y]))
-          (if (and (= screen-x right-corner) (not (= left-corner (dec right-corner))))
-            (@world [width world-y])
-            (if (and (> screen-x left-corner)
-                     (< screen-x right-corner)
-                     (some? square))
-              square
-              (if (= world-y (dec (count @world-row-widths)))
-                "_"
-                " "))))))))
+        (cond
+          (= screen-x left-corner) (mirror-map-edge (@world [width world-y]))
+          (and (= screen-x right-corner) (not (= left-corner (dec right-corner)))) (@world [width world-y])
+          (and (> screen-x left-corner) (< screen-x right-corner) (some? square)) square
+          (= world-y (dec (count @world-row-widths))) "_"
+          :else " ")))))
 
 (defn render
   "Draw the world and the player on the screen."
