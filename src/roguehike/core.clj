@@ -102,8 +102,7 @@
           (= world-y (dec (count @world-row-widths))) "_"
           :else " ")))))
 
-(defn render
-  "Draw the world and the player on the screen."
+(defn render-screen
   []
   ;(println (inc @player-x) (inc @player-y))
   (dosync
@@ -161,7 +160,6 @@
   nil)
 
 (defmethod handle-command :move [_ dir]
-  "Move the player in the given direction."
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
      (when (walkable? x y)
@@ -197,7 +195,7 @@
             (ref-set player-y (dec y)))))
 
 (defn game-loop []
-  (render)
+  (render-screen)
   (let [[command data] (parse-input)]
     (if (= command :quit)
       (s/stop @screen)
@@ -208,10 +206,10 @@
 (defn handle-resize [cols rows]
   (dosync (ref-set canvas-cols cols)
           (ref-set canvas-rows rows))
-  ; for some reason, (redraw) inside (render) is not enough
+  ; for some reason, (redraw) inside (render-screen) is not enough
   (s/redraw @screen)
   ; we need to re-render the screen
-  (render))
+  (render-screen))
 
 (defn -main [& args]
   ; first argument is terminal type: auto/swing/text/unix/cygwin
