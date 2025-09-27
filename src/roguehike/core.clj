@@ -91,11 +91,13 @@
             ; right edge will look bad without inc
             screen-width (quot (inc width) 2)
             left-corner (- center-x (quot screen-width 2))
-            right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
-        ; special case for the top
+            ; special case for the top
+            right-corner (if (= width 2)
+                           left-corner
+                           (+ center-x (quot screen-width 2) (rem screen-width 2)))]
         (cond
           (= screen-x left-corner) (mirror-map-edge (@world [width world-y]))
-          (and (= screen-x right-corner) (not (= left-corner (dec right-corner)))) (@world [width world-y])
+          (= screen-x right-corner) (@world [width world-y])
           (and (> screen-x left-corner) (< screen-x right-corner) (some? square)) square
           (= world-y (dec (count @world-row-widths))) "_"
           :else " ")))))
