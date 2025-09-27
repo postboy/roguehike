@@ -98,7 +98,7 @@
         (cond
           (= screen-x left-corner) (mirror-map-edge (@world [width world-y]))
           (= screen-x right-corner) (@world [width world-y])
-          (and (> screen-x left-corner) (< screen-x right-corner) (some? square)) square
+          (and (> screen-x left-corner) (< screen-x right-corner)) square
           (= world-y (dec (count @world-row-widths))) "_"
           :else " ")))))
 
