@@ -57,8 +57,8 @@
     ; don't correct anything if there's no such row in world-row-widths
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       [world-x world-y]
-      ; when user stands on the last column in the row there's last columns above and below him too
-      ; despite the fact that all rows have different lengths
+      ; when player stands on the last column in the row there's last columns above and below them
+      ; too despite the fact that all rows have different lengths
       (let [this-line-width (get @world-row-widths world-y)
             this-line-center (recalculate-x @player-x @player-y world-y)
             ; modular arithmetics to wrap around the mountain map
@@ -115,7 +115,9 @@
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
-     (s/put-string @screen center-x center-y "i")
+     ; if player is on the rope then draw them differently
+     (s/put-string @screen center-x center-y
+                   (if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
      (s/move-cursor @screen center-x center-y)))
   (s/redraw @screen))
 
