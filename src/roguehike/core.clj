@@ -15,7 +15,7 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-(def walkable-object? #{"\\" "_" "|" "/"})
+(def walkable-object? #{"_" "|" " "})
 
 ; Utility functions
 (defn create-screen
