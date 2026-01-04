@@ -44,15 +44,7 @@
   (let [[world-x world-y] (screen-to-world screen-x screen-y)]
     (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
       " "
-      (let [square (@world [world-x world-y])
-            center-x (quot @canvas-cols 2)
-            width (get @world-row-widths world-y)
-            screen-width (quot width 2)
-            left-corner (- center-x (quot screen-width 2))
-            right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
-        (cond
-          (and (>= screen-x left-corner) (<= screen-x right-corner)) square
-          :else " ")))))
+      (@world [world-x world-y]))))
 
 ; TODO: procedural map generation
 
