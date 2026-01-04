@@ -5,7 +5,7 @@
 ; World/screen state
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
-(def world (ref {}))
+(def world-syms (ref {}))
 (def world-cols 100)
 (def world-rows 100)
 (def player-x (ref 0))
@@ -47,7 +47,7 @@
    {} 0 0))
 
 (defn create-initial-world []
-  (dosync (ref-set world (create-world))))
+  (dosync (ref-set world-syms (create-world))))
 
 ; Input/command handling
 (defn calc-screen-coords
@@ -95,7 +95,7 @@
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
   [x y]
-  (let [dest (@world [x y])]
+  (let [dest (@world-syms [x y])]
     (and (some? dest) (walkable-object? dest))))
 
 (defmulti handle-command
@@ -118,7 +118,7 @@
    ; draw the world
    (doseq [x (range @canvas-cols)
            y (range @canvas-rows)]
-     (s/put-string @screen x y (@world (screen-to-world x y))))
+     (s/put-string @screen x y (@world-syms (screen-to-world x y))))
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
