@@ -30,14 +30,6 @@
     (dosync (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
-; fix coordinates so if you can go up then you can also go down by same squares
-(defn recalculate-x
-  [source-x source-y target-y]
-  (let [source-line-width (get @world-row-widths source-y)
-        target-line-width (get @world-row-widths target-y)]
-    ; TODO: it doesn't work as expected in the middle of the line, so map had to be hacked here and there
-    (math/round (* (/ source-x source-line-width) target-line-width))))
-
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn screen-to-world
@@ -54,7 +46,7 @@
       ; when player stands on the last column in the row there's last columns above and below them
       ; too despite the fact that all rows have different lengths
       (let [this-line-width (get @world-row-widths world-y)
-            this-line-center (recalculate-x @player-x @player-y world-y)
+            this-line-center @player-x
             ; modular arithmetics to wrap around the mountain map
             corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
         [corrected-world-x world-y]))))
@@ -156,6 +148,8 @@
      (when (walkable? x y)
        (ref-set player-x x)
        (ref-set player-y y)))))
+
+; TODO: procedural map generation
 
 ; World creation
 (defn array-to-world [array]
