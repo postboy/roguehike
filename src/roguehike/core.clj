@@ -33,8 +33,8 @@
 ; World creation
 (defn array-to-world [array]
   ((fn [world col row index]
-     (if (= (count array) index)
-       [world]
+     (if (= row world-rows)
+       world
        (let [ch (get array index)
              next-index (inc index)]
          (cond
@@ -49,8 +49,7 @@
    {} 0 0 0))
 
 (defn create-world []
-  (let [[local-world] (array-to-world (slurp "assets/map.txt"))]
-    (dosync (ref-set world local-world))))
+  (dosync (ref-set world (array-to-world (slurp "assets/map.txt")))))
 
 ; Input/command handling
 (defn calc-screen-coords
