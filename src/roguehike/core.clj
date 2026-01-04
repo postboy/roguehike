@@ -18,18 +18,6 @@
 ;(def walkable-object? #{"_" "|" " "})
 (def walkable-object? (fn [_] true))
 
-; Utility functions
-(defn create-screen
-  [terminal-type resized-fn]
-  (dosync (ref-set screen (s/get-screen terminal-type)))
-  (s/start @screen)
-  ; for some reason, this works better than setting :resize-listener argument
-  ; to get-screen
-  (s/add-resize-listener @screen resized-fn)
-  (let [[cols rows] (s/get-size @screen)]
-    (dosync (ref-set canvas-cols cols)
-            (ref-set canvas-rows rows))))
-
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
 (defn screen-to-world
@@ -51,21 +39,6 @@
             corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
         [corrected-world-x world-y]))))
 
-(defn calc-screen-coords
-  "Calculate the new screen coordinates after moving dir from current position."
-  [dir]
-    (let [center-x (quot @canvas-cols 2)
-          center-y (quot @canvas-rows 2)]
-      (case dir
-        :left       [(dec center-x) center-y]
-        :right      [(inc center-x) center-y]
-        :up         [center-x (dec center-y)]
-        :down       [center-x (inc center-y)]
-        :up-left    [(dec center-x) (dec center-y)]
-        :up-right   [(inc center-x) (dec center-y)]
-        :down-left  [(dec center-x) (inc center-y)]
-        :down-right [(inc center-x) (inc center-y)])))
-
 (defn get-rendered-square
   [screen-x screen-y]
   (let [[world-x world-y] (screen-to-world screen-x screen-y)]
@@ -81,24 +54,49 @@
           (and (>= screen-x left-corner) (<= screen-x right-corner)) square
           :else " ")))))
 
-(defn render-screen
-  []
-  ;(println (inc @player-x) (inc @player-y))
-  (dosync
-   ; draw the world
-   (doseq [x (range @canvas-cols)
-           y (range @canvas-rows)]
-     (s/put-string @screen x y (get-rendered-square x y)))
-   ; draw the player in center of the canvas
-   (let [center-x (quot @canvas-cols 2)
-         center-y (quot @canvas-rows 2)]
-     ; if player is on the rope then draw them differently
-     (s/put-string @screen center-x center-y "@")
-                   ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
-     (s/move-cursor @screen center-x center-y)))
-  (s/redraw @screen))
+; TODO: procedural map generation
+
+; World creation
+(defn array-to-world [array]
+  ((fn [world widths col row index]
+     (if (= (count array) index)
+       [world widths]
+       (let [ch (get array index)
+             next-index (inc index)]
+         (cond
+           ; ignore it
+           (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
+           ; go to next row
+           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
+           ; add square
+           :else (recur (-> world
+                            (assoc [col row] (str ch)))
+                        widths (inc col) row next-index)))))
+   {} [] 0 0 0))
+
+(defn create-world []
+  (let [[local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
+    (dosync (ref-set world local-world)
+            (ref-set world-row-widths local-widths)
+            (ref-set player-x 0)
+            (ref-set player-y 0))))
 
 ; Input/command handling
+(defn calc-screen-coords
+  "Calculate the new screen coordinates after moving dir from current position."
+  [dir]
+  (let [center-x (quot @canvas-cols 2)
+        center-y (quot @canvas-rows 2)]
+    (case dir
+      :left       [(dec center-x) center-y]
+      :right      [(inc center-x) center-y]
+      :up         [center-x (dec center-y)]
+      :down       [center-x (inc center-y)]
+      :up-left    [(dec center-x) (dec center-y)]
+      :up-right   [(inc center-x) (dec center-y)]
+      :down-left  [(dec center-x) (inc center-y)]
+      :down-right [(inc center-x) (inc center-y)])))
+
 (defn parse-input
   "Get a key from the user and return what command they want (if any).
    The returned value is a vector of [command-type data], where data is any
@@ -145,32 +143,41 @@
        (ref-set player-x x)
        (ref-set player-y y)))))
 
-; TODO: procedural map generation
+(defn render-screen
+  []
+  ;(println (inc @player-x) (inc @player-y))
+  (dosync
+   ; draw the world
+   (doseq [x (range @canvas-cols)
+           y (range @canvas-rows)]
+     (s/put-string @screen x y (get-rendered-square x y)))
+   ; draw the player in center of the canvas
+   (let [center-x (quot @canvas-cols 2)
+         center-y (quot @canvas-rows 2)]
+     ; if player is on the rope then draw them differently
+     (s/put-string @screen center-x center-y "@")
+                   ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
+     (s/move-cursor @screen center-x center-y)))
+  (s/redraw @screen))
 
-; World creation
-(defn array-to-world [array]
-  ((fn [world widths col row index]
-     (if (= (count array) index)
-       [world widths]
-       (let [ch (get array index)
-             next-index (inc index)]
-         (cond
-           ; ignore it
-           (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
-           ; go to next row
-           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
-           ; add square
-           :else (recur (-> world
-                            (assoc [col row] (str ch)))
-                        widths (inc col) row next-index)))))
-   {} [] 0 0 0))
+(defn handle-resize [cols rows]
+  (dosync (ref-set canvas-cols cols)
+          (ref-set canvas-rows rows))
+  ; for some reason, (redraw) inside (render-screen) is not enough
+  (s/redraw @screen)
+  ; we need to re-render the screen
+  (render-screen))
 
-(defn create-world []
-  (let [[local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
-    (dosync (ref-set world local-world)
-            (ref-set world-row-widths local-widths)
-            (ref-set player-x 0)
-            (ref-set player-y 0))))
+(defn create-screen
+  [terminal-type resized-fn]
+  (dosync (ref-set screen (s/get-screen terminal-type)))
+  (s/start @screen)
+  ; for some reason, this works better than setting :resize-listener argument
+  ; to get-screen
+  (s/add-resize-listener @screen resized-fn)
+  (let [[cols rows] (s/get-size @screen)]
+    (dosync (ref-set canvas-cols cols)
+            (ref-set canvas-rows rows))))
 
 (defn game-loop []
   (render-screen)
@@ -180,14 +187,6 @@
       (do
         (handle-command command data)
         (recur)))))
-
-(defn handle-resize [cols rows]
-  (dosync (ref-set canvas-cols cols)
-          (ref-set canvas-rows rows))
-  ; for some reason, (redraw) inside (render-screen) is not enough
-  (s/redraw @screen)
-  ; we need to re-render the screen
-  (render-screen))
 
 (defn -main [& args]
   ; first argument is terminal type: auto/swing/text/unix/cygwin
