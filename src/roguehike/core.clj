@@ -74,13 +74,9 @@
       (let [square (@world [world-x world-y])
             center-x (quot @canvas-cols 2)
             width (get @world-row-widths world-y)
-            ; right edge will look bad without inc
-            screen-width (quot (inc width) 2)
+            screen-width (quot width 2)
             left-corner (- center-x (quot screen-width 2))
-            ; special case for the top
-            right-corner (if (= width 2)
-                           left-corner
-                           (+ center-x (quot screen-width 2) (rem screen-width 2)))]
+            right-corner (+ center-x (quot screen-width 2) (rem screen-width 2))]
         (cond
           (and (>= screen-x left-corner) (<= screen-x right-corner)) square
           :else " ")))))
