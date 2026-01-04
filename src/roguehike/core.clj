@@ -28,28 +28,23 @@
         corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
-; TODO: procedural map generation
-
 ; World creation
-(defn array-to-world [array]
-  ((fn [world col row index]
+(defn create-world []
+  ((fn [world col row]
      (if (= row world-rows)
        world
-       (let [ch (get array index)
-             next-index (inc index)]
+       (let [symbol col] ; TODO
          (cond
-           ; ignore it
-           (or (= ch \return) (= ch \`)) (recur world col row next-index)
            ; go to next row
-           (= ch \newline) (recur world 0 (inc row) next-index)
+           (= col world-cols) (recur world 0 (inc row))
            ; add square
            :else (recur (-> world
-                            (assoc [col row] (str ch)))
-                        (inc col) row next-index)))))
-   {} 0 0 0))
+                            (assoc [col row] (str symbol)))
+                        (inc col) row)))))
+   {} 0 0))
 
-(defn create-world []
-  (dosync (ref-set world (array-to-world (slurp "assets/map.txt")))))
+(defn create-initial-world []
+  (dosync (ref-set world (create-world))))
 
 ; Input/command handling
 (defn calc-screen-coords
@@ -161,5 +156,5 @@
 (defn -main [& args]
   ; first argument is terminal type: auto/swing/text/unix/cygwin
   (create-screen (keyword (or (first args) "auto")) handle-resize)
-  (create-world)
+  (create-initial-world)
   (game-loop))
