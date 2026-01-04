@@ -23,20 +23,10 @@
   [screen-x screen-y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
-        delta-x (- center-x @player-x)
-        delta-y (- center-y @player-y)
-        world-x (- screen-x delta-x)
-        world-y (- screen-y delta-y)]
-    ; modular arithmetics to wrap around the mountain map
-    (let [corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)]
-      [corrected-world-x world-y])))
-
-(defn get-rendered-square
-  [screen-x screen-y]
-  (let [[world-x world-y] (screen-to-world screen-x screen-y)]
-    (if (or (not (>= world-y 0)) (not (< world-y world-rows)))
-      " "
-      (@world [world-x world-y]))))
+        ; modular arithmetics to wrap around the mountain map          
+        corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
+        corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
+    [corrected-world-x corrected-world-y]))
 
 ; TODO: procedural map generation
 
@@ -133,7 +123,7 @@
    ; draw the world
    (doseq [x (range @canvas-cols)
            y (range @canvas-rows)]
-     (s/put-string @screen x y (get-rendered-square x y)))
+     (s/put-string @screen x y (@world (screen-to-world x y))))
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
