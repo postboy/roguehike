@@ -2,23 +2,25 @@
   (:gen-class)
   (:require [lanterna.screen :as s]))
 
-; World/screen state
-; map instead of vector seems excessive but probably will be useful in the
-; future
-(def world-syms (ref {}))
-(def world-cols 100)
-(def world-rows 100)
-(def player-x (ref 0))
-(def player-y (ref 0))
-(def canvas-cols (ref 0))
-(def canvas-rows (ref 0))
-(def screen (ref nil))
-
 (def map-symbols [" " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "
                   "." "." "." "." "." "." "." "." "." "."
                   "o" "O" "w" "W" "t" "T"])
 
 (def walkable-object? #{" " "." "o" "w" "t"})
+
+; World/screen state
+(def world-cols 100)
+(def world-rows 100)
+(def initial-map
+  (vec (for [_ (range world-rows)]
+         (vec (for [_ (range world-cols)]
+                (rand-nth map-symbols))))))
+(def world-syms (ref []))
+(def player-x (ref 0))
+(def player-y (ref 0))
+(def canvas-cols (ref 0))
+(def canvas-rows (ref 0))
+(def screen (ref nil))
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
@@ -32,22 +34,8 @@
     [corrected-world-x corrected-world-y]))
 
 ; World creation
-(defn create-world []
-  ((fn [world col row]
-     (if (= row world-rows)
-       world
-       (let [symbol (rand-nth map-symbols)]
-         (cond
-           ; go to next row
-           (= col world-cols) (recur world 0 (inc row))
-           ; add square
-           :else (recur (-> world
-                            (assoc [col row] (str symbol)))
-                        (inc col) row)))))
-   {} 0 0))
-
 (defn create-initial-world []
-  (dosync (ref-set world-syms (create-world))))
+  (dosync (ref-set world-syms initial-map)))
 
 ; Input/command handling
 (defn calc-screen-coords
@@ -95,7 +83,7 @@
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
   [x y]
-  (let [dest (@world-syms [x y])]
+  (let [dest (get-in @world-syms [x y])]
     (and (some? dest) (walkable-object? dest))))
 
 (defmulti handle-command
@@ -118,7 +106,7 @@
    ; draw the world
    (doseq [x (range @canvas-cols)
            y (range @canvas-rows)]
-     (s/put-string @screen x y (@world-syms (screen-to-world x y))))
+     (s/put-string @screen x y (get-in @world-syms (screen-to-world x y))))
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
