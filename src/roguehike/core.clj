@@ -6,16 +6,19 @@
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
 (def world (ref {}))
-(def world-cols 10)
-(def world-rows 10)
+(def world-cols 100)
+(def world-rows 100)
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-;(def walkable-object? #{"_" "|" " "})
-(def walkable-object? (fn [_] true))
+(def map-symbols [" " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "
+                  "." "." "." "." "." "." "." "." "." "."
+                  "o" "O" "w" "W" "t" "T"])
+
+(def walkable-object? #{" " "." "o" "w" "t"})
 
 ; Rendering
 ; player will be in center of the canvas, so move everything accordingly
@@ -33,7 +36,7 @@
   ((fn [world col row]
      (if (= row world-rows)
        world
-       (let [symbol col] ; TODO
+       (let [symbol (rand-nth map-symbols)]
          (cond
            ; go to next row
            (= col world-cols) (recur world 0 (inc row))
@@ -120,7 +123,7 @@
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
      ; if player is on the rope then draw them differently
-     (s/put-string @screen center-x center-y "@")
+     (s/put-string @screen center-x center-y "i")
                    ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
      (s/move-cursor @screen center-x center-y)))
   (s/redraw @screen))
