@@ -50,9 +50,7 @@
 
 (defn create-world []
   (let [[local-world _] (array-to-world (slurp "assets/map.txt"))]
-    (dosync (ref-set world local-world)
-            (ref-set player-x 0)
-            (ref-set player-y 0))))
+    (dosync (ref-set world local-world))))
 
 ; Input/command handling
 (defn calc-screen-coords
