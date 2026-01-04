@@ -8,7 +8,8 @@
 ; map instead of vector seems excessive but probably will be useful in the
 ; future
 (def world (ref {}))
-(def world-row-widths (ref []))
+(def world-cols 10)
+(def world-rows 10)
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def canvas-cols (ref 0))
@@ -28,12 +29,12 @@
         delta-y (- center-y @player-y)
         world-x (- screen-x delta-x)
         world-y (- screen-y delta-y)]
-    ; don't correct anything if there's no such row in world-row-widths
-    (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
+    ; don't correct anything if there's no such row in world
+    (if (or (not (>= world-y 0)) (not (< world-y world-rows)))
       [world-x world-y]
       ; when player stands on the last column in the row there's last columns above and below them
       ; too despite the fact that all rows have different lengths
-      (let [this-line-width (get @world-row-widths world-y)
+      (let [this-line-width world-cols
             this-line-center @player-x
             ; modular arithmetics to wrap around the mountain map
             corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
@@ -42,7 +43,7 @@
 (defn get-rendered-square
   [screen-x screen-y]
   (let [[world-x world-y] (screen-to-world screen-x screen-y)]
-    (if (or (not (>= world-y 0)) (not (< world-y (count @world-row-widths))))
+    (if (or (not (>= world-y 0)) (not (< world-y world-rows)))
       " "
       (@world [world-x world-y]))))
 
@@ -67,9 +68,8 @@
    {} [] 0 0 0))
 
 (defn create-world []
-  (let [[local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
+  (let [[local-world _] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world)
-            (ref-set world-row-widths local-widths)
             (ref-set player-x 0)
             (ref-set player-y 0))))
 
