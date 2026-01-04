@@ -27,10 +27,8 @@
         delta-y (- center-y @player-y)
         world-x (- screen-x delta-x)
         world-y (- screen-y delta-y)]
-    (let [this-line-width world-cols
-          this-line-center @player-x
-          ; modular arithmetics to wrap around the mountain map
-          corrected-world-x (mod (+ (- this-line-center center-x) screen-x) this-line-width)]
+    ; modular arithmetics to wrap around the mountain map
+    (let [corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)]
       [corrected-world-x world-y])))
 
 (defn get-rendered-square
