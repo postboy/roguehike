@@ -15,7 +15,8 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-(def walkable-object? #{"_" "|" " "})
+;(def walkable-object? #{"_" "|" " "})
+(def walkable-object? (fn [_] true))
 
 ; Utility functions
 (defn create-screen
@@ -29,18 +30,11 @@
     (dosync (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
-(defn mirror-map-edge
-  [square]
-    (case square
-      "\\" "/"
-      "/" "\\"
-      square))
-
 ; fix coordinates so if you can go up then you can also go down by same squares
 (defn recalculate-x
   [source-x source-y target-y]
-  (let [source-line-width (dec (get @world-row-widths source-y))
-        target-line-width (dec (get @world-row-widths target-y))]
+  (let [source-line-width (get @world-row-widths source-y)
+        target-line-width (get @world-row-widths target-y)]
     ; TODO: it doesn't work as expected in the middle of the line, so map had to be hacked here and there
     (math/round (* (/ source-x source-line-width) target-line-width))))
 
@@ -96,10 +90,7 @@
                            left-corner
                            (+ center-x (quot screen-width 2) (rem screen-width 2)))]
         (cond
-          (= screen-x left-corner) (mirror-map-edge (@world [width world-y]))
-          (= screen-x right-corner) (@world [width world-y])
-          (and (> screen-x left-corner) (< screen-x right-corner)) square
-          (= world-y (dec (count @world-row-widths))) "_"
+          (and (>= screen-x left-corner) (<= screen-x right-corner)) square
           :else " ")))))
 
 (defn render-screen
@@ -114,8 +105,8 @@
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
      ; if player is on the rope then draw them differently
-     (s/put-string @screen center-x center-y
-                   (if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
+     (s/put-string @screen center-x center-y "@")
+                   ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
      (s/move-cursor @screen center-x center-y)))
   (s/redraw @screen))
 
@@ -177,8 +168,7 @@
            ; ignore it
            (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
            ; go to next row
-           ; last symbol in a row is special, it's a map edge, so don't count it
-           (= ch \newline) (recur world (conj widths (dec col)) 0 (inc row) next-index)
+           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (str ch)))
@@ -186,13 +176,11 @@
    {} [] 0 0 0))
 
 (defn create-world []
-  (let [spawn-text (slurp "assets/spawn.txt")
-        [x y] (int-array (map #(Integer/parseInt %) (string/split-lines spawn-text)))
-        [local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
+  (let [[local-world local-widths] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world)
             (ref-set world-row-widths local-widths)
-            (ref-set player-x (dec x))
-            (ref-set player-y (dec y)))))
+            (ref-set player-x 0)
+            (ref-set player-y 0))))
 
 (defn game-loop []
   (render-screen)
