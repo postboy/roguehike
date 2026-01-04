@@ -32,24 +32,24 @@
 
 ; World creation
 (defn array-to-world [array]
-  ((fn [world widths col row index]
+  ((fn [world col row index]
      (if (= (count array) index)
-       [world widths]
+       [world]
        (let [ch (get array index)
              next-index (inc index)]
          (cond
            ; ignore it
-           (or (= ch \return) (= ch \`)) (recur world widths col row next-index)
+           (or (= ch \return) (= ch \`)) (recur world col row next-index)
            ; go to next row
-           (= ch \newline) (recur world (conj widths col) 0 (inc row) next-index)
+           (= ch \newline) (recur world 0 (inc row) next-index)
            ; add square
            :else (recur (-> world
                             (assoc [col row] (str ch)))
-                        widths (inc col) row next-index)))))
-   {} [] 0 0 0))
+                        (inc col) row next-index)))))
+   {} 0 0 0))
 
 (defn create-world []
-  (let [[local-world _] (array-to-world (slurp "assets/map.txt"))]
+  (let [[local-world] (array-to-world (slurp "assets/map.txt"))]
     (dosync (ref-set world local-world))))
 
 ; Input/command handling
