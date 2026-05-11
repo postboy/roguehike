@@ -105,7 +105,7 @@
   (dosync
    ; draw the world
    (doseq [x (range @canvas-cols)
-           y (range @canvas-rows)]
+           y (range (dec @canvas-rows))]
      (s/put-string @screen x y (get-in @world-syms (screen-to-world x y))))
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
@@ -113,7 +113,11 @@
      ; if player is on the rope then draw them differently
      (s/put-string @screen center-x center-y "i")
                    ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
-     (s/move-cursor @screen center-x center-y)))
+     (s/move-cursor @screen center-x center-y))
+   ; draw the status bar
+   (doseq [x (range @canvas-cols)]
+     (s/put-string @screen x (dec @canvas-rows) " "))
+   (s/put-string @screen 0 (dec @canvas-rows) " Walking"))
   (s/redraw @screen))
 
 (defn handle-resize [cols rows]
