@@ -134,7 +134,8 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
      (s/put-string @screen 1 status-bar-row @status-message)
      ; insert at the end of status bar
-     (let [string (format "Stamina: %3d/%3d" @cur-stamina max-stamina)
+     (let [width (count (str max-stamina))
+           string (format (str "Stamina: %" width "d/%" width "d") @cur-stamina max-stamina)
            col-to-insert (- @canvas-cols (count string) 1)]
        (s/put-string @screen col-to-insert status-bar-row string)))
    (s/redraw @screen)))
