@@ -20,7 +20,7 @@
 (def world-syms (ref []))
 (def player-x (ref 0))
 (def player-y (ref 0))
-(def last-action (ref ""))
+(def status-message (ref ""))
 (def current-stamina (ref total-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
@@ -99,18 +99,18 @@
   nil)
 
 (defmethod handle-command :rest [_ _]
- (dosync (ref-set last-action "You rest for a while.")))
+ (dosync (ref-set status-message "You rest for a while.")))
 
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
      (if (< @current-stamina stamina-for-step)
-       (ref-set last-action "You're too tired to walk. You need a rest.")
+       (ref-set status-message "You're too tired to walk. You need a rest.")
        (if (walkable? x y)
          (do (ref-set player-x x)
              (ref-set player-y y)
-             (ref-set last-action "You walk."))
-         (ref-set last-action "You cannot walk there: path is obstructed."))))))
+             (ref-set status-message "You walk."))
+         (ref-set status-message "You cannot walk there: path is obstructed."))))))
 
 (defn render-screen
   []
@@ -128,7 +128,7 @@
        (s/move-cursor @screen center-x center-y))
      ; draw the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
-     (s/put-string @screen 1 status-bar-row @last-action)
+     (s/put-string @screen 1 status-bar-row @status-message)
      ; insert at the end of status bar
      (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
            col-to-insert (- @canvas-cols (count string) 1)]
