@@ -12,6 +12,7 @@
 (def world-cols 100)
 (def world-rows 100)
 (def total-stamina 100)
+(def stamina-for-step 1)
 (def initial-map
   (vec (for [_ (range world-rows)]
          (vec (for [_ (range world-cols)]
@@ -103,11 +104,13 @@
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
-     (if (walkable? x y)
-       (do (ref-set player-x x)
-           (ref-set player-y y)
-           (ref-set last-action "You walk."))
-       (ref-set last-action "You cannot walk there: path is obstructed.")))))
+     (if (< @current-stamina stamina-for-step)
+       (ref-set last-action "You're too tired to walk. You need a rest.")
+       (if (walkable? x y)
+         (do (ref-set player-x x)
+             (ref-set player-y y)
+             (ref-set last-action "You walk."))
+         (ref-set last-action "You cannot walk there: path is obstructed."))))))
 
 (defn render-screen
   []
