@@ -21,7 +21,7 @@
 (def world-syms (ref []))
 (def player-x (ref 0))
 (def player-y (ref 0))
-(def status-message (ref ""))
+(def status-message (ref "You're standing at the foot of the mountain."))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
