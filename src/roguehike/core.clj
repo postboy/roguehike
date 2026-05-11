@@ -11,6 +11,7 @@
 ; World/screen state
 (def world-cols 100)
 (def world-rows 100)
+(def max-height (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
 (def stamina-for-step 2)
 (def stamina-from-rest 7)
@@ -22,6 +23,7 @@
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def status-message (ref "You're standing at the foot of the mountain."))
+(def cur-height (ref 0))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
@@ -136,8 +138,10 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
      (s/put-string @screen 1 status-bar-row @status-message)
      ; insert at the end of status bar
-     (let [width (count (str max-stamina))
-           string (format (str "Stamina: %" width "d/%" width "d") @cur-stamina max-stamina)
+     (let [st-width (count (str max-stamina))
+           he-width (count (str max-height))
+           string (format (str "Stamina: %" st-width "d/%" st-width "d Height: %" he-width "d/%" he-width "d")
+                          @cur-stamina max-stamina @cur-height max-height)
            col-to-insert (- @canvas-cols (count string) 1)]
        (s/put-string @screen col-to-insert status-bar-row string)))
    (s/redraw @screen)))
