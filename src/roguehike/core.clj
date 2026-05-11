@@ -18,6 +18,7 @@
 (def world-syms (ref []))
 (def player-x (ref 0))
 (def player-y (ref 0))
+(def last-action (ref ""))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
@@ -95,9 +96,11 @@
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
-     (when (walkable? x y)
-       (ref-set player-x x)
-       (ref-set player-y y)))))
+     (if (walkable? x y)
+       (do (ref-set player-x x)
+           (ref-set player-y y)
+           (ref-set last-action "You walk."))
+       (ref-set last-action "You cannot walk there: path is obstructed.")))))
 
 (defn render-screen
   []
@@ -115,7 +118,7 @@
    ; draw the status bar
    (doseq [x (range @canvas-cols)]
      (s/put-string @screen x (dec @canvas-rows) " "))
-   (s/put-string @screen 0 (dec @canvas-rows) " Walking"))
+   (s/put-string @screen 1 (dec @canvas-rows) @last-action))
   (s/redraw @screen))
 
 (defn handle-resize [cols rows]
