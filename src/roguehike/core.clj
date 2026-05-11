@@ -11,6 +11,7 @@
 ; World/screen state
 (def world-cols 100)
 (def world-rows 100)
+(def total-stamina 100)
 (def initial-map
   (vec (for [_ (range world-rows)]
          (vec (for [_ (range world-cols)]
@@ -19,6 +20,7 @@
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def last-action (ref ""))
+(def current-stamina (ref total-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
@@ -123,7 +125,11 @@
    ; draw the status bar
    (doseq [x (range @canvas-cols)]
      (s/put-string @screen x (dec @canvas-rows) " "))
-   (s/put-string @screen 1 (dec @canvas-rows) @last-action))
+   (s/put-string @screen 1 (dec @canvas-rows) @last-action)
+   ; insert at the end of status bar
+   (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
+         col-to-insert (- @canvas-cols (count string) 1)]
+     (s/put-string @screen col-to-insert (dec @canvas-rows) string)))
   (s/redraw @screen))
 
 (defn handle-resize [cols rows]
