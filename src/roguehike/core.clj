@@ -11,7 +11,7 @@
 ; World/screen state
 (def world-cols 100)
 (def world-rows 100)
-(def total-stamina 100)
+(def max-stamina 100)
 (def stamina-for-step 2)
 (def stamina-from-rest 7)
 (def initial-map
@@ -22,7 +22,7 @@
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def status-message (ref ""))
-(def current-stamina (ref total-stamina))
+(def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
@@ -101,18 +101,18 @@
 
 (defmethod handle-command :rest [_ _]
  (dosync
-  (ref-set current-stamina (min total-stamina (+ @current-stamina stamina-from-rest)))
+  (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
   (ref-set status-message "You rest for a while.")))
 
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
-     (if (< @current-stamina stamina-for-step)
+     (if (< @cur-stamina stamina-for-step)
        (ref-set status-message "You're too tired to walk. You need a rest.")
        (if (walkable? x y)
          (do (ref-set player-x x)
              (ref-set player-y y)
-             (ref-set current-stamina (- @current-stamina stamina-for-step))
+             (ref-set cur-stamina (- @cur-stamina stamina-for-step))
              (ref-set status-message "You walk."))
          (ref-set status-message "You cannot walk there: path is obstructed."))))))
 
@@ -134,7 +134,7 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
      (s/put-string @screen 1 status-bar-row @status-message)
      ; insert at the end of status bar
-     (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
+     (let [string (format "Stamina: %3d/%3d" @cur-stamina max-stamina)
            col-to-insert (- @canvas-cols (count string) 1)]
        (s/put-string @screen col-to-insert status-bar-row string)))
    (s/redraw @screen)))
