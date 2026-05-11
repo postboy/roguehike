@@ -62,6 +62,8 @@
   (let [k (s/get-key-blocking @screen)]
     (case k
       \q [:quit nil]
+      \5 [:rest nil]
+      \r [:rest nil]
       \4 [:move :left]
       \2 [:move :down]
       \8 [:move :up]
@@ -92,6 +94,9 @@
 
 (defmethod handle-command nil [_ _]
   nil)
+
+(defmethod handle-command :rest [_ _]
+ (dosync (ref-set last-action "You rest for a while.")))
 
 (defmethod handle-command :move [_ dir]
   (dosync
