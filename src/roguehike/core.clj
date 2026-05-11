@@ -16,7 +16,7 @@
 (def summit-y (quot world-rows 2))
 (def max-height (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
-(def stamina-for-step 2)
+(def step-cost 2)
 (def stamina-from-rest 7)
 (def initial-map
   (vec (for [_ (range world-rows)]
@@ -114,7 +114,7 @@
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
-     (if (< @cur-stamina stamina-for-step)
+     (if (< @cur-stamina step-cost)
        (ref-set status-message "You're too tired to walk. You need a rest.")
        (if (walkable? x y)
          (do (ref-set player-x x)
@@ -124,7 +124,7 @@
                                          ; distance to summit
                                          (dec (math/round (math/sqrt (+ (math/pow (- @player-x summit-x) 2)
                                                                         (math/pow (- @player-y summit-y) 2))))))))
-             (ref-set cur-stamina (- @cur-stamina stamina-for-step))
+             (ref-set cur-stamina (- @cur-stamina step-cost))
              (ref-set status-message "You walk."))
          (ref-set status-message "You cannot walk there: path is obstructed."))))))
 
