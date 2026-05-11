@@ -124,8 +124,7 @@
        (s/put-string @screen center-x center-y "i")
        (s/move-cursor @screen center-x center-y))
      ; draw the status bar
-     (doseq [x (range @canvas-cols)]
-       (s/put-string @screen x status-bar-row " "))
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
      (s/put-string @screen 1 status-bar-row @last-action)
      ; insert at the end of status bar
      (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
