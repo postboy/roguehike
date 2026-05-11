@@ -110,9 +110,7 @@
    ; draw the player in center of the canvas
    (let [center-x (quot @canvas-cols 2)
          center-y (quot @canvas-rows 2)]
-     ; if player is on the rope then draw them differently
      (s/put-string @screen center-x center-y "i")
-                   ;(if (= "|" (get-rendered-square center-x center-y)) "$" "1"))
      (s/move-cursor @screen center-x center-y))
    ; draw the status bar
    (doseq [x (range @canvas-cols)]
