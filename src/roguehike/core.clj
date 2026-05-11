@@ -12,7 +12,8 @@
 (def world-cols 100)
 (def world-rows 100)
 (def total-stamina 100)
-(def stamina-for-step 1)
+(def stamina-for-step 2)
+(def stamina-from-rest 7)
 (def initial-map
   (vec (for [_ (range world-rows)]
          (vec (for [_ (range world-cols)]
@@ -99,7 +100,9 @@
   nil)
 
 (defmethod handle-command :rest [_ _]
- (dosync (ref-set status-message "You rest for a while.")))
+ (dosync
+  (ref-set current-stamina (min total-stamina (+ @current-stamina stamina-from-rest)))
+  (ref-set status-message "You rest for a while.")))
 
 (defmethod handle-command :move [_ dir]
   (dosync
@@ -109,6 +112,7 @@
        (if (walkable? x y)
          (do (ref-set player-x x)
              (ref-set player-y y)
+             (ref-set current-stamina (- @current-stamina stamina-for-step))
              (ref-set status-message "You walk."))
          (ref-set status-message "You cannot walk there: path is obstructed."))))))
 
