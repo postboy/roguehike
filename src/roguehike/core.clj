@@ -16,7 +16,9 @@
 (def summit-y (quot world-rows 2))
 (def max-height (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
-(def step-cost 2)
+(def step-up-cost 3)
+(def step-down-cost 2)
+(def step-straight-cost 1)
 (def stamina-from-rest 7)
 (def initial-map
   (vec (for [_ (range world-rows)]
@@ -116,16 +118,21 @@
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
      (if (not (walkable? x y))
        (ref-set status-message "You cannot walk there: path is obstructed.")
+       (let [old-height @cur-height
+             new-height (max 0 (- max-height
+                                  ; distance to summit
+                                  (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
+                                                                 (math/pow (- y summit-y) 2)))))))
+             step-cost (if (> new-height old-height)
+                         step-up-cost
+                         (if (< new-height old-height) step-down-cost step-straight-cost))]
        (if (< @cur-stamina step-cost)
          (ref-set status-message "You're too tired to walk. You need a rest.")
          (do (ref-set player-x x)
              (ref-set player-y y)
-             (ref-set cur-height (max 0 (- max-height
-                                           ; distance to summit
-                                           (dec (math/round (math/sqrt (+ (math/pow (- @player-x summit-x) 2)
-                                                                          (math/pow (- @player-y summit-y) 2))))))))
+             (ref-set cur-height new-height)
              (ref-set cur-stamina (- @cur-stamina step-cost))
-             (ref-set status-message "You walk.")))))))
+             (ref-set status-message "You walk."))))))))
 
 (defn render-screen
   []
