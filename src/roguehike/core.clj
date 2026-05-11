@@ -100,9 +100,11 @@
   nil)
 
 (defmethod handle-command :rest [_ _]
- (dosync
-  (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
-  (ref-set status-message "You rest for a while.")))
+  (dosync
+   (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
+   (if (= @cur-stamina max-stamina)
+     (ref-set status-message "You're fully rested.")
+     (ref-set status-message "You rest for a while."))))
 
 (defmethod handle-command :move [_ dir]
   (dosync
