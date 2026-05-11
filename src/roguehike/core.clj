@@ -114,19 +114,18 @@
 (defmethod handle-command :move [_ dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
-     (if (< @cur-stamina step-cost)
-       (ref-set status-message "You're too tired to walk. You need a rest.")
-       (if (walkable? x y)
+     (if (not (walkable? x y))
+       (ref-set status-message "You cannot walk there: path is obstructed.")
+       (if (< @cur-stamina step-cost)
+         (ref-set status-message "You're too tired to walk. You need a rest.")
          (do (ref-set player-x x)
              (ref-set player-y y)
-             (ref-set cur-height (max 0
-                                      (- max-height
-                                         ; distance to summit
-                                         (dec (math/round (math/sqrt (+ (math/pow (- @player-x summit-x) 2)
-                                                                        (math/pow (- @player-y summit-y) 2))))))))
+             (ref-set cur-height (max 0 (- max-height
+                                           ; distance to summit
+                                           (dec (math/round (math/sqrt (+ (math/pow (- @player-x summit-x) 2)
+                                                                          (math/pow (- @player-y summit-y) 2))))))))
              (ref-set cur-stamina (- @cur-stamina step-cost))
-             (ref-set status-message "You walk."))
-         (ref-set status-message "You cannot walk there: path is obstructed."))))))
+             (ref-set status-message "You walk.")))))))
 
 (defn render-screen
   []
