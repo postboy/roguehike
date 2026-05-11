@@ -113,24 +113,25 @@
   []
   ;(println (inc @player-x) (inc @player-y))
   (dosync
-   ; draw the world
-   (doseq [x (range @canvas-cols)
-           y (range (dec @canvas-rows))]
-     (s/put-string @screen x y (get-in @world-syms (screen-to-world x y))))
-   ; draw the player in center of the canvas
-   (let [center-x (quot @canvas-cols 2)
-         center-y (quot @canvas-rows 2)]
-     (s/put-string @screen center-x center-y "i")
-     (s/move-cursor @screen center-x center-y))
-   ; draw the status bar
-   (doseq [x (range @canvas-cols)]
-     (s/put-string @screen x (dec @canvas-rows) " "))
-   (s/put-string @screen 1 (dec @canvas-rows) @last-action)
-   ; insert at the end of status bar
-   (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
-         col-to-insert (- @canvas-cols (count string) 1)]
-     (s/put-string @screen col-to-insert (dec @canvas-rows) string)))
-  (s/redraw @screen))
+   (let [status-bar-row (dec @canvas-rows)]
+     ; draw the world
+     (doseq [x (range @canvas-cols)
+             y (range status-bar-row)]
+       (s/put-string @screen x y (get-in @world-syms (screen-to-world x y))))
+     ; draw the player in center of the canvas
+     (let [center-x (quot @canvas-cols 2)
+           center-y (quot @canvas-rows 2)]
+       (s/put-string @screen center-x center-y "i")
+       (s/move-cursor @screen center-x center-y))
+     ; draw the status bar
+     (doseq [x (range @canvas-cols)]
+       (s/put-string @screen x status-bar-row " "))
+     (s/put-string @screen 1 status-bar-row @last-action)
+     ; insert at the end of status bar
+     (let [string (format "Stamina: %3d/%3d" @current-stamina total-stamina)
+           col-to-insert (- @canvas-cols (count string) 1)]
+       (s/put-string @screen col-to-insert status-bar-row string)))
+   (s/redraw @screen)))
 
 (defn handle-resize [cols rows]
   (dosync (ref-set canvas-cols cols)
