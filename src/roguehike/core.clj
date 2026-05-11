@@ -3,10 +3,10 @@
   (:require [lanterna.screen :as s]))
 
 (def map-symbols [" " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "
-                  "." "." "." "." "." "." "." "." "." "."
-                  "o" "O" "w" "W" "t" "T"])
+                  "." "." "." "." "." "." "." "." "." "." "*" "*" "*" "*" "*" "*" "*" "*"
+                  "o" "O" "0" "w" "W" "t" "T"])
 
-(def walkable-object? #{" " "." "o" "w" "t"})
+(def walkable-object? #{" " "." "*" "o" "w" "t"})
 
 ; World/screen state
 (def world-cols 100)
