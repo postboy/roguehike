@@ -121,8 +121,8 @@
        (let [old-height @cur-height
              new-height (max 0 (- max-height
                                   ; distance to summit
-                                  (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                                 (math/pow (- y summit-y) 2)))))))
+                                  (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
+                                                                        (math/pow (- y summit-y) 2))))))))
              step-cost (if (> new-height old-height)
                          step-up-cost
                          (if (< new-height old-height) step-down-cost step-straight-cost))]
