@@ -1,6 +1,7 @@
 (ns roguehike.core
   (:gen-class)
-  (:require [lanterna.screen :as s]))
+  (:require [lanterna.screen :as s]
+            [clojure.math :as math]))
 
 (def map-symbols [" " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "
                   "." "." "." "." "." "." "." "." "." "." "*" "*" "*" "*" "*" "*" "*" "*"
@@ -11,6 +12,8 @@
 ; World/screen state
 (def world-cols 100)
 (def world-rows 100)
+(def summit-x (quot world-cols 2))
+(def summit-y (quot world-rows 2))
 (def max-height (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
 (def stamina-for-step 2)
@@ -116,6 +119,11 @@
        (if (walkable? x y)
          (do (ref-set player-x x)
              (ref-set player-y y)
+             (ref-set cur-height (max 0
+                                      (- max-height
+                                         ; distance to summit
+                                         (dec (math/round (math/sqrt (+ (math/pow (- @player-x summit-x) 2)
+                                                                        (math/pow (- @player-y summit-y) 2))))))))
              (ref-set cur-stamina (- @cur-stamina stamina-for-step))
              (ref-set status-message "You walk."))
          (ref-set status-message "You cannot walk there: path is obstructed."))))))
