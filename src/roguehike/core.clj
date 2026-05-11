@@ -126,13 +126,13 @@
              step-cost (if (> new-height old-height)
                          step-up-cost
                          (if (< new-height old-height) step-down-cost step-straight-cost))]
-       (if (< @cur-stamina step-cost)
-         (ref-set status-message "You're too tired to walk. You need a rest.")
-         (do (ref-set player-x x)
-             (ref-set player-y y)
-             (ref-set cur-height new-height)
-             (ref-set cur-stamina (- @cur-stamina step-cost))
-             (ref-set status-message "You walk."))))))))
+         (if (< @cur-stamina step-cost)
+           (ref-set status-message "You're too tired to walk. You need a rest.")
+           (do (ref-set player-x x)
+               (ref-set player-y y)
+               (ref-set cur-height new-height)
+               (ref-set cur-stamina (- @cur-stamina step-cost))
+               (ref-set status-message "You walk."))))))))
 
 (defn render-screen
   []
