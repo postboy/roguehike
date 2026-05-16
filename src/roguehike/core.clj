@@ -63,7 +63,7 @@
   (let [dest (get-in world-map [x y])]
     (and (some? dest) (walkable-object? dest))))
 
-(defn in-bounds? [x y]
+(defn in-world-bounds? [x y]
   (and (>= x 0)
        (< x world-cols)
        (>= y 0)
@@ -79,7 +79,7 @@
 (defn move [dir]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] (coords-shift dir))]
-     (if (not (in-bounds? x y))
+     (if (not (in-world-bounds? x y))
        (ref-set status-message "You are about to leave wilderness. Press q to quit.")
        (if (not (walkable? x y))
          (ref-set status-message "You cannot walk there: path is obstructed.")
