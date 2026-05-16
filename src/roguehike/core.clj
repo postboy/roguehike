@@ -57,24 +57,6 @@
       :down-left  [(dec center-x) (inc center-y)]
       :down-right [(inc center-x) (inc center-y)])))
 
-; Get a key from the user and return what command they want (if any).
-; The returned value is a vector of [command-type data], where data is any
-; extra metadata that might be needed (like the direction for a :move command).
-(defn parse-input []
-  (let [k (s/get-key-blocking @screen)]
-    (case k
-      \q [:quit nil]
-      (\5 \r) [:rest nil]
-      (\4 \h) [:move :left]
-      (\2 \j) [:move :down]
-      (\8 \k) [:move :up]
-      (\6 \l) [:move :right]
-      (\7 \y) [:move :up-left]
-      (\9 \u) [:move :up-right]
-      (\1 \b) [:move :down-left]
-      (\3 \n) [:move :down-right]
-      [nil nil])))
-
 ; does bounds checking via map and ensures the player doesn't walk through
 ; solid objects, so a player might not actually end up moving
 (defn walkable? [x y]
@@ -114,6 +96,24 @@
                (ref-set cur-height new-height)
                (ref-set cur-stamina (- @cur-stamina step-cost))
                (ref-set status-message "You walk."))))))))
+
+; Get a key from the user and return what command they want (if any).
+; The returned value is a vector of [command-type data], where data is any
+; extra metadata that might be needed (like the direction for a :move command).
+(defn parse-input []
+  (let [k (s/get-key-blocking @screen)]
+    (case k
+      \q [:quit nil]
+      (\5 \r) [:rest nil]
+      (\4 \h) [:move :left]
+      (\2 \j) [:move :down]
+      (\8 \k) [:move :up]
+      (\6 \l) [:move :right]
+      (\7 \y) [:move :up-left]
+      (\9 \u) [:move :up-right]
+      (\1 \b) [:move :down-left]
+      (\3 \n) [:move :down-right]
+      [nil nil])))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
