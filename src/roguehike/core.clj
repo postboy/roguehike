@@ -69,7 +69,7 @@
 (defmethod handle-command nil [_ _]
   nil)
 
-(defmethod handle-command :rest [_ _]
+(defmethod handle-command :rest-turn [_ _]
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
    (if (= @cur-stamina max-stamina)
@@ -104,7 +104,7 @@
   (let [k (s/get-key-blocking @screen)]
     (case k
       \q [:quit nil]
-      (\5 \r) [:rest nil]
+      (\5 \r) [:rest-turn nil]
       (\4 \h) [:move :left]
       (\2 \j) [:move :down]
       (\8 \k) [:move :up]
