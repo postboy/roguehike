@@ -63,6 +63,12 @@
   (let [dest (get-in world-map [x y])]
     (and (some? dest) (walkable-object? dest))))
 
+(defn in-bounds? [x y]
+  (and (>= x 0)
+       (< x world-cols)
+       (>= y 0)
+       (< y world-rows)))
+
 (defn rest-turn []
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
@@ -73,25 +79,27 @@
 (defn move [dir]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] (coords-shift dir))]
-     (if (not (walkable? x y))
-       (ref-set status-message "You cannot walk there: path is obstructed.")
-       (let [old-height @cur-height
-             new-height (max 0 (- max-height
+     (if (not (in-bounds? x y))
+       (ref-set status-message "You are about to leave wilderness. Press q to quit.")
+       (if (not (walkable? x y))
+         (ref-set status-message "You cannot walk there: path is obstructed.")
+         (let [old-height @cur-height
+               new-height (max 0 (- max-height
                                   ; distance to summit
-                                  (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                                        (math/pow (- y summit-y) 2))))))))
-             step-cost (if (> new-height old-height)
-                         step-up-cost
-                         (if (< new-height old-height) step-down-cost step-straight-cost))]
-         (if (< @cur-stamina step-cost)
-           (ref-set status-message "You're too tired to walk. You need a rest.")
-           (do (ref-set player-x x)
-               (ref-set player-y y)
-               (ref-set render-center-x x)
-               (ref-set render-center-y y)
-               (ref-set cur-height new-height)
-               (ref-set cur-stamina (- @cur-stamina step-cost))
-               (ref-set status-message "You walk."))))))))
+                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
+                                                                          (math/pow (- y summit-y) 2))))))))
+               step-cost (if (> new-height old-height)
+                           step-up-cost
+                           (if (< new-height old-height) step-down-cost step-straight-cost))]
+           (if (< @cur-stamina step-cost)
+             (ref-set status-message "You're too tired to walk. You need a rest.")
+             (do (ref-set player-x x)
+                 (ref-set player-y y)
+                 (ref-set render-center-x x)
+                 (ref-set render-center-y y)
+                 (ref-set cur-height new-height)
+                 (ref-set cur-stamina (- @cur-stamina step-cost))
+                 (ref-set status-message "You walk.")))))))))
 
 ; get a key from the user and execute their command
 (defn parse-input []
