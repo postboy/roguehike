@@ -8,7 +8,7 @@ Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to ex
 
 |Symbol|Meaning|
 |:----:|:-----:|
-|i|that's you, the hiker|
+|i|that's you, hiker|
 |space|ground|
 |*|moss|
 |.|stone|
