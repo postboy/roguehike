@@ -73,8 +73,12 @@
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
    (if (= @cur-stamina max-stamina)
-     (ref-set status-message "You're fully rested.")
-     (ref-set status-message "You rest for a while."))))
+     (if (< @cur-height max-height)
+       (ref-set status-message "You're fully rested.")
+       (ref-set status-message "You're fully rested on the top of the mountain."))
+     (if (< @cur-height max-height)
+       (ref-set status-message "You rest for a while.")
+       (ref-set status-message "You rest for a while on the top of the mountain.")))))
 
 (defn move [dir]
   (dosync
@@ -99,7 +103,9 @@
                  (ref-set render-center-y y)
                  (ref-set cur-height new-height)
                  (ref-set cur-stamina (- @cur-stamina step-cost))
-                 (ref-set status-message "You walk.")))))))))
+                 (if (< @cur-height max-height)
+                   (ref-set status-message "You walk.")
+                   (ref-set status-message "You walk on the top of the mountain."))))))))))
 
 ; get a key from the user and execute their command
 (defn parse-input []
