@@ -20,11 +20,10 @@
 (def step-down-cost 2)
 (def step-straight-cost 1)
 (def stamina-from-rest 7)
-(def initial-map
+(def world-map
   (vec (for [_ (range world-rows)]
          (vec (for [_ (range world-cols)]
                 (rand-nth map-symbols))))))
-(def world-map (ref []))
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def status-message (ref "You're standing at the foot of the mountain."))
@@ -44,10 +43,6 @@
         corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
         corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
-
-; World creation
-(defn create-initial-world []
-  (dosync (ref-set world-map initial-map)))
 
 ; Input/command handling
 (defn calc-screen-coords
@@ -88,7 +83,7 @@
   "Does bounds checking via map and ensures the player doesn't walk through
    solid objects, so a player might not actually end up moving."
   [x y]
-  (let [dest (get-in @world-map [x y])]
+  (let [dest (get-in world-map [x y])]
     (and (some? dest) (walkable-object? dest))))
 
 (defmulti handle-command
@@ -133,7 +128,7 @@
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
-       (s/put-string @screen x y (get-in @world-map (screen-to-world x y))))
+       (s/put-string @screen x y (get-in world-map (screen-to-world x y))))
      ; draw the player in center of the canvas
      (let [center-x (quot @canvas-cols 2)
            center-y (quot @canvas-rows 2)]
@@ -180,5 +175,4 @@
 (defn -main [& args]
   ; first argument is terminal type: auto/swing/text/unix/cygwin
   (create-screen (keyword (or (first args) "auto")) handle-resize)
-  (create-initial-world)
   (game-loop))
