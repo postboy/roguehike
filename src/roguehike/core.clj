@@ -50,11 +50,11 @@
 
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
-  (let [center-x (quot @canvas-cols 2)
-        center-y (quot @canvas-rows 2)
+  (let [canvas-center-x (quot @canvas-cols 2)
+        canvas-center-y (quot @canvas-rows 2)
         ; modular arithmetics to wrap around the map          
-        corrected-world-x (mod (+ (- @render-center-x center-x) screen-x) world-cols)
-        corrected-world-y (mod (+ (- @render-center-y center-y) screen-y) world-rows)]
+        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
+        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
 ; does bounds checking via map and ensures the player doesn't walk through
@@ -72,9 +72,9 @@
 
 (defn move [dir]
   (dosync
-   (let [center-x (quot @canvas-cols 2)
-         center-y (quot @canvas-rows 2)
-         [x y] (apply screen-to-world (mapv + [center-x center-y] (coords-shift dir)))]
+   (let [canvas-center-x (quot @canvas-cols 2)
+         canvas-center-y (quot @canvas-rows 2)
+         [x y] (apply screen-to-world (mapv + [canvas-center-x canvas-center-y] (coords-shift dir)))]
      (if (not (walkable? x y))
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [old-height @cur-height
@@ -122,10 +122,10 @@
              y (range status-bar-row)]
        (s/put-string @screen x y (get-in world-map (screen-to-world x y))))
      ; draw the player in center of the canvas
-     (let [center-x (quot @canvas-cols 2)
-           center-y (quot @canvas-rows 2)]
-       (s/put-string @screen center-x center-y "i")
-       (s/move-cursor @screen center-x center-y))
+     (let [canvas-center-x (quot @canvas-cols 2)
+           canvas-center-y (quot @canvas-rows 2)]
+       (s/put-string @screen canvas-center-x canvas-center-y "i")
+       (s/move-cursor @screen canvas-center-x canvas-center-y))
      ; draw the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
      ; insert at the end of status bar
