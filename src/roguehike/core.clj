@@ -72,9 +72,7 @@
 
 (defn move [dir]
   (dosync
-   (let [canvas-center-x (quot @canvas-cols 2)
-         canvas-center-y (quot @canvas-rows 2)
-         [x y] (apply screen-to-world (mapv + [canvas-center-x canvas-center-y] (coords-shift dir)))]
+   (let [[x y] (mapv + [@player-x @player-y] (coords-shift dir))]
      (if (not (walkable? x y))
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [old-height @cur-height
