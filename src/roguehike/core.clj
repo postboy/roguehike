@@ -34,15 +34,6 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-; player will be in center of the canvas, so move everything accordingly
-(defn screen-to-world [screen-x screen-y]
-  (let [center-x (quot @canvas-cols 2)
-        center-y (quot @canvas-rows 2)
-        ; modular arithmetics to wrap around the map          
-        corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
-        corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
-    [corrected-world-x corrected-world-y]))
-
 ; calculate coordinates shift after moving dir from current position
 (defn coords-shift [dir]
   (case dir
@@ -54,6 +45,15 @@
     :up-right   [1 -1]
     :down-left  [-1 1]
     :down-right [1 1]))
+
+; player will be in center of the canvas, so move everything accordingly
+(defn screen-to-world [screen-x screen-y]
+  (let [center-x (quot @canvas-cols 2)
+        center-y (quot @canvas-rows 2)
+        ; modular arithmetics to wrap around the map          
+        corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
+        corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
+    [corrected-world-x corrected-world-y]))
 
 ; does bounds checking via map and ensures the player doesn't walk through
 ; solid objects, so a player might not actually end up moving
