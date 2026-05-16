@@ -38,24 +38,22 @@
 (defn screen-to-world [screen-x screen-y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
-        ; modular arithmetics to wrap around the mountain map          
+        ; modular arithmetics to wrap around the map          
         corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
         corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
-; calculate the new screen coordinates after moving dir from current position
-(defn calc-screen-coords [dir]
-  (let [center-x (quot @canvas-cols 2)
-        center-y (quot @canvas-rows 2)]
-    (case dir
-      :left       [(dec center-x) center-y]
-      :right      [(inc center-x) center-y]
-      :up         [center-x (dec center-y)]
-      :down       [center-x (inc center-y)]
-      :up-left    [(dec center-x) (dec center-y)]
-      :up-right   [(inc center-x) (dec center-y)]
-      :down-left  [(dec center-x) (inc center-y)]
-      :down-right [(inc center-x) (inc center-y)])))
+; calculate coordinates shift after moving dir from current position
+(defn coords-shift [dir]
+  (case dir
+    :left       [-1 0]
+    :right      [1 0]
+    :up         [0 -1]
+    :down       [0 1]
+    :up-left    [-1 -1]
+    :up-right   [1 -1]
+    :down-left  [-1 1]
+    :down-right [1 1]))
 
 ; does bounds checking via map and ensures the player doesn't walk through
 ; solid objects, so a player might not actually end up moving
@@ -72,7 +70,9 @@
 
 (defn move [dir]
   (dosync
-   (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
+   (let [center-x (quot @canvas-cols 2)
+         center-y (quot @canvas-rows 2)
+         [x y] (apply screen-to-world (mapv + [center-x center-y] (coords-shift dir)))]
      (if (not (walkable? x y))
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [old-height @cur-height
