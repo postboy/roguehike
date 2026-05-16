@@ -63,20 +63,14 @@
   (let [dest (get-in world-map [x y])]
     (and (some? dest) (walkable-object? dest))))
 
-(defmulti handle-command
-  (fn [command _] command))
-
-(defmethod handle-command nil [_ _]
-  nil)
-
-(defmethod handle-command :rest-turn [_ _]
+(defn rest-turn []
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
    (if (= @cur-stamina max-stamina)
      (ref-set status-message "You're fully rested.")
      (ref-set status-message "You rest for a while."))))
 
-(defmethod handle-command :move [_ dir]
+(defn move [dir]
   (dosync
    (let [[x y] (apply screen-to-world (calc-screen-coords dir))]
      (if (not (walkable? x y))
@@ -97,23 +91,23 @@
                (ref-set cur-stamina (- @cur-stamina step-cost))
                (ref-set status-message "You walk."))))))))
 
-; Get a key from the user and return what command they want (if any).
-; The returned value is a vector of [command-type data], where data is any
-; extra metadata that might be needed (like the direction for a :move command).
+; get a key from the user and execute their command
 (defn parse-input []
   (let [k (s/get-key-blocking @screen)]
     (case k
-      \q [:quit nil]
-      (\5 \r) [:rest-turn nil]
-      (\4 \h) [:move :left]
-      (\2 \j) [:move :down]
-      (\8 \k) [:move :up]
-      (\6 \l) [:move :right]
-      (\7 \y) [:move :up-left]
-      (\9 \u) [:move :up-right]
-      (\1 \b) [:move :down-left]
-      (\3 \n) [:move :down-right]
-      [nil nil])))
+      \q (do (s/stop @screen)
+             ; hacky way to quit
+             (dosync (ref-set screen nil)))
+      (\5 \r) (rest-turn)
+      (\4 \h) (move :left)
+      (\2 \j) (move :down)
+      (\8 \k) (move :up)
+      (\6 \l) (move :right)
+      (\7 \y) (move :up-left)
+      (\9 \u) (move :up-right)
+      (\1 \b) (move :down-left)
+      (\3 \n) (move :down-right)
+      nil)))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
@@ -158,12 +152,10 @@
 
 (defn game-loop []
   (render-screen)
-  (let [[command data] (parse-input)]
-    (if (= command :quit)
-      (s/stop @screen)
-      (do
-        (handle-command command data)
-        (recur)))))
+  (parse-input)
+  ; hacky way to quit
+  (when (some? @screen)
+    (recur)))
 
 (defn -main [& args]
   ; first argument is terminal type: auto/swing/text/unix/cygwin
