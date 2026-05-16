@@ -27,6 +27,8 @@
 
 (def player-x (ref 0))
 (def player-y (ref 0))
+(def render-center-x (ref 0))
+(def render-center-y (ref 0))
 (def status-message (ref "You're standing at the foot of the mountain."))
 (def cur-height (ref 0))
 (def cur-stamina (ref max-stamina))
@@ -46,13 +48,13 @@
     :down-left  [-1 1]
     :down-right [1 1]))
 
-; player will be in center of the canvas, so move everything accordingly
+; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
         ; modular arithmetics to wrap around the map          
-        corrected-world-x (mod (+ (- @player-x center-x) screen-x) world-cols)
-        corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
+        corrected-world-x (mod (+ (- @render-center-x center-x) screen-x) world-cols)
+        corrected-world-y (mod (+ (- @render-center-y center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
 ; does bounds checking via map and ensures the player doesn't walk through
@@ -87,6 +89,8 @@
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
                (ref-set player-y y)
+               (ref-set render-center-x x)
+               (ref-set render-center-y y)
                (ref-set cur-height new-height)
                (ref-set cur-stamina (- @cur-stamina step-cost))
                (ref-set status-message "You walk."))))))))
