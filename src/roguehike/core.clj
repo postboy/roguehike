@@ -27,6 +27,8 @@
 
 (def player-x (ref 0))
 (def player-y (ref 0))
+(def render-delta-x (ref 0))
+(def render-delta-y (ref 0))
 (def render-center-x (ref 0))
 (def render-center-y (ref 0))
 (def status-message (ref "You're standing at the foot of the mountain."))
@@ -82,12 +84,14 @@
 
 (defn move [dir]
   (dosync
-   (let [[x y] (mapv + [@player-x @player-y] (coords-shift dir))]
+   (let [shift (coords-shift dir)
+         [x y] (mapv + [@player-x @player-y] shift)]
      (if (not (in-world-bounds? x y))
        (ref-set status-message "You are about to leave wilderness. Press q to quit.")
        (if (not (walkable? x y))
          (ref-set status-message "You cannot walk there: path is obstructed.")
-         (let [old-height @cur-height
+         (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
+               old-height @cur-height
                new-height (max 0 (- max-height
                                   ; distance to summit
                                     (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
@@ -99,8 +103,8 @@
              (ref-set status-message "You're too tired to walk. You need a rest.")
              (do (ref-set player-x x)
                  (ref-set player-y y)
-                 (ref-set render-center-x x)
-                 (ref-set render-center-y y)
+                 (ref-set render-delta-x new-delta-x)
+                 (ref-set render-delta-y new-delta-y)
                  (ref-set cur-height new-height)
                  (ref-set cur-stamina (- @cur-stamina step-cost))
                  (if (< @cur-height max-height)
@@ -128,16 +132,21 @@
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
   (dosync
-   (let [status-bar-row (dec @canvas-rows)]
+   (let [status-bar-row (dec @canvas-rows)
+         canvas-center-x (quot @canvas-cols 2)
+         canvas-center-y (quot @canvas-rows 2)]
+     (when (or (>= (abs @render-delta-x) (- canvas-center-x 2)) (>= (abs @render-delta-y) (- canvas-center-y 2)))
+       (ref-set render-center-x (+ @render-center-x @render-delta-x))
+       (ref-set render-center-y (+ @render-center-y @render-delta-y))
+       (ref-set render-delta-x 0)
+       (ref-set render-delta-y 0))
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
        (s/put-string @screen x y (get-in world-map (screen-to-world x y))))
      ; draw the player in center of the canvas
-     (let [canvas-center-x (quot @canvas-cols 2)
-           canvas-center-y (quot @canvas-rows 2)]
-       (s/put-string @screen canvas-center-x canvas-center-y "i")
-       (s/move-cursor @screen canvas-center-x canvas-center-y))
+     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i")
+     (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; draw the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:bg :white})
      ; insert at the end of status bar
