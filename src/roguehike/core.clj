@@ -9,7 +9,6 @@
 
 (def walkable-object? #{" " "." "*" "o" "w" "t"})
 
-; World/screen state
 (def world-cols 100)
 (def world-rows 100)
 (def summit-x (quot world-cols 2))
@@ -24,6 +23,7 @@
   (vec (for [_ (range world-rows)]
          (vec (for [_ (range world-cols)]
                 (rand-nth map-symbols))))))
+
 (def player-x (ref 0))
 (def player-y (ref 0))
 (def status-message (ref "You're standing at the foot of the mountain."))
@@ -33,10 +33,8 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-; Rendering
 ; player will be in center of the canvas, so move everything accordingly
-(defn screen-to-world
-  [screen-x screen-y]
+(defn screen-to-world [screen-x screen-y]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)
         ; modular arithmetics to wrap around the mountain map          
@@ -44,10 +42,8 @@
         corrected-world-y (mod (+ (- @player-y center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
-; Input/command handling
-(defn calc-screen-coords
-  "Calculate the new screen coordinates after moving dir from current position."
-  [dir]
+; calculate the new screen coordinates after moving dir from current position
+(defn calc-screen-coords [dir]
   (let [center-x (quot @canvas-cols 2)
         center-y (quot @canvas-rows 2)]
     (case dir
@@ -60,11 +56,10 @@
       :down-left  [(dec center-x) (inc center-y)]
       :down-right [(inc center-x) (inc center-y)])))
 
-(defn parse-input
-  "Get a key from the user and return what command they want (if any).
-   The returned value is a vector of [command-type data], where data is any
-   extra metadata that might be needed (like the direction for a :move command)."
-  []
+; Get a key from the user and return what command they want (if any).
+; The returned value is a vector of [command-type data], where data is any
+; extra metadata that might be needed (like the direction for a :move command).
+(defn parse-input []
   (let [k (s/get-key-blocking @screen)]
     (case k
       \q [:quit nil]
@@ -79,10 +74,9 @@
       (\3 \n) [:move :down-right]
       [nil nil])))
 
-(defn walkable?
-  "Does bounds checking via map and ensures the player doesn't walk through
-   solid objects, so a player might not actually end up moving."
-  [x y]
+; does bounds checking via map and ensures the player doesn't walk through
+; solid objects, so a player might not actually end up moving
+(defn walkable? [x y]
   (let [dest (get-in world-map [x y])]
     (and (some? dest) (walkable-object? dest))))
 
@@ -120,8 +114,7 @@
                (ref-set cur-stamina (- @cur-stamina step-cost))
                (ref-set status-message "You walk."))))))))
 
-(defn render-screen
-  []
+(defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
   (dosync
    (let [status-bar-row (dec @canvas-rows)]
@@ -152,8 +145,7 @@
   ; we need to re-render the screen
   (render-screen))
 
-(defn create-screen
-  [terminal-type resized-fn]
+(defn create-screen [terminal-type resized-fn]
   (dosync (ref-set screen (s/get-screen terminal-type)))
   (s/start @screen)
   ; for some reason, this works better than setting :resize-listener argument
