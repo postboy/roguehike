@@ -139,13 +139,13 @@
        (s/put-string @screen canvas-center-x canvas-center-y "i")
        (s/move-cursor @screen canvas-center-x canvas-center-y))
      ; draw the status bar
-     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")))
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:bg :white})
      ; insert at the end of status bar
      (let [st-width (count (str max-stamina))
            he-width (count (str max-height))
            string (format (str "| Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
                           @cur-stamina max-stamina @cur-height max-height @status-message)]
-       (s/put-string @screen 0 status-bar-row string)))
+       (s/put-string @screen 0 status-bar-row string {:bg :white :fg :black})))
    (s/redraw @screen)))
 
 (defn handle-resize [cols rows]
