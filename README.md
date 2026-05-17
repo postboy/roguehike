@@ -12,9 +12,9 @@ Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to ex
 |space|ground|
 |*|moss|
 |"|tall grass|
-|.|stone|
+|. , `|stone|
 |o|small rock|
-|0, O|big rock|
+|0 O|big rock|
 |w|small bush|
 |W|big bush|
 |t|small tree|
