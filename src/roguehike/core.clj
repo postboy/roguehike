@@ -3,12 +3,18 @@
   (:require [lanterna.screen :as s]
             [clojure.math :as math]))
 
-(def map-symbols (vec (concat (repeat 30 " ")
-                              (repeat 8 "*")
-                              (repeat 4 ".")
-                              (repeat 3 ",")
-                              (repeat 3 "`")
-                              ["o" "O" "0" "\"" "w" "W" "t" "T" "~"])))
+(def map-symbols (vec (concat (repeat 150 " ")
+                              (repeat 20 ".") (repeat 15 ",") (repeat 15 "`")
+                              (repeat 40 "*")
+                              (repeat 5 "\"")
+                              (repeat 5 "o")
+                              (repeat 5 "w")
+                              (repeat 5 "t")
+
+                              (repeat 5 "0") (repeat 5 "O")
+                              (repeat 5 "W")
+                              (repeat 5 "T")
+                              (repeat 5 "~"))))
 
 (def walkable-object? #{" " "*" "." "," "`" "o" "\"" "w" "t"})
 

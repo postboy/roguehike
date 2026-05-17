@@ -6,22 +6,26 @@ You are standing at the foot of the mountain. If you ascend the mountain and the
 
 Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to exit.
 
+"i" symbol on the screen is you, hiker. Other used symbols and their meanings are:
+
+Non-obstacles:
 |Symbol|Meaning|
 |:----:|:-----:|
-|i|that's you, hiker|
 |space|ground|
+|. , `|stone|
 |*|moss|
 |"|tall grass|
-|. , `|stone|
 |o|small rock|
-|0 O|big rock|
 |w|small bush|
-|W|big bush|
 |t|small tree|
+
+Obstacles:
+|Symbol|Meaning|
+|:----:|:-----:|
+|0 O|big rock|
+|W|big bush|
 |T|big tree|
 |~|puddle|
-
-Everything is walkable except puddles, big rocks, bushes and trees.
 
 And don't forget: mountains are always worth climbing!
 
