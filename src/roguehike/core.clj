@@ -161,7 +161,7 @@
      ; set the status bar
      (let [st-width (count (str max-stamina))
            he-width (count (str max-height))
-           string (format (str "| Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
+           string (format (str " Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
                           @cur-stamina max-stamina @cur-height max-height @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
