@@ -143,18 +143,18 @@
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
-       (s/put-string @screen x y (get-in world-map (screen-to-world x y))))
-     ; draw the player in center of the canvas
-     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i")
+       (s/put-string @screen x y (get-in world-map (screen-to-world x y)) {:fg :white :bg :black}))
+     ; draw the player
+     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
-     ; draw the status bar
-     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:bg :white})
-     ; insert at the end of status bar
+     ; clear the status bar
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
+     ; set the status bar
      (let [st-width (count (str max-stamina))
            he-width (count (str max-height))
            string (format (str "| Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
                           @cur-stamina max-stamina @cur-height max-height @status-message)]
-       (s/put-string @screen 0 status-bar-row string {:bg :white :fg :black})))
+       (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
 (defn handle-resize [cols rows]
