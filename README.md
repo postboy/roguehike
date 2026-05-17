@@ -18,8 +18,9 @@ Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to ex
 |W|big bush|
 |t|small tree|
 |T|big tree|
+|~|puddle|
 
-Everything is walkable except big rocks, bushes and trees.
+Everything is walkable except puddles, big rocks, bushes and trees.
 
 And don't forget: mountains are always worth climbing!
 
