@@ -6,9 +6,9 @@
 (def map-symbols (vec (concat (repeat 30 " ")
                               (repeat 8 "*")
                               (repeat 10 ".")
-                              ["o" "O" "0" "w" "W" "t" "T" "~"])))
+                              ["o" "O" "0" "\"" "w" "W" "t" "T" "~"])))
 
-(def walkable-object? #{" " "*" "." "o" "w" "t"})
+(def walkable-object? #{" " "*" "." "o" "\"" "w" "t"})
 
 (def world-cols 100)
 (def world-rows 100)

@@ -11,6 +11,7 @@ Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to ex
 |i|that's you, hiker|
 |space|ground|
 |*|moss|
+|"|tall grass|
 |.|stone|
 |o|small rock|
 |0, O|big rock|
