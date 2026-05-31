@@ -14,7 +14,7 @@
                               (repeat 5 "0") (repeat 5 "O")
                               (repeat 5 "W")
                               (repeat 5 "T")
-                              (repeat 5 "~")
+                              (repeat 5 "@")
                               ["="])))
 
 (defn obstacle? [square] (not (#{" " "." "," "`" "*" "\"" "o" "w" "t"} square)))

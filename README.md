@@ -27,7 +27,7 @@ Obstacles:
 |0 O|big rock|
 |W|big bush|
 |T|big tree|
-|~|puddle|
+|@|puddle|
 |=|fallen tree|
 
 And don't forget: mountains are always worth climbing!
