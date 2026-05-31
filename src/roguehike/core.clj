@@ -34,8 +34,8 @@
          (vec (for [_ (range world-cols)]
                 (rand-nth map-symbols))))))
 
-(def player-x (ref 0))
-(def player-y (ref 0))
+(def player-x (ref 1))
+(def player-y (ref 1))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
 (def render-center-x (ref 0))
