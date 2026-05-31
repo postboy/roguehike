@@ -68,18 +68,6 @@
         corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
 
-; does bounds checking via map and ensures the player doesn't walk through
-; solid objects, so a player might not actually end up moving
-(defn walkable? [x y]
-  (let [dest (get-in world-map [x y])]
-    (and (some? dest) (walkable-object? dest))))
-
-(defn in-world-bounds? [x y]
-  (and (>= x 0)
-       (< x world-cols)
-       (>= y 0)
-       (< y world-rows)))
-
 (defn rest-turn []
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
@@ -94,10 +82,11 @@
 (defn move [dir]
   (dosync
    (let [shift (coords-shift dir)
-         [x y] (mapv + [@player-x @player-y] shift)]
-     (if (not (in-world-bounds? x y))
+         [x y] (mapv + [@player-x @player-y] shift)
+         dest (get-in world-map [x y])]
+     (if (not (some? dest))
        (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-       (if (not (walkable? x y))
+       (if (not (walkable-object? dest))
          (ref-set status-message "You cannot walk there: path is obstructed.")
          (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
                old-height @cur-height
