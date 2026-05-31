@@ -151,8 +151,8 @@
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
      (let [st-width (count (str max-stamina))
-           he-width (count (str max-altitude))
-           string (format (str " Stamina: %" st-width "d/%" st-width "d | Altitude: %" he-width "d/%" he-width "d | %s")
+           alt-width (count (str max-altitude))
+           string (format (str " Stamina: %" st-width "d/%" st-width "d | Altitude: %" alt-width "d/%" alt-width "d | %s")
                           @cur-stamina max-stamina @cur-altitude max-altitude @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
