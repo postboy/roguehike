@@ -50,7 +50,7 @@ To build release jar:
 
 ## Reference
 
-Zmeinaya Mountain (Republic of Karelia, Russia) located at 61.480991, 30.217564.
+Zmeinaya Mountain (Karelia, Russia) located at 61.480991, 30.217564.
 
 ## License
 
