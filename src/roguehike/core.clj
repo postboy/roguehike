@@ -17,7 +17,7 @@
                               (repeat 5 "~")
                               ["_"])))
 
-(def walkable-object? #{" " "." "," "`" "*" "\"" "o" "w" "t"})
+(defn obstacle? [square] (not (#{" " "." "," "`" "*" "\"" "o" "w" "t"} square)))
 
 (def world-cols 100)
 (def world-rows 100)
@@ -86,7 +86,7 @@
          dest (get-in world-map [x y])]
      (if (not (some? dest))
        (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-       (if (not (walkable-object? dest))
+       (if (obstacle? dest)
          (ref-set status-message "You cannot walk there: path is obstructed.")
          (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
                old-height @cur-height
