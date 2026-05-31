@@ -21,9 +21,9 @@
 
 (def world-cols 100)
 (def world-rows 100)
-(def summit-x (quot world-cols 2))
-(def summit-y (quot world-rows 2))
-(def max-height (quot (+ world-cols world-rows) 4))
+(def top-x (quot world-cols 2))
+(def top-y (quot world-rows 2))
+(def max-altitude (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
 (def step-up-cost 3)
 (def step-down-cost 2)
@@ -41,7 +41,7 @@
 (def render-center-x (ref 0))
 (def render-center-y (ref 0))
 (def status-message (ref "You're standing at foot of the mountain."))
-(def cur-height (ref 0))
+(def cur-altitude (ref 0))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
@@ -71,10 +71,10 @@
   (dosync
    (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
    (if (= @cur-stamina max-stamina)
-     (if (< @cur-height max-height)
+     (if (< @cur-altitude max-altitude)
        (ref-set status-message "You're fully rested.")
        (ref-set status-message "You're fully rested on top of the mountain."))
-     (if (< @cur-height max-height)
+     (if (< @cur-altitude max-altitude)
        (ref-set status-message "You rest for a while.")
        (ref-set status-message "You rest for a while on top of the mountain.")))))
 
@@ -88,24 +88,24 @@
        (if (obstacle? dest)
          (ref-set status-message "You cannot walk there: path is obstructed.")
          (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
-               old-height @cur-height
-               new-height (max 0 (- max-height
-                                    ; distance to summit
-                                    ; decrement here is required for in-game summit to be an area, not a single square
-                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                                          (math/pow (- y summit-y) 2))))))))
-               step-cost (if (> new-height old-height)
+               old-altitude @cur-altitude
+               new-altitude (max 0 (- max-altitude
+                                    ; distance to top
+                                    ; decrement here is required for in-game top to be an area, not a single square
+                                      (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x top-x) 2)
+                                                                            (math/pow (- y top-y) 2))))))))
+               step-cost (if (> new-altitude old-altitude)
                            step-up-cost
-                           (if (< new-height old-height) step-down-cost step-straight-cost))]
+                           (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
            (if (< @cur-stamina step-cost)
              (ref-set status-message "You're too tired to walk. You need a rest.")
              (do (ref-set player-x x)
                  (ref-set player-y y)
                  (ref-set render-delta-x new-delta-x)
                  (ref-set render-delta-y new-delta-y)
-                 (ref-set cur-height new-height)
+                 (ref-set cur-altitude new-altitude)
                  (ref-set cur-stamina (- @cur-stamina step-cost))
-                 (if (< @cur-height max-height)
+                 (if (< @cur-altitude max-altitude)
                    (ref-set status-message "You walk.")
                    (ref-set status-message "You walk on top of the mountain."))))))))))
 
@@ -147,9 +147,9 @@
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
      (let [st-width (count (str max-stamina))
-           he-width (count (str max-height))
-           string (format (str " Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
-                          @cur-stamina max-stamina @cur-height max-height @status-message)]
+           he-width (count (str max-altitude))
+           string (format (str " Stamina: %" st-width "d/%" st-width "d | Altitude: %" he-width "d/%" he-width "d | %s")
+                          @cur-stamina max-stamina @cur-altitude max-altitude @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 

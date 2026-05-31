@@ -4,7 +4,9 @@ A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
 
 You are standing at foot of the mountain. If you ascend the mountain and then return to wilderness edge, you win. If you give up and quit, you lose. There is no saving, just as in real life.
 
-Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to exit.
+Status bar is located at the bottom of the screen. It shows your current and maximum stamina, current and maximum altitude on this terrain, and status message. Everything apart the status bar is the map.
+
+Use numpad (1-4, 6-9) or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to exit.
 
 "i" symbol on the screen is you, hiker. Other used symbols and their meanings are:
 
