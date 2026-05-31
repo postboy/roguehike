@@ -109,6 +109,13 @@
                    (ref-set status-message "You walk.")
                    (ref-set status-message "You walk on top of the mountain."))))))))))
 
+(defn recenter []
+  (dosync
+   (ref-set render-center-x (+ @render-center-x @render-delta-x))
+   (ref-set render-delta-x 0)
+   (ref-set render-center-y (+ @render-center-y @render-delta-y))
+   (ref-set render-delta-y 0)))
+
 (defn parse-input []
   (let [k (s/get-key-blocking @screen)]
     (case k
@@ -124,6 +131,7 @@
       (\9 \u) (move :up-right)
       (\1 \b) (move :down-left)
       (\3 \n) (move :down-right)
+      \c (recenter)
       nil)))
 
 (defn render-screen []

@@ -6,7 +6,7 @@ You are standing at foot of the mountain. If you ascend the mountain and then re
 
 Status bar is located at the bottom of the screen. It shows your current and maximum stamina, current and maximum altitude on this terrain, and status message. Everything apart the status bar is the map shown via top-down view. Top of the mountain is located to the north from starting point of your hike.
 
-Use numpad (1-4, 6-9) or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to exit.
+Use **numpad (1-4, 6-9)** or **vi keys (hjklyubn)** for moving. Press **5** or **r** to rest. Press **c** to redraw the screen placing user in its center. Press **q** to quit.
 
 "i" symbol on the screen is you, hiker. Other used symbols and their meanings are:
 
