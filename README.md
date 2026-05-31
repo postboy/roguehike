@@ -48,10 +48,14 @@ To build release jar:
 
     lein uberjar
 
+## Reference
+
+Zmeinaya Mountain (Republic of Karelia, Russia) located at 61.480991, 30.217564.
+
 ## License
 
 Source code: MIT/X11
 
 Copyright 2024 Ivan Zuboff
 
-Copyright 2012 Steve Losh (see his [zen project](https://github.com/sjl/zen) used as base for this one)
+Copyright 2012 Steve Losh (his [zen project](https://github.com/sjl/zen) served as base for this one)
