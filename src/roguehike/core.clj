@@ -133,11 +133,11 @@
          canvas-center-x (quot @canvas-cols 2)
          canvas-center-y (quot @canvas-rows 2)]
      ; when we're stepping on the edge, we need to re-center so we can see what's over the edge
-     (when (or (= 0 (+ canvas-center-x @render-delta-x)) (= (dec @canvas-cols) (+ canvas-center-x @render-delta-x)))
+     (when (or (= 0 (+ canvas-center-x @render-delta-x)) (= (- @canvas-cols 1) (+ canvas-center-x @render-delta-x)))
        (ref-set render-center-x (+ @render-center-x @render-delta-x))
        (ref-set render-delta-x 0))
      ; same logic plus taking status bar into account
-     (when (or (>= (- @render-delta-y) (- canvas-center-y 1)) (>= @render-delta-y (- canvas-center-y 2)))
+     (when (or (= 0 (+ canvas-center-y @render-delta-y)) (= (- @canvas-rows 2) (+ canvas-center-y @render-delta-y)))
        (ref-set render-center-y (+ @render-center-y @render-delta-y))
        (ref-set render-delta-y 0))
      ; draw the world
