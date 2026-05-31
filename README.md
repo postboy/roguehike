@@ -2,6 +2,8 @@
 
 A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
 
+[See demo on YouTube.](https://www.youtube.com/watch?v=O6cpjinmioI)
+
 You are standing at foot of the mountain. If you ascend the mountain and then return to wilderness edge, you win. If you give up and quit, you lose. There is no saving, just as in real life.
 
 Status bar is located at the bottom of the screen. It shows your current and maximum stamina, current and maximum altitude on this terrain, and status message. Everything apart the status bar is the map shown via top-down view. Top of the mountain is located to the north from starting point of your hike.
