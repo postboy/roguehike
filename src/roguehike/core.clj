@@ -178,6 +178,7 @@
   (dosync (ref-set canvas-cols cols)
           (ref-set canvas-rows rows))
   ; for some reason, (redraw) inside (render-screen) is not enough
+  (recenter)
   (s/redraw @screen)
   (render-screen))
 
