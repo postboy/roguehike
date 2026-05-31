@@ -60,8 +60,9 @@
 
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
-  (let [canvas-center-x (quot @canvas-cols 2)
-        canvas-center-y (quot @canvas-rows 2)
+  (let [status-bar-row (dec @canvas-rows)
+        canvas-center-x (quot @canvas-cols 2)
+        canvas-center-y (quot status-bar-row 2)
         ; modular arithmetics to wrap around the map          
         corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
         corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
@@ -139,7 +140,7 @@
   (dosync
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @canvas-cols 2)
-         canvas-center-y (quot @canvas-rows 2)]
+         canvas-center-y (quot status-bar-row 2)]
      ; when we're stepping on the edge, we need to re-center so we can see what's over the edge
      ; we can find ourselves over the edge after resize that shrinks a window
      (when (or (>= 0 (+ canvas-center-x @render-delta-x)) (<= (- @canvas-cols 1) (+ canvas-center-x @render-delta-x)))
