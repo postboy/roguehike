@@ -148,14 +148,14 @@
      (when (>= 0 (+ canvas-center-x @render-delta-x))
        (ref-set render-center-x (- @render-center-x shift-x))
        (ref-set render-delta-x (+ @render-delta-x shift-x)))
-     (when (<= (- @canvas-cols 1) (+ canvas-center-x @render-delta-x))
+     (when (<= (dec @canvas-cols) (+ canvas-center-x @render-delta-x))
        (ref-set render-center-x (+ @render-center-x shift-x))
        (ref-set render-delta-x (- @render-delta-x shift-x)))
      ; same logic plus taking status bar into account
      (when (>= 0 (+ canvas-center-y @render-delta-y))
        (ref-set render-center-y (- @render-center-y shift-y))
        (ref-set render-delta-y (+ @render-delta-y shift-y)))
-     (when (<= (- @canvas-rows 2) (+ canvas-center-y @render-delta-y))
+     (when (<= (dec status-bar-row) (+ canvas-center-y @render-delta-y))
        (ref-set render-center-y (+ @render-center-y shift-y))
        (ref-set render-delta-y (- @render-delta-y shift-y)))
      ; draw the world
