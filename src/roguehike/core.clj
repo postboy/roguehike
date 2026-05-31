@@ -132,10 +132,11 @@
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @canvas-cols 2)
          canvas-center-y (quot @canvas-rows 2)]
-     (when (or (>= (abs @render-delta-x) (- canvas-center-x 2)) (>= (abs @render-delta-y) (- canvas-center-y 2)))
+     (when (>= (abs @render-delta-x) (- canvas-center-x 2))
        (ref-set render-center-x (+ @render-center-x @render-delta-x))
+       (ref-set render-delta-x 0))
+     (when (>= (abs @render-delta-y) (- canvas-center-y 2))
        (ref-set render-center-y (+ @render-center-y @render-delta-y))
-       (ref-set render-delta-x 0)
        (ref-set render-delta-y 0))
      ; draw the world
      (doseq [x (range @canvas-cols)
