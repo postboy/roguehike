@@ -17,7 +17,7 @@
                               (repeat 5 "~")
                               ["_"])))
 
-(def walkable-object? #{" " "*" "." "," "`" "o" "\"" "w" "t"})
+(def walkable-object? #{" " "." "," "`" "*" "\"" "o" "w" "t"})
 
 (def world-cols 100)
 (def world-rows 100)
