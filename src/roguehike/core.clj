@@ -141,24 +141,23 @@
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @canvas-cols 2)
          canvas-center-y (quot status-bar-row 2)
-         ; TODO: better formulas will be more precise for edge cases
-         shift-x (- canvas-center-x 2)
-         shift-y (- canvas-center-y 2)]
+         shift-x (- @canvas-cols 2)
+         shift-y (- status-bar-row 2)]
      ; when we're stepping on the edge, we need to re-center so we can see what's over the edge
      ; we can find ourselves over the edge after resize that shrinks a window
      (when (>= 0 (+ canvas-center-x @render-delta-x))
-       (ref-set render-center-x (+ @render-center-x @render-delta-x (- shift-x)))
-       (ref-set render-delta-x shift-x))
+       (ref-set render-center-x (- @render-center-x shift-x))
+       (ref-set render-delta-x (+ @render-delta-x shift-x)))
      (when (<= (- @canvas-cols 1) (+ canvas-center-x @render-delta-x))
-       (ref-set render-center-x (+ @render-center-x @render-delta-x shift-x))
-       (ref-set render-delta-x (- shift-x)))
+       (ref-set render-center-x (+ @render-center-x shift-x))
+       (ref-set render-delta-x (- @render-delta-x shift-x)))
      ; same logic plus taking status bar into account
      (when (>= 0 (+ canvas-center-y @render-delta-y))
-       (ref-set render-center-y (+ @render-center-y @render-delta-y (- shift-y)))
-       (ref-set render-delta-y shift-y))
+       (ref-set render-center-y (- @render-center-y shift-y))
+       (ref-set render-delta-y (+ @render-delta-y shift-y)))
      (when (<= (- @canvas-rows 2) (+ canvas-center-y @render-delta-y))
-       (ref-set render-center-y (+ @render-center-y @render-delta-y shift-y))
-       (ref-set render-delta-y (- shift-y)))
+       (ref-set render-center-y (+ @render-center-y shift-y))
+       (ref-set render-delta-y (- @render-delta-y shift-y)))
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
