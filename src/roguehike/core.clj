@@ -1,7 +1,7 @@
 (ns roguehike.core
-  (:gen-class)
   (:require [lanterna.screen :as s]
-            [clojure.math :as math]))
+            [clojure.math :as math])
+  (:gen-class))
 
 (def map-symbols (vec (concat (repeat 150 " ")
                               (repeat 20 ".") (repeat 15 ",") (repeat 15 "`")
