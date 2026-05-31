@@ -34,14 +34,14 @@
          (vec (for [_ (range world-cols)]
                 (rand-nth map-symbols))))))
 
-(def player-x (ref 1))
-(def player-y (ref 1))
+(def player-x (ref top-x))
+(def player-y (ref (- world-rows 2)))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
 (def status-message (ref "You're standing at foot of the mountain."))
-(def cur-altitude (ref 0))
+(def cur-altitude (ref 3))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
