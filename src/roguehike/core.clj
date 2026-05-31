@@ -47,7 +47,6 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-; calculate coordinates shift after moving dir from current position
 (defn coords-shift [dir]
   (case dir
     :left       [-1 0]
@@ -91,7 +90,8 @@
          (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
                old-height @cur-height
                new-height (max 0 (- max-height
-                                  ; distance to summit
+                                    ; distance to summit
+                                    ; decrement here is required for in-game summit to be an area, not a single square
                                     (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
                                                                           (math/pow (- y summit-y) 2))))))))
                step-cost (if (> new-height old-height)
@@ -109,7 +109,6 @@
                    (ref-set status-message "You walk.")
                    (ref-set status-message "You walk on top of the mountain."))))))))))
 
-; get a key from the user and execute their command
 (defn parse-input []
   (let [k (s/get-key-blocking @screen)]
     (case k
@@ -145,9 +144,8 @@
      ; draw the player
      (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
-     ; clear the status bar
+     ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
-     ; set the status bar
      (let [st-width (count (str max-stamina))
            he-width (count (str max-height))
            string (format (str " Stamina: %" st-width "d/%" st-width "d | Height: %" he-width "d/%" he-width "d | %s")
@@ -160,7 +158,6 @@
           (ref-set canvas-rows rows))
   ; for some reason, (redraw) inside (render-screen) is not enough
   (s/redraw @screen)
-  ; we need to re-render the screen
   (render-screen))
 
 (defn create-screen [terminal-type resized-fn]
@@ -181,6 +178,5 @@
     (recur)))
 
 (defn -main [& args]
-  ; first argument is terminal type: auto/swing/text/unix/cygwin
   (create-screen (keyword (or (first args) "auto")) handle-resize)
   (game-loop))
