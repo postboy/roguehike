@@ -40,7 +40,7 @@
 (def render-delta-y (ref 0))
 (def render-center-x (ref 0))
 (def render-center-y (ref 0))
-(def status-message (ref "You're standing at the foot of the mountain."))
+(def status-message (ref "You're standing at foot of the mountain."))
 (def cur-height (ref 0))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
@@ -74,10 +74,10 @@
    (if (= @cur-stamina max-stamina)
      (if (< @cur-height max-height)
        (ref-set status-message "You're fully rested.")
-       (ref-set status-message "You're fully rested on the top of the mountain."))
+       (ref-set status-message "You're fully rested on top of the mountain."))
      (if (< @cur-height max-height)
        (ref-set status-message "You rest for a while.")
-       (ref-set status-message "You rest for a while on the top of the mountain.")))))
+       (ref-set status-message "You rest for a while on top of the mountain.")))))
 
 (defn move [dir]
   (dosync
@@ -107,7 +107,7 @@
                  (ref-set cur-stamina (- @cur-stamina step-cost))
                  (if (< @cur-height max-height)
                    (ref-set status-message "You walk.")
-                   (ref-set status-message "You walk on the top of the mountain."))))))))))
+                   (ref-set status-message "You walk on top of the mountain."))))))))))
 
 ; get a key from the user and execute their command
 (defn parse-input []

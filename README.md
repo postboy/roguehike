@@ -1,8 +1,8 @@
 # roguehike
 
-A simple roguelike hiking game in Clojure. Go climb a mountain here!
+A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
 
-You are standing at the foot of the mountain. If you ascend the mountain and then return to wilderness edge, you win. If you give up and quit, you lose. There is no saving, just as in real life.
+You are standing at foot of the mountain. If you ascend the mountain and then return to wilderness edge, you win. If you give up and quit, you lose. There is no saving, just as in real life.
 
 Use numpad or vi keys (hjklyubn) for moving. Press 5 or r to rest. Press q to exit.
 
@@ -34,7 +34,13 @@ And don't forget: mountains are always worth climbing!
 
 Requires Leiningen.
 
+To run:
+
     lein run
+
+To build release jar:
+
+    lein uberjar
 
 ## License
 
