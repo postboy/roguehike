@@ -46,7 +46,7 @@ To run:
 
     lein run
 
-To build release jar:
+To build a release jar (pick up standalone one):
 
     lein uberjar
 
