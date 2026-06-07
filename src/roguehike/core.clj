@@ -63,7 +63,7 @@
   (let [status-bar-row (dec @canvas-rows)
         canvas-center-x (quot @canvas-cols 2)
         canvas-center-y (quot status-bar-row 2)
-        ; modular arithmetics to wrap around the map          
+        ; modular arithmetics to wrap around the map
         corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
         corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
     [corrected-world-x corrected-world-y]))
@@ -83,29 +83,31 @@
   (dosync
    (let [shift (coords-shift dir)
          [x y] (mapv + [@player-x @player-y] shift)
-         dest (get-in world-map [x y])]
-     (if (not (some? dest))
-       (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-       (if (obstacle? dest)
-         (ref-set status-message "You cannot walk there: path is obstructed.")
-         (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
-               old-altitude @cur-altitude
-               new-altitude (max 0 (- max-altitude
+         ; modular arithmetics to wrap around the map
+         dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
+     (if (obstacle? dest)
+       (ref-set status-message "You cannot walk there: path is obstructed.")
+       (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
+             old-altitude @cur-altitude
+             new-altitude (max 0 (- max-altitude
                                     ; distance to top
                                     ; decrement here is required for in-game top to be an area, not a single square
-                                      (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x top-x) 2)
-                                                                            (math/pow (- y top-y) 2))))))))
-               step-cost (if (> new-altitude old-altitude)
-                           step-up-cost
-                           (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
-           (if (< @cur-stamina step-cost)
-             (ref-set status-message "You're too tired to walk. You need a rest.")
-             (do (ref-set player-x x)
-                 (ref-set player-y y)
-                 (ref-set render-delta-x new-delta-x)
-                 (ref-set render-delta-y new-delta-y)
-                 (ref-set cur-altitude new-altitude)
-                 (ref-set cur-stamina (- @cur-stamina step-cost))
+                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x top-x) 2)
+                                                                          (math/pow (- y top-y) 2))))))))
+             step-cost (if (> new-altitude old-altitude)
+                         step-up-cost
+                         (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
+         (if (< @cur-stamina step-cost)
+           (ref-set status-message "You're too tired to walk. You need a rest.")
+           (do (ref-set player-x x)
+               (ref-set player-y y)
+               (ref-set render-delta-x new-delta-x)
+               (ref-set render-delta-y new-delta-y)
+               (ref-set cur-altitude new-altitude)
+               (ref-set cur-stamina (- @cur-stamina step-cost))
+               ; warn about being outside of the map but allow to go there anyway
+               (if (nil? (get-in world-map [x y]))
+                 (ref-set status-message "You are about to leave wilderness. Press q to quit.")
                  (if (< @cur-altitude max-altitude)
                    (ref-set status-message "You walk.")
                    (ref-set status-message "You walk on top of the mountain."))))))))))
