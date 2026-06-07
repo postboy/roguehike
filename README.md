@@ -2,9 +2,9 @@
 
 A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
 
-![Screenshot.](screenshot.png)
-
 [See demo on YouTube.](https://www.youtube.com/watch?v=O6cpjinmioI)
+
+![Screenshot.](screenshot.png)
 
 You are standing at foot of the mountain. If you ascend the mountain and then return to wilderness edge, you win. If you give up and quit, you lose. There is no saving, just as in real life.
 
