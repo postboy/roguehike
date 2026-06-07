@@ -52,9 +52,13 @@ To build a release jar (pick up standalone one):
 
     lein uberjar
 
-## Reference
+## Inspiration
 
 Zmeinaya Mountain (Karelia, Russia) located at 61.480991, 30.217564.
+
+Videos on YouTube: [one](https://www.youtube.com/watch?v=RatzV-C6QtI), [two](https://www.youtube.com/watch?v=z_yjNECbgzU), [three](https://www.youtube.com/watch?v=L1GLNxfAmP4).
+
+Photos on LiveJournal: [one](https://trekking-hiking.livejournal.com/94575.html), [two](https://lenoblast-pohod.livejournal.com/111665.html), [three](https://pohod-vosemvrat.livejournal.com/104778.html).
 
 ## License
 
