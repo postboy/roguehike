@@ -38,7 +38,7 @@ And don't forget: mountains are always worth climbing!
 
 ## Running
 
-First optional argument is terminal type to launch the game in: auto (default)/swing/text/unix/cygwin.
+First optional argument is terminal type to launch the game in: auto, swing, text, unix, cygwin. Default on *nix: unix, default on Windows: auto.
 
 ## Building
 

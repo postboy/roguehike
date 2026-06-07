@@ -202,5 +202,10 @@
     (recur)))
 
 (defn -main [& args]
-  (create-screen (keyword (or (first args) "auto")) handle-resize)
-  (game-loop))
+  ; Windows can't live without Swing, but on *nix it's better to use standard terminal
+  (let [terminal-type (keyword (or (first args)
+                                   (if (re-matches #"Windows.*" (System/getProperty "os.name"))
+                                     "auto"
+                                     "unix")))]
+    (create-screen terminal-type handle-resize)
+    (game-loop)))
