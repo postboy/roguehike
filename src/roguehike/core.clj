@@ -47,17 +47,6 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-(defn coords-shift [dir]
-  (case dir
-    :left       [-1 0]
-    :right      [1 0]
-    :up         [0 -1]
-    :down       [0 1]
-    :up-left    [-1 -1]
-    :up-right   [1 -1]
-    :down-left  [-1 1]
-    :down-right [1 1]))
-
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
   (let [status-bar-row (dec @canvas-rows)
@@ -79,10 +68,9 @@
        (ref-set status-message "You rest for a while.")
        (ref-set status-message "You rest for a while on top of the mountain.")))))
 
-(defn move [dir]
+(defn move [shift]
   (dosync
-   (let [shift (coords-shift dir)
-         [x y] (mapv + [@player-x @player-y] shift)
+   (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
      (if (obstacle? dest)
@@ -126,14 +114,14 @@
              ; hacky way to quit
              (dosync (ref-set screen nil)))
       (\5 \r) (rest-turn)
-      (\4 \h) (move :left)
-      (\2 \j) (move :down)
-      (\8 \k) (move :up)
-      (\6 \l) (move :right)
-      (\7 \y) (move :up-left)
-      (\9 \u) (move :up-right)
-      (\1 \b) (move :down-left)
-      (\3 \n) (move :down-right)
+      (\4 \h) (move [-1 0]) ; left
+      (\2 \j) (move [0 1]) ; down
+      (\8 \k) (move [0 -1]) ; up
+      (\6 \l) (move [1 0]) ; right
+      (\7 \y) (move [-1 -1]) ; up-left
+      (\9 \u) (move [1 -1]) ; up-right
+      (\1 \b) (move [-1 1]) ; down-left
+      (\3 \n) (move [1 1]) ; down-right
       \c (recenter)
       nil)))
 
