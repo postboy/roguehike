@@ -21,8 +21,8 @@
 
 (def world-cols 100)
 (def world-rows 100)
-(def top-x (quot world-cols 2))
-(def top-y (quot world-rows 2))
+(def summit-x (quot world-cols 2))
+(def summit-y (quot world-rows 2))
 (def max-altitude (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
 (def step-up-cost 3)
@@ -34,7 +34,7 @@
          (vec (for [_ (range world-cols)]
                 (rand-nth map-symbols))))))
 
-(def player-x (ref top-x))
+(def player-x (ref summit-x))
 (def player-y (ref (- world-rows 2)))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
@@ -80,8 +80,8 @@
              new-altitude (max 0 (- max-altitude
                                     ; distance to top
                                     ; decrement here is required for in-game top to be an area, not a single square
-                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x top-x) 2)
-                                                                          (math/pow (- y top-y) 2))))))))
+                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
+                                                                          (math/pow (- y summit-y) 2))))))))
              step-cost (if (> new-altitude old-altitude)
                          step-up-cost
                          (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
@@ -159,9 +159,9 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
      (let [st-width (count (str max-stamina))
            alt-width (count (str max-altitude))
-           arrow-left (if (> @player-x top-x) "<" "")
-           arrow-up-down (if (< @player-y top-y) "v" (if (> @player-y top-y) "^" " "))
-           arrow-right (if (< @player-x top-x) ">" "")
+           arrow-left (if (> @player-x summit-x) "<" "")
+           arrow-up-down (if (< @player-y summit-y) "v" (if (> @player-y summit-y) "^" " "))
+           arrow-right (if (< @player-x summit-x) ">" "")
            string (format (str " Stamina: %" st-width "d/%" st-width "d | Altitude: %" alt-width "d/%" alt-width "d | %s%s%s | %s")
                           @cur-stamina max-stamina @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
