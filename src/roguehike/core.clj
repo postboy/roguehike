@@ -41,7 +41,15 @@
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
 (def status-message (ref "You're standing at foot of the mountain."))
-(def cur-altitude (ref 3))
+
+(defn get-altitude [x y]
+  (max 0 (- max-altitude
+            ; distance to top
+            ; decrement here is required for in-game top to be an area, not a single square
+            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
+                                                  (math/pow (- y summit-y) 2)))))))))
+
+(def cur-altitude (ref (get-altitude @player-x @player-y)))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
@@ -77,11 +85,7 @@
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              old-altitude @cur-altitude
-             new-altitude (max 0 (- max-altitude
-                                    ; distance to top
-                                    ; decrement here is required for in-game top to be an area, not a single square
-                                    (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                                          (math/pow (- y summit-y) 2))))))))
+             new-altitude (get-altitude x y)
              step-cost (if (> new-altitude old-altitude)
                          step-up-cost
                          (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
