@@ -160,10 +160,12 @@
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
-     (let [alt-width (count (str max-altitude))
+     (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            arrow-left (if (> @player-x summit-x) "<" " ")
            arrow-up-down (if (< @player-y summit-y) "v" (if (> @player-y summit-y) "^" " "))
            arrow-right (if (< @player-x summit-x) ">" " ")
+           ; "STA 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
+           ; fit in 80 symbols of standard terminal
            string (format (str "STA %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
                           @cur-stamina @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
