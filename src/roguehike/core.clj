@@ -157,13 +157,12 @@
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
-     (let [st-width (count (str max-stamina))
-           alt-width (count (str max-altitude))
+     (let [alt-width (count (str max-altitude))
            arrow-left (if (> @player-x summit-x) "<" " ")
            arrow-up-down (if (< @player-y summit-y) "v" (if (> @player-y summit-y) "^" " "))
            arrow-right (if (< @player-x summit-x) ">" " ")
-           string (format (str " Stamina: %" st-width "d/%" st-width "d | Altitude: %" alt-width "d/%" alt-width "d |%s%s%s| %s")
-                          @cur-stamina max-stamina @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+           string (format (str "STA %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+                          @cur-stamina @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
