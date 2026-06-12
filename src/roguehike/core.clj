@@ -84,11 +84,10 @@
      (if (obstacle? dest)
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
-             old-altitude @cur-altitude
              new-altitude (get-altitude x y)
-             step-cost (if (> new-altitude old-altitude)
+             step-cost (if (> new-altitude @cur-altitude)
                          step-up-cost
-                         (if (< new-altitude old-altitude) step-down-cost step-straight-cost))]
+                         (if (< new-altitude @cur-altitude) step-down-cost step-straight-cost))]
          (if (< @cur-stamina step-cost)
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
