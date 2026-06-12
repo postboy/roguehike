@@ -2,7 +2,7 @@
 
 A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
 
-[See demo on YouTube.](https://www.youtube.com/watch?v=O6cpjinmioI)
+[See gameplay on YouTube.](https://www.youtube.com/watch?v=NQ6feqqXHTw)
 
 ![Screenshot.](screenshot.png)
 
