@@ -42,6 +42,7 @@
 (def render-center-y (ref @player-y))
 (def status-message (ref "You're standing at foot of the mountain."))
 
+; must be in sync with arrows to summit
 (defn get-altitude [x y]
   (max 0 (- max-altitude
             ; distance to top
@@ -161,13 +162,14 @@
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
-           ; formulas are not as exact as they could be
+           ; inc/dec to be in sync with get-altitude
            arrow-left (if (= @cur-altitude max-altitude) "T"
-                          (if (> @player-x summit-x) "<" " "))
+                          (if (> @player-x (inc summit-x)) "<" " "))
            arrow-up-down (if (= @cur-altitude max-altitude) "O"
-                             (if (< @player-y summit-y) "v" (if (> @player-y summit-y) "^" " ")))
+                             (if (< @player-y (dec summit-y)) "v"
+                                 (if (> @player-y (inc summit-y)) "^" " ")))
            arrow-right (if (= @cur-altitude max-altitude) "P"
-                           (if (< @player-x summit-x) ">" " "))
+                           (if (< @player-x (dec summit-x)) ">" " "))
            ; "STA 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
            ; fit in 80 symbols of standard terminal
            string (format (str "STA %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
