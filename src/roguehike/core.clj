@@ -108,22 +108,20 @@
    (ref-set render-delta-y 0)))
 
 (defn parse-input []
-  (let [k (s/get-key-blocking @screen)]
-    (case k
-      \q (do (s/stop @screen)
-             ; hacky way to quit
-             (dosync (ref-set screen nil)))
-      (\5 \r) (rest-turn)
-      (\4 \h) (move [-1 0]) ; left
-      (\2 \j) (move [0 1]) ; down
-      (\8 \k) (move [0 -1]) ; up
-      (\6 \l) (move [1 0]) ; right
-      (\7 \y) (move [-1 -1]) ; up-left
-      (\9 \u) (move [1 -1]) ; up-right
-      (\1 \b) (move [-1 1]) ; down-left
-      (\3 \n) (move [1 1]) ; down-right
-      \c (recenter)
-      nil)))
+  (case (s/get-key-blocking @screen)
+    \q (do (s/stop @screen)
+           (dosync (ref-set screen nil))) ; hacky way to quit
+    (\5 \r) (rest-turn)
+    (\4 \h) (move [-1 0]) ; left
+    (\2 \j) (move [0 1]) ; down
+    (\8 \k) (move [0 -1]) ; up
+    (\6 \l) (move [1 0]) ; right
+    (\7 \y) (move [-1 -1]) ; up-left
+    (\9 \u) (move [1 -1]) ; up-right
+    (\1 \b) (move [-1 1]) ; down-left
+    (\3 \n) (move [1 1]) ; down-right
+    \c (recenter)
+    nil))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
