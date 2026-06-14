@@ -25,10 +25,6 @@
 (def summit-y (quot world-rows 2))
 (def max-altitude (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
-(def step-up-cost 3)
-(def step-down-cost 2)
-(def step-straight-cost 1)
-(def stamina-from-rest 7)
 (def world-map (vec (for [_ (range world-rows)]
                       (vec (for [_ (range world-cols)]
                              (rand-nth map-symbols))))))
@@ -66,7 +62,7 @@
 
 (defn rest-turn []
   (dosync
-   (ref-set cur-stamina (min max-stamina (+ @cur-stamina stamina-from-rest)))
+   (ref-set cur-stamina (min max-stamina (+ @cur-stamina 7)))
    (if (= @cur-stamina max-stamina)
      (if (< @cur-altitude max-altitude)
        (ref-set status-message "You're fully rested.")
@@ -84,9 +80,9 @@
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
-             step-cost (cond (> new-altitude @cur-altitude) step-up-cost
-                             (< new-altitude @cur-altitude) step-down-cost
-                             :else step-straight-cost)]
+             step-cost (cond (> new-altitude @cur-altitude) 3
+                             (< new-altitude @cur-altitude) 2
+                             :else 1)]
          (if (< @cur-stamina step-cost)
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
@@ -99,29 +95,6 @@
                (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
                      (< @cur-altitude max-altitude) (ref-set status-message "You walk.")
                      :else (ref-set status-message "You walk on top of the mountain.")))))))))
-
-(defn recenter []
-  (dosync
-   (ref-set render-center-x @player-x)
-   (ref-set render-delta-x 0)
-   (ref-set render-center-y @player-y)
-   (ref-set render-delta-y 0)))
-
-(defn parse-input []
-  (case (s/get-key-blocking @screen)
-    \q (do (s/stop @screen)
-           (dosync (ref-set screen nil))) ; hacky way to quit
-    \c (recenter)
-    (\5 \r) (rest-turn)
-    (\4 \h) (move [-1 0]) ; left
-    (\2 \j) (move [0 1]) ; down
-    (\8 \k) (move [0 -1]) ; up
-    (\6 \l) (move [1 0]) ; right
-    (\7 \y) (move [-1 -1]) ; up-left
-    (\9 \u) (move [1 -1]) ; up-right
-    (\1 \b) (move [-1 1]) ; down-left
-    (\3 \n) (move [1 1]) ; down-right
-    nil))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
@@ -174,6 +147,29 @@
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
+(defn recenter []
+  (dosync
+   (ref-set render-center-x @player-x)
+   (ref-set render-delta-x 0)
+   (ref-set render-center-y @player-y)
+   (ref-set render-delta-y 0)))
+
+(defn parse-input []
+  (case (s/get-key-blocking @screen)
+    \q (do (s/stop @screen)
+           (dosync (ref-set screen nil))) ; hacky way to quit
+    \c (recenter)
+    (\5 \r) (rest-turn)
+    (\4 \h) (move [-1 0]) ; left
+    (\2 \j) (move [0 1]) ; down
+    (\8 \k) (move [0 -1]) ; up
+    (\6 \l) (move [1 0]) ; right
+    (\7 \y) (move [-1 -1]) ; up-left
+    (\9 \u) (move [1 -1]) ; up-right
+    (\1 \b) (move [-1 1]) ; down-left
+    (\3 \n) (move [1 1]) ; down-right
+    nil))
+
 (defn handle-resize [cols rows]
   (dosync (ref-set canvas-cols cols)
           (ref-set canvas-rows rows))
@@ -194,8 +190,7 @@
 (defn game-loop []
   (render-screen)
   (parse-input)
-  ; hacky way to quit
-  (when (some? @screen)
+  (when (some? @screen) ; hacky way to quit
     (recur)))
 
 (defn -main [& args]
