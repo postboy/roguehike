@@ -185,13 +185,12 @@
   (render-screen))
 
 (defn create-screen [terminal-type resized-fn]
-  (dosync (ref-set screen (s/get-screen terminal-type)))
-  (s/start @screen)
-  ; for some reason, this works better than setting :resize-listener argument to get-screen
-  (s/add-resize-listener @screen resized-fn)
-  (let [[cols rows] (s/get-size @screen)]
-    ; for some reason, this should be a separate dosync, not dosync from above
-    (dosync (ref-set canvas-cols cols)
+  (dosync (ref-set screen (s/get-screen terminal-type))
+          (s/start @screen)
+          ; for some reason, this works better than setting :resize-listener argument to get-screen
+          (s/add-resize-listener @screen resized-fn)
+          (let [[cols rows] (s/get-size @screen)]
+            (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
 (defn game-loop []
