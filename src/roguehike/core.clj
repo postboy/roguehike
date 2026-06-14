@@ -178,15 +178,6 @@
   (s/redraw @screen)
   (render-screen))
 
-(defn create-screen [terminal-type resized-fn]
-  (dosync (ref-set screen (s/get-screen terminal-type))
-          (s/start @screen)
-          ; for some reason, this works better than setting :resize-listener argument to get-screen
-          (s/add-resize-listener @screen resized-fn)
-          (let [[cols rows] (s/get-size @screen)]
-            (ref-set canvas-cols cols)
-            (ref-set canvas-rows rows))))
-
 (defn game-loop []
   (render-screen)
   (parse-input)
@@ -197,5 +188,11 @@
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
   (let [terminal-type (keyword (or (first args)
                                    (if (re-matches #"Windows.*" (System/getProperty "os.name")) "auto" "unix")))]
-    (create-screen terminal-type handle-resize)
+    (dosync (ref-set screen (s/get-screen terminal-type))
+            (s/start @screen)
+            ; for some reason, this works better than setting :resize-listener argument to get-screen
+            (s/add-resize-listener @screen handle-resize)
+            (let [[cols rows] (s/get-size @screen)]
+              (ref-set canvas-cols cols)
+              (ref-set canvas-rows rows)))
     (game-loop)))
