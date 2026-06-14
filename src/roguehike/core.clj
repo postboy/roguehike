@@ -29,18 +29,9 @@
 (def step-down-cost 2)
 (def step-straight-cost 1)
 (def stamina-from-rest 7)
-(def world-map
-  (vec (for [_ (range world-rows)]
-         (vec (for [_ (range world-cols)]
-                (rand-nth map-symbols))))))
-
-(def player-x (ref summit-x))
-(def player-y (ref (- world-rows 2)))
-(def render-delta-x (ref 0))
-(def render-delta-y (ref 0))
-(def render-center-x (ref @player-x))
-(def render-center-y (ref @player-y))
-(def status-message (ref "You're standing at foot of the mountain."))
+(def world-map (vec (for [_ (range world-rows)]
+                      (vec (for [_ (range world-cols)]
+                             (rand-nth map-symbols))))))
 
 ; must be in sync with arrows to summit
 (defn get-altitude [x y]
@@ -50,6 +41,13 @@
             (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
                                                   (math/pow (- y summit-y) 2)))))))))
 
+(def player-x (ref summit-x))
+(def player-y (ref (- world-rows 2)))
+(def render-center-x (ref @player-x))
+(def render-center-y (ref @player-y))
+(def render-delta-x (ref 0))
+(def render-delta-y (ref 0))
+(def status-message (ref "You're standing at foot of the mountain."))
 (def cur-altitude (ref (get-altitude @player-x @player-y)))
 (def cur-stamina (ref max-stamina))
 (def canvas-cols (ref 0))
@@ -86,10 +84,9 @@
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
-             step-cost (cond
-                         (> new-altitude @cur-altitude) step-up-cost
-                         (< new-altitude @cur-altitude) step-down-cost
-                         :else step-straight-cost)]
+             step-cost (cond (> new-altitude @cur-altitude) step-up-cost
+                             (< new-altitude @cur-altitude) step-down-cost
+                             :else step-straight-cost)]
          (if (< @cur-stamina step-cost)
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
@@ -99,11 +96,9 @@
                (ref-set cur-altitude new-altitude)
                (ref-set cur-stamina (- @cur-stamina step-cost))
                ; warn about being outside of the map but allow to go there anyway
-               (if (nil? (get-in world-map [x y]))
-                 (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-                 (if (< @cur-altitude max-altitude)
-                   (ref-set status-message "You walk.")
-                   (ref-set status-message "You walk on top of the mountain."))))))))))
+               (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
+                     (< @cur-altitude max-altitude) (ref-set status-message "You walk.")
+                     :else (ref-set status-message "You walk on top of the mountain.")))))))))
 
 (defn recenter []
   (dosync
@@ -192,10 +187,10 @@
 (defn create-screen [terminal-type resized-fn]
   (dosync (ref-set screen (s/get-screen terminal-type)))
   (s/start @screen)
-  ; for some reason, this works better than setting :resize-listener argument
-  ; to get-screen
+  ; for some reason, this works better than setting :resize-listener argument to get-screen
   (s/add-resize-listener @screen resized-fn)
   (let [[cols rows] (s/get-size @screen)]
+    ; for some reason, this should be a separate dosync, not dosync from above
     (dosync (ref-set canvas-cols cols)
             (ref-set canvas-rows rows))))
 
