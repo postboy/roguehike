@@ -111,6 +111,7 @@
   (case (s/get-key-blocking @screen)
     \q (do (s/stop @screen)
            (dosync (ref-set screen nil))) ; hacky way to quit
+    \c (recenter)
     (\5 \r) (rest-turn)
     (\4 \h) (move [-1 0]) ; left
     (\2 \j) (move [0 1]) ; down
@@ -120,7 +121,6 @@
     (\9 \u) (move [1 -1]) ; up-right
     (\1 \b) (move [-1 1]) ; down-left
     (\3 \n) (move [1 1]) ; down-right
-    \c (recenter)
     nil))
 
 (defn render-screen []
