@@ -86,9 +86,10 @@
        (ref-set status-message "You cannot walk there: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
-             step-cost (if (> new-altitude @cur-altitude)
-                         step-up-cost
-                         (if (< new-altitude @cur-altitude) step-down-cost step-straight-cost))]
+             step-cost (cond
+                         (> new-altitude @cur-altitude) step-up-cost
+                         (< new-altitude @cur-altitude) step-down-cost
+                         :else step-straight-cost)]
          (if (< @cur-stamina step-cost)
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
@@ -163,13 +164,16 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            ; inc/dec to be in sync with get-altitude
-           arrow-left (if (= @cur-altitude max-altitude) "T"
-                          (if (> @player-x (inc summit-x)) "<" " "))
-           arrow-up-down (if (= @cur-altitude max-altitude) "O"
-                             (if (< @player-y (dec summit-y)) "v"
-                                 (if (> @player-y (inc summit-y)) "^" " ")))
-           arrow-right (if (= @cur-altitude max-altitude) "P"
-                           (if (< @player-x (dec summit-x)) ">" " "))
+           arrow-left (cond (= @cur-altitude max-altitude) "T"
+                            (> @player-x (inc summit-x)) "<"
+                            :else " ")
+           arrow-up-down (cond (= @cur-altitude max-altitude) "O"
+                               (< @player-y (dec summit-y)) "v"
+                               (> @player-y (inc summit-y)) "^"
+                               :else " ")
+           arrow-right (cond (= @cur-altitude max-altitude) "P"
+                             (< @player-x (dec summit-x)) ">"
+                             :else " ")
            ; "STA 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
            ; fit in 80 symbols of standard terminal
            string (format (str "STA %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
