@@ -59,15 +59,12 @@
    (ref-set render-delta-y 0)))
 
 (defn rest-turn []
-  (dosync
-   (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
-   (if (= @cur-energy max-energy)
-     (if (< @cur-altitude max-altitude)
-       (ref-set status-message "You're fully rested.")
-       (ref-set status-message "You're fully rested on top of the mountain."))
-     (if (< @cur-altitude max-altitude)
-       (ref-set status-message "You rest for a while.")
-       (ref-set status-message "You rest for a while on top of the mountain.")))))
+  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain" "")]
+    (dosync
+     (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
+     (if (= @cur-energy max-energy)
+       (ref-set status-message (str "You're fully rested" location "."))
+       (ref-set status-message (str "You rest for a while" location "."))))))
 
 (defn move [shift cramble]
   (dosync
