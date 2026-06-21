@@ -160,15 +160,15 @@
     \q (do (s/stop @screen)
            (dosync (ref-set screen nil))) ; hacky way to quit
     \c (recenter)
-    (\5 \r) (rest-turn)
-    (\4 \h) (move [-1 0]) ; left
-    (\2 \j) (move [0 1]) ; down
-    (\8 \k) (move [0 -1]) ; up
-    (\6 \l) (move [1 0]) ; right
-    (\7 \y) (move [-1 -1]) ; up-left
-    (\9 \u) (move [1 -1]) ; up-right
-    (\1 \b) (move [-1 1]) ; down-left
-    (\3 \n) (move [1 1]) ; down-right
+    (\r \5) (rest-turn)
+    (\h \4) (move [-1 0]) ; left
+    (\j \2) (move [0 1]) ; down
+    (\k \8) (move [0 -1]) ; up
+    (\l \6) (move [1 0]) ; right
+    (\y \7) (move [-1 -1]) ; up-left
+    (\u \9) (move [1 -1]) ; up-right
+    (\b \1) (move [-1 1]) ; down-left
+    (\n \3) (move [1 1]) ; down-right
     nil))
 
 (defn game-loop []
