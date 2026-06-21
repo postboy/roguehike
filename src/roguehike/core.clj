@@ -51,6 +51,13 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
+(defn recenter []
+  (dosync
+   (ref-set render-center-x @player-x)
+   (ref-set render-delta-x 0)
+   (ref-set render-center-y @player-y)
+   (ref-set render-delta-y 0)))
+
 (defn rest-turn []
   (dosync
    (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
@@ -147,13 +154,6 @@
                           @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
-
-(defn recenter []
-  (dosync
-   (ref-set render-center-x @player-x)
-   (ref-set render-delta-x 0)
-   (ref-set render-center-y @player-y)
-   (ref-set render-delta-y 0)))
 
 (defn parse-input []
   (case (s/get-key-blocking @screen)
