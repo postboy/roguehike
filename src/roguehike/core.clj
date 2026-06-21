@@ -66,20 +66,20 @@
        (ref-set status-message (str "You're fully rested" location "."))
        (ref-set status-message (str "You rest for a while" location "."))))))
 
-(defn move [shift cramble]
+(defn move [shift clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
-     (if (and (obstacle? dest) (not cramble))
-       (ref-set status-message "Can't walk there, only cramble: path is obstructed.")
+     (if (and (obstacle? dest) (not clamber))
+       (ref-set status-message "Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
-             cramble-modifier (if (obstacle? dest) 6 1)
-             verb (if (obstacle? dest) "cramble" "walk")
-             step-cost (cond (> new-altitude @cur-altitude) (* cramble-modifier 3)
-                             (< new-altitude @cur-altitude) (* cramble-modifier 2)
-                             :else (* cramble-modifier 1))]
+             clamber-modifier (if (obstacle? dest) 6 1)
+             verb (if (obstacle? dest) "clamber" "walk")
+             step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
+                             (< new-altitude @cur-altitude) (* clamber-modifier 2)
+                             :else (* clamber-modifier 1))]
          (if (< @cur-energy step-cost)
            (ref-set status-message (str "You're too tired to " verb ". You need a rest."))
            (do (ref-set player-x x)
