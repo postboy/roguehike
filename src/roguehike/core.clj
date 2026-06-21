@@ -25,8 +25,9 @@
 (def summit-y (quot world-rows 2))
 (def max-altitude (quot (+ world-cols world-rows) 4))
 (def max-stamina 100)
-(def world-map (vec (for [_ (range world-rows)]
-                      (vec (for [_ (range world-cols)]
+; weird order here so we don't have to bother about it elsewhere
+(def world-map (vec (for [_ (range world-cols)]
+                      (vec (for [_ (range world-rows)]
                              (rand-nth map-symbols))))))
 
 ; must be in sync with arrows to summit
