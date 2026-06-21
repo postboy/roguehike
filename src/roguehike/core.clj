@@ -171,6 +171,12 @@
     (\3 \n) (move [1 1]) ; down-right
     nil))
 
+(defn game-loop []
+  (render-screen)
+  (parse-input)
+  (when (some? @screen) ; hacky way to quit
+    (recur)))
+
 (defn handle-resize [cols rows]
   (dosync (ref-set canvas-cols cols)
           (ref-set canvas-rows rows))
@@ -178,12 +184,6 @@
   ; for some reason, (redraw) inside (render-screen) is not enough
   (s/redraw @screen)
   (render-screen))
-
-(defn game-loop []
-  (render-screen)
-  (parse-input)
-  (when (some? @screen) ; hacky way to quit
-    (recur)))
 
 (defn -main [& args]
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
