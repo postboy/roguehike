@@ -24,7 +24,7 @@
 (def summit-x (quot world-cols 2))
 (def summit-y (quot world-rows 2))
 (def max-altitude (quot (+ world-cols world-rows) 4))
-(def max-stamina 100)
+(def max-energy 100)
 ; weird order here so we don't have to bother about it elsewhere
 (def world-map (vec (for [_ (range world-cols)]
                       (vec (for [_ (range world-rows)]
@@ -46,7 +46,7 @@
 (def render-delta-y (ref 0))
 (def status-message (ref "You're standing at foot of the mountain."))
 (def cur-altitude (ref (get-altitude @player-x @player-y)))
-(def cur-stamina (ref max-stamina))
+(def cur-energy (ref max-energy))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
@@ -63,8 +63,8 @@
 
 (defn rest-turn []
   (dosync
-   (ref-set cur-stamina (min max-stamina (+ @cur-stamina 7)))
-   (if (= @cur-stamina max-stamina)
+   (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
+   (if (= @cur-energy max-energy)
      (if (< @cur-altitude max-altitude)
        (ref-set status-message "You're fully rested.")
        (ref-set status-message "You're fully rested on top of the mountain."))
@@ -84,14 +84,14 @@
              step-cost (cond (> new-altitude @cur-altitude) 3
                              (< new-altitude @cur-altitude) 2
                              :else 1)]
-         (if (< @cur-stamina step-cost)
+         (if (< @cur-energy step-cost)
            (ref-set status-message "You're too tired to walk. You need a rest.")
            (do (ref-set player-x x)
                (ref-set player-y y)
                (ref-set render-delta-x new-delta-x)
                (ref-set render-delta-y new-delta-y)
                (ref-set cur-altitude new-altitude)
-               (ref-set cur-stamina (- @cur-stamina step-cost))
+               (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
                (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
                      (< @cur-altitude max-altitude) (ref-set status-message "You walk.")
@@ -141,10 +141,10 @@
            arrow-right (cond (= @cur-altitude max-altitude) "P"
                              (< @player-x (dec summit-x)) ">"
                              :else " ")
-           ; "STA 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
+           ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
            ; fit in 80 symbols of standard terminal
-           string (format (str "STA %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
-                          @cur-stamina @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+           string (format (str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+                          @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
