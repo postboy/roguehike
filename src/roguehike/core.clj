@@ -20,7 +20,7 @@
 (defn obstacle? [square] (not (#{" " "." "," "`" "*" "\"" "o" "w" "t"} square)))
 
 (def world-cols 150)
-(def world-rows 150)
+(def world-rows world-cols)
 (def summit-x (quot world-cols 2))
 (def summit-y (quot world-rows 2))
 (def max-altitude (quot (+ world-cols world-rows) 4))
