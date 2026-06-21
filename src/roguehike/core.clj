@@ -51,16 +51,6 @@
 (def canvas-rows (ref 0))
 (def screen (ref nil))
 
-; render center will be in center of the canvas, so move everything accordingly
-(defn screen-to-world [screen-x screen-y]
-  (let [status-bar-row (dec @canvas-rows)
-        canvas-center-x (quot @canvas-cols 2)
-        canvas-center-y (quot status-bar-row 2)
-        ; modular arithmetics to wrap around the map
-        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
-        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
-    [corrected-world-x corrected-world-y]))
-
 (defn rest-turn []
   (dosync
    (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
@@ -96,6 +86,16 @@
                (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
                      (< @cur-altitude max-altitude) (ref-set status-message "You walk.")
                      :else (ref-set status-message "You walk on top of the mountain.")))))))))
+
+; render center will be in center of the canvas, so move everything accordingly
+(defn screen-to-world [screen-x screen-y]
+  (let [status-bar-row (dec @canvas-rows)
+        canvas-center-x (quot @canvas-cols 2)
+        canvas-center-y (quot status-bar-row 2)
+        ; modular arithmetics to wrap around the map
+        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
+        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
+    [corrected-world-x corrected-world-y]))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
