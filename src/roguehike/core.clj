@@ -69,20 +69,22 @@
        (ref-set status-message "You rest for a while.")
        (ref-set status-message "You rest for a while on top of the mountain.")))))
 
-(defn move [shift]
+(defn move [shift cramble]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
-     (if (obstacle? dest)
-       (ref-set status-message "You cannot walk there: path is obstructed.")
+     (if (and (obstacle? dest) (not cramble))
+       (ref-set status-message "Can't walk there, only cramble: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
-             step-cost (cond (> new-altitude @cur-altitude) 3
-                             (< new-altitude @cur-altitude) 2
-                             :else 1)]
+             cramble-modifier (if (obstacle? dest) 6 1)
+             verb (if (obstacle? dest) "cramble" "walk")
+             step-cost (cond (> new-altitude @cur-altitude) (* cramble-modifier 3)
+                             (< new-altitude @cur-altitude) (* cramble-modifier 2)
+                             :else (* cramble-modifier 1))]
          (if (< @cur-energy step-cost)
-           (ref-set status-message "You're too tired to walk. You need a rest.")
+           (ref-set status-message (str "You're too tired to " verb ". You need a rest."))
            (do (ref-set player-x x)
                (ref-set player-y y)
                (ref-set render-delta-x new-delta-x)
@@ -91,8 +93,8 @@
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
                (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude max-altitude) (ref-set status-message "You walk.")
-                     :else (ref-set status-message "You walk on top of the mountain.")))))))))
+                     (< @cur-altitude max-altitude) (ref-set status-message (str "You " verb "."))
+                     :else (ref-set status-message (str "You " verb " on top of the mountain."))))))))))
 
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
@@ -148,7 +150,7 @@
            arrow-right (cond (= @cur-altitude max-altitude) "P"
                              (< @player-x (dec summit-x)) ">"
                              :else " ")
-           ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 54 symbols to
+           ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
            string (format (str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
                           @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
@@ -161,14 +163,14 @@
            (dosync (ref-set screen nil))) ; hacky way to quit
     \c (recenter)
     (\r \5) (rest-turn)
-    (\h \4) (move [-1 0]) ; left
-    (\j \2) (move [0 1]) ; down
-    (\k \8) (move [0 -1]) ; up
-    (\l \6) (move [1 0]) ; right
-    (\y \7) (move [-1 -1]) ; up-left
-    (\u \9) (move [1 -1]) ; up-right
-    (\b \1) (move [-1 1]) ; down-left
-    (\n \3) (move [1 1]) ; down-right
+    (\h \4) (move [-1 0] false) ; left
+    (\j \2) (move [0 1] false) ; down
+    (\k \8) (move [0 -1] false) ; up
+    (\l \6) (move [1 0] false) ; right
+    (\y \7) (move [-1 -1] false) ; up-left
+    (\u \9) (move [1 -1] false) ; up-right
+    (\b \1) (move [-1 1] false) ; down-left
+    (\n \3) (move [1 1] false) ; down-right
     nil))
 
 (defn game-loop []
