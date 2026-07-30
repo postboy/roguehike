@@ -61,7 +61,7 @@
 (defn rest-turn []
   (let [location (if (= @cur-altitude max-altitude) " on top of the mountain" "")]
     (dosync
-     (ref-set cur-energy (min max-energy (+ @cur-energy 7)))
+     (ref-set cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
        (ref-set status-message (str "You're fully rested" location "."))
        (ref-set status-message (str "You rest for a while" location "."))))))
