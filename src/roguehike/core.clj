@@ -3,21 +3,21 @@
             [clojure.math :as math])
   (:gen-class))
 
-(def map-symbols (vec (concat (repeat 150 " ")
-                              (repeat 20 ".") (repeat 15 ",") (repeat 15 "`")
-                              (repeat 40 "*")
-                              (repeat 5 "\"")
-                              (repeat 5 "o")
-                              (repeat 5 "w")
-                              (repeat 5 "t")
+(def map-symbols (vec (concat (repeat 150 \space)
+                              (repeat 20 \.) (repeat 15 \,) (repeat 15 \`)
+                              (repeat 40 \*)
+                              (repeat 5 \")
+                              (repeat 5 \o)
+                              (repeat 5 \w)
+                              (repeat 5 \t)
 
-                              (repeat 5 "0") (repeat 5 "O")
-                              (repeat 5 "W")
-                              (repeat 5 "T")
-                              (repeat 5 "@")
-                              ["="])))
+                              (repeat 5 \0) (repeat 5 \O)
+                              (repeat 5 \W)
+                              (repeat 5 \T)
+                              (repeat 5 \@)
+                              [\=])))
 
-(defn obstacle? [square] (not (#{" " "." "," "`" "*" "\"" "o" "w" "t"} square)))
+(defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
 (def world-cols 150)
 (def world-rows world-cols)
@@ -129,7 +129,7 @@
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
-       (s/put-string @screen x y (get-in world-map (screen-to-world x y)) {:fg :white :bg :black}))
+       (s/put-string @screen x y (str (get-in world-map (screen-to-world x y))) {:fg :white :bg :black}))
      ; draw the player
      (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
