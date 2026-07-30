@@ -1,6 +1,6 @@
-# roguehike
+# roguehike: hiking roguelike
 
-A minimalistic roguelike hiking game in Clojure. Go climb a mountain here!
+A minimalistic roguelike game about hiking in Clojure. Go climb a mountain here!
 
 [See gameplay on YouTube.](https://www.youtube.com/watch?v=NQ6feqqXHTw)
 
