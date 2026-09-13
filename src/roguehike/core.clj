@@ -1,21 +1,22 @@
 (ns roguehike.core
   (:require [lanterna.screen :as s]
+            [roul.random :as rr]
             [clojure.math :as math])
   (:gen-class))
 
-(def map-symbols (vec (concat (repeat 150 \space)
-                              (repeat 20 \.) (repeat 15 \,) (repeat 15 \`)
-                              (repeat 40 \*)
-                              (repeat 5 \")
-                              (repeat 5 \o)
-                              (repeat 5 \w)
-                              (repeat 5 \t)
+(def map-symbols [[\space 150]
+                  [\. 20] [\, 15] [\` 15]
+                  [\* 40]
+                  [\" 5]
+                  [\o 5]
+                  [\w 5]
+                  [\t 5]
 
-                              (repeat 5 \0) (repeat 5 \O)
-                              (repeat 5 \W)
-                              (repeat 5 \T)
-                              (repeat 5 \@)
-                              [\=])))
+                  [\0 5] [\O 5]
+                  [\W 5]
+                  [\T 5]
+                  [\@ 5]
+                  [\= 1]])
 
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
@@ -28,7 +29,7 @@
 ; weird order here so we don't have to bother about it elsewhere
 (def world-map (vec (for [_ (range world-cols)]
                       (vec (for [_ (range world-rows)]
-                             (rand-nth map-symbols))))))
+                             (rr/rand-nth-weighted map-symbols))))))
 
 ; must be in sync with arrows to summit
 (defn get-altitude [x y]

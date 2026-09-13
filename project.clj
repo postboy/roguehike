@@ -3,6 +3,7 @@
   :url "https://github.com/postboy/roguehike"
   :license {:name "MIT/X11"}
   :dependencies [[org.clojure/clojure "1.12.5"]
-                 [clojure-lanterna "0.9.7"]]
+                 [clojure-lanterna "0.9.7"]
+                 [roul "0.2.0"]]
   :profiles {:uberjar {:aot :all}}
   :main roguehike.core)
