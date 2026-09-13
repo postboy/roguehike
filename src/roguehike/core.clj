@@ -1,7 +1,8 @@
 (ns roguehike.core
   (:require [lanterna.screen :as s]
             [roul.random :as rr]
-            [clojure.math :as math])
+            [clojure.math :as math]
+            [clojure.edn :as edn])
   (:gen-class))
 
 (def map-symbols [[\space 150]
@@ -196,8 +197,9 @@
 (defn -main [& args]
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
   (let [terminal-type (keyword (or (first args)
-                                   (if (re-matches #"Windows.*" (System/getProperty "os.name")) "auto" "unix")))]
-    (dosync (ref-set screen (s/get-screen terminal-type))
+                                   (if (re-matches #"Windows.*" (System/getProperty "os.name")) "auto" "unix")))
+        options (edn/read-string (or (second args) "{}"))]
+    (dosync (ref-set screen (s/get-screen terminal-type options))
             (s/start @screen)
             ; for some reason, this works better than setting :resize-listener argument to get-screen
             (s/add-resize-listener @screen handle-resize)
