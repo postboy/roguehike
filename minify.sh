@@ -6,4 +6,5 @@ tr -d '\n' > src/roguehike/tmp.clj < src/roguehike/core.clj
 mv src/roguehike/tmp.clj src/roguehike/core.clj
 sed -i 's/ \+/ /g' src/roguehike/core.clj
 sed -i 's/ (/(/g' src/roguehike/core.clj
+sed -i 's/} /}/g' src/roguehike/core.clj
 sed -i 's/ \[/\[/g' src/roguehike/core.clj
