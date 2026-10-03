@@ -1,27 +1,30 @@
 #!/bin/sh
 # stage 1: change identifiers
-cp original.clj stage1.clj
+target=stage1.clj
+cp original.clj $target
 # stage 2: remove excess spaces
-cp stage1.clj stage2.clj
-sed -i 's/\(.*\);.*/\1/' stage2.clj
-sed -i 's/ \+/ /g' stage2.clj
-sed -i 's/ \\/\\/g' stage2.clj
-sed -i 's/ (/(/g' stage2.clj
-sed -i 's/) /)/g' stage2.clj
-sed -i 's/ @/@/g' stage2.clj
-sed -i 's/} /}/g' stage2.clj
-sed -i 's/ \[/\[/g' stage2.clj
-sed -i 's/\] /\]/g' stage2.clj
-sed -i 's/^ //' stage2.clj
+target=stage2.clj
+cp stage1.clj $target
+sed -i 's/\(.*\);.*/\1/g' $target
+sed -i 's/ \+/ /g' $target
+sed -i 's/ \\/\\/g' $target
+sed -i 's/ (/(/g' $target
+sed -i 's/) /)/g' $target
+sed -i 's/ @/@/g' $target
+sed -i 's/} /}/g' $target
+sed -i 's/ \[/\[/g' $target
+sed -i 's/\] /\]/g' $target
+sed -i 's/^ //g' $target
 # stage 3: remove newlines (and bit of excess spaces again)
-tr -d '\n' < stage2.clj > src/roguehike/core.clj
-sed -i 's/\(.*\);.*/\1/' src/roguehike/core.clj
-sed -i 's/ \+/ /g' src/roguehike/core.clj
-sed -i 's/ \\/\\/g' src/roguehike/core.clj
-sed -i 's/ (/(/g' src/roguehike/core.clj
-sed -i 's/) /)/g' src/roguehike/core.clj
-sed -i 's/ @/@/g' src/roguehike/core.clj
-sed -i 's/} /}/g' src/roguehike/core.clj
-sed -i 's/ \[/\[/g' src/roguehike/core.clj
-sed -i 's/\] /\]/g' src/roguehike/core.clj
-sed -i 's/^ //' src/roguehike/core.clj
+target=src/roguehike/core.clj
+tr -d '\n' < stage2.clj > $target
+sed -i 's/\(.*\);.*/\1/g' $target
+sed -i 's/ \+/ /g' $target
+sed -i 's/ \\/\\/g' $target
+sed -i 's/ (/(/g' $target
+sed -i 's/) /)/g' $target
+sed -i 's/ @/@/g' $target
+sed -i 's/} /}/g' $target
+sed -i 's/ \[/\[/g' $target
+sed -i 's/\] /\]/g' $target
+sed -i 's/^ //g' $target
