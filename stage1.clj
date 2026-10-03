@@ -47,7 +47,7 @@
 (def d (ref 0))
 (def e (ref 0))
 (def status-message (ref "You're standing at foot of the mountain."))
-(def cur-altitude (ref 3))
+(def f (ref 3))
 (def cur-energy (ref max-energy))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
@@ -61,7 +61,7 @@
    (a e 0)))
 
 (defn rest-turn []
-  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain""")]
+  (let [location (if (= @f max-altitude) " on top of the mountain""")]
     (dosync
      (a cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
@@ -79,8 +79,8 @@
              new-altitude (get-altitude x y)
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (obstacle? dest) "clamber""walk")
-             step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
-                             (< new-altitude @cur-altitude) (* clamber-modifier 2)
+             step-cost (cond (> new-altitude @f) (* clamber-modifier 3)
+                             (< new-altitude @f) (* clamber-modifier 2)
                              :else (* clamber-modifier 1))]
          (if (< @cur-energy step-cost)
            (a status-message (str "You're too tired to "verb". You need a rest."))
@@ -88,11 +88,11 @@
                (a player-y y)
                (a d new-delta-x)
                (a e new-delta-y)
-               (a cur-altitude new-altitude)
+               (a f new-altitude)
                (a cur-energy (- @cur-energy step-cost))
                
                (cond (nil? (get-in world-map [x y])) (a status-message"You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude max-altitude) (a status-message (str "You "verb"."))
+                     (< @f max-altitude) (a status-message (str "You "verb"."))
                      :else (a status-message (str "You "verb" on top of the mountain."))))))))))
 
 
@@ -139,20 +139,20 @@
      (s/put-string @b 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
      (let [alt-width 2 
            
-           arrow-left (cond (= @cur-altitude max-altitude) "T"
+           arrow-left (cond (= @f max-altitude) "T"
                             (> @player-x (inc summit-coord)) "<"
                             :else " ")
-           arrow-up-down (cond (= @cur-altitude max-altitude) "O"
+           arrow-up-down (cond (= @f max-altitude) "O"
                                (< @player-y (dec summit-coord)) "v"
                                (> @player-y (inc summit-coord)) "^"
                                :else " ")
-           arrow-right (cond (= @cur-altitude max-altitude) "P"
+           arrow-right (cond (= @f max-altitude) "P"
                              (< @player-x (dec summit-coord)) ">"
                              :else " ")
            
            
            string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
-                          @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+                          @cur-energy @f max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @b 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @b)))
 
