@@ -49,7 +49,7 @@
 (def g  (ref "You're standing at foot of the mountain."))
 (def f (ref 3))
 (def cur-energy (ref max-energy))
-(def canvas-cols (ref 0))
+(def h (ref 0))
 (def canvas-rows (ref 0))
 (def b (ref nil))
 
@@ -98,7 +98,7 @@
 
 (defn screen-to-world [screen-x screen-y]
   (let [status-bar-row (dec @canvas-rows)
-        canvas-center-x (quot @canvas-cols 2)
+        canvas-center-x (quot @h 2)
         canvas-center-y (quot status-bar-row 2)
         
         corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-size)
@@ -109,16 +109,16 @@
   
   (dosync
    (let [status-bar-row (dec @canvas-rows)
-         canvas-center-x (quot @canvas-cols 2)
+         canvas-center-x (quot @h 2)
          canvas-center-y (quot status-bar-row 2)
-         shift-x (- @canvas-cols 2)
+         shift-x (- @h 2)
          shift-y (- status-bar-row 2)]
      
      
      (when (>= 0 (+ canvas-center-x @d))
        (a render-center-x (- @render-center-x shift-x))
        (a d (+ @d shift-x)))
-     (when (<= (dec @canvas-cols) (+ canvas-center-x @d))
+     (when (<= (dec @h) (+ canvas-center-x @d))
        (a render-center-x (+ @render-center-x shift-x))
        (a d (- @d shift-x)))
      
@@ -129,14 +129,14 @@
        (a render-center-y (+ @render-center-y shift-y))
        (a e (- @e shift-y)))
      
-     (doseq [x (range @canvas-cols)
+     (doseq [x (range @h)
              y (range status-bar-row)]
        (s/put-string @b x y (str (get-in world-map (screen-to-world x y))) {:fg :white :bg :black}))
      
      (s/put-string @b (+ canvas-center-x @d) (+ canvas-center-y @e) "i" {:fg :white :bg :black})
      (s/move-cursor @b (+ canvas-center-x @d) (+ canvas-center-y @e))
      
-     (s/put-string @b 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
+     (s/put-string @b 0 status-bar-row (apply str (repeat @h" ")) {:fg :black :bg :white})
      (let [alt-width 2 
            
            arrow-left (cond (= @f max-altitude) "T"
@@ -187,7 +187,7 @@
     (recur)))
 
 (defn handle-resize [cols rows]
-  (dosync (a canvas-cols cols)
+  (dosync (a h cols)
           (a canvas-rows rows))
   (recenter)
   
@@ -204,6 +204,6 @@
             
             (s/add-resize-listener @b handle-resize)
             (let [[cols rows] (s/get-size @b)]
-              (a canvas-cols cols)
+              (a h cols)
               (a canvas-rows rows)))
     (game-loop)))
