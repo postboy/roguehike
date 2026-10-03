@@ -163,21 +163,21 @@
     \c (recenter)
     (\r \5) (rest-turn)
     (\h \4) (move [-1 0] false) ; left
-    (\H :left) (move [-1 0] true)
+    (:left \H) (move [-1 0] true)
     (\j \2) (move [0 1] false) ; down
-    (\J :down) (move [0 1] true)
+    (:down \J) (move [0 1] true)
     (\k \8) (move [0 -1] false) ; up
-    (\K :up) (move [0 -1] true)
+    (:up \K) (move [0 -1] true)
     (\l \6) (move [1 0] false) ; right
-    (\L :right) (move [1 0] true)
+    (:right \L) (move [1 0] true)
     (\y \7) (move [-1 -1] false) ; up-left
-    (\Y :home) (move [-1 -1] true)
+    (:home \Y) (move [-1 -1] true)
     (\u \9) (move [1 -1] false) ; up-right
-    (\U :page-up) (move [1 -1] true)
+    (:page-up \U) (move [1 -1] true)
     (\b \1) (move [-1 1] false) ; down-left
-    (\B :end) (move [-1 1] true)
+    (:end \B) (move [-1 1] true)
     (\n \3) (move [1 1] false) ; down-right
-    (\N :page-down) (move [1 1] true)
+    (:page-down \N) (move [1 1] true)
     nil))
 
 (defn game-loop []
