@@ -24,8 +24,7 @@
 (defn obstacle?[square](not(#{\space\.\,\`\*\"\o\w\t}square)))
 
 (def world-size 150)
-(def summit-x(quot world-size 2))
-(def summit-y(quot world-size 2))
+(def summit-coord(quot world-size 2))
 (def max-altitude(quot(+ world-size world-size)4))
 (def max-energy 100)
 
@@ -38,10 +37,10 @@
 (max 0(- max-altitude
 
 
-(max 0(dec(math/round(math/sqrt(+(math/pow(- x summit-x)2)
-(math/pow(- y summit-y)2)))))))))
+(max 0(dec(math/round(math/sqrt(+(math/pow(- x summit-coord)2)
+(math/pow(- y summit-coord)2)))))))))
 
-(def player-x(ref summit-x))
+(def player-x(ref summit-coord))
 (def player-y(ref(- world-size 2)))
 (def render-center-x(ref@player-x))
 (def render-center-y(ref@player-y))
@@ -141,14 +140,14 @@ y(range status-bar-row)]
 (let[alt-width 2 
 
 arrow-left(cond(=@cur-altitude max-altitude)"T"
-(>@player-x(inc summit-x))"<"
+(>@player-x(inc summit-coord))"<"
 :else" ")
 arrow-up-down(cond(=@cur-altitude max-altitude)"O"
-(<@player-y(dec summit-y))"v"
-(>@player-y(inc summit-y))"^"
+(<@player-y(dec summit-coord))"v"
+(>@player-y(inc summit-coord))"^"
 :else" ")
 arrow-right(cond(=@cur-altitude max-altitude)"P"
-(<@player-x(dec summit-x))">"
+(<@player-x(dec summit-coord))">"
 :else" ")
 
 

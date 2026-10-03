@@ -24,8 +24,7 @@
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
 (def world-size 150)
-(def summit-x (quot world-size 2))
-(def summit-y (quot world-size 2))
+(def summit-coord (quot world-size 2))
 (def max-altitude (quot (+ world-size world-size) 4))
 (def max-energy 100)
 ; weird order here so we don't have to bother about it elsewhere
@@ -38,10 +37,10 @@
   (max 0 (- max-altitude
             ; distance to top
             ; decrement here is required for in-game top to be an area, not a single square
-            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                  (math/pow (- y summit-y) 2)))))))))
+            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-coord) 2)
+                                                  (math/pow (- y summit-coord) 2)))))))))
 
-(def player-x (ref summit-x))
+(def player-x (ref summit-coord))
 (def player-y (ref (- world-size 2)))
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
@@ -141,14 +140,14 @@
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            ; inc/dec to be in sync with get-altitude
            arrow-left (cond (= @cur-altitude max-altitude) "T"
-                            (> @player-x (inc summit-x)) "<"
+                            (> @player-x (inc summit-coord)) "<"
                             :else " ")
            arrow-up-down (cond (= @cur-altitude max-altitude) "O"
-                               (< @player-y (dec summit-y)) "v"
-                               (> @player-y (inc summit-y)) "^"
+                               (< @player-y (dec summit-coord)) "v"
+                               (> @player-y (inc summit-coord)) "^"
                                :else " ")
            arrow-right (cond (= @cur-altitude max-altitude) "P"
-                             (< @player-x (dec summit-x)) ">"
+                             (< @player-x (dec summit-coord)) ">"
                              :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
