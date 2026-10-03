@@ -6,4 +6,4 @@
                  [clojure-lanterna "0.9.7"]
                  [roul "0.2.0"]]
   :profiles {:uberjar {:aot :all}}
-  :main rh.c)
+  :main r.c)

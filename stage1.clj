@@ -1,4 +1,4 @@
-(ns rh.c
+(ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as rr]
             [clojure.math :as math]
