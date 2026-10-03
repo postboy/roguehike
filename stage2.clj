@@ -35,8 +35,8 @@
 
 (defn get-altitude[x y]
 (max 0(- max-altitude
- 
- 
+
+
 (max 0(dec(math/round(math/sqrt(+(math/pow(- x summit-x)2)
 (math/pow(- y summit-y)2)))))))))
 
@@ -71,17 +71,17 @@
 (defn move[shift clamber]
 (dosync
 (let[[x y](mapv +[@player-x@player-y]shift)
- 
- dest(get-in world-map[(mod x world-cols)(mod y world-rows)])]
+
+dest(get-in world-map[(mod x world-cols)(mod y world-rows)])]
 (if(and(obstacle? dest)(not clamber))
 (ref-set status-message "Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@render-delta-x@render-delta-y]shift)
- new-altitude(get-altitude x y)
- clamber-modifier(if(obstacle? dest)6 1)
- verb(if(obstacle? dest)"clamber" "walk")
- step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
+new-altitude(get-altitude x y)
+clamber-modifier(if(obstacle? dest)6 1)
+verb(if(obstacle? dest)"clamber" "walk")
+step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 (< new-altitude@cur-altitude)(* clamber-modifier 2)
- :else(* clamber-modifier 1))]
+:else(* clamber-modifier 1))]
 (if(<@cur-energy step-cost)
 (ref-set status-message(str "You're too tired to " verb ". You need a rest."))
 (do(ref-set player-x x)
@@ -90,68 +90,68 @@
 (ref-set render-delta-y new-delta-y)
 (ref-set cur-altitude new-altitude)
 (ref-set cur-energy(-@cur-energy step-cost))
- 
+
 (cond(nil?(get-in world-map[x y]))(ref-set status-message "You are about to leave wilderness. Press q to quit.")
 (<@cur-altitude max-altitude)(ref-set status-message(str "You " verb "."))
- :else(ref-set status-message(str "You " verb " on top of the mountain."))))))))))
+:else(ref-set status-message(str "You " verb " on top of the mountain."))))))))))
 
 
 (defn screen-to-world[screen-x screen-y]
 (let[status-bar-row(dec@canvas-rows)
- canvas-center-x(quot@canvas-cols 2)
- canvas-center-y(quot status-bar-row 2)
- 
- corrected-world-x(mod(+(-@render-center-x canvas-center-x)screen-x)world-cols)
- corrected-world-y(mod(+(-@render-center-y canvas-center-y)screen-y)world-rows)]
+canvas-center-x(quot@canvas-cols 2)
+canvas-center-y(quot status-bar-row 2)
+
+corrected-world-x(mod(+(-@render-center-x canvas-center-x)screen-x)world-cols)
+corrected-world-y(mod(+(-@render-center-y canvas-center-y)screen-y)world-rows)]
 [corrected-world-x corrected-world-y]))
 
 (defn render-screen[]
- 
+
 (dosync
 (let[status-bar-row(dec@canvas-rows)
- canvas-center-x(quot@canvas-cols 2)
- canvas-center-y(quot status-bar-row 2)
- shift-x(-@canvas-cols 2)
- shift-y(- status-bar-row 2)]
- 
- 
+canvas-center-x(quot@canvas-cols 2)
+canvas-center-y(quot status-bar-row 2)
+shift-x(-@canvas-cols 2)
+shift-y(- status-bar-row 2)]
+
+
 (when(>= 0(+ canvas-center-x@render-delta-x))
 (ref-set render-center-x(-@render-center-x shift-x))
 (ref-set render-delta-x(+@render-delta-x shift-x)))
 (when(<=(dec@canvas-cols)(+ canvas-center-x@render-delta-x))
 (ref-set render-center-x(+@render-center-x shift-x))
 (ref-set render-delta-x(-@render-delta-x shift-x)))
- 
+
 (when(>= 0(+ canvas-center-y@render-delta-y))
 (ref-set render-center-y(-@render-center-y shift-y))
 (ref-set render-delta-y(+@render-delta-y shift-y)))
 (when(<=(dec status-bar-row)(+ canvas-center-y@render-delta-y))
 (ref-set render-center-y(+@render-center-y shift-y))
 (ref-set render-delta-y(-@render-delta-y shift-y)))
- 
+
 (doseq[x(range@canvas-cols)
- y(range status-bar-row)]
+y(range status-bar-row)]
 (s/put-string@screen x y(str(get-in world-map(screen-to-world x y))){:fg :white :bg :black}))
- 
+
 (s/put-string@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i" {:fg :white :bg :black})
 (s/move-cursor@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y))
- 
+
 (s/put-string@screen 0 status-bar-row(apply str(repeat@canvas-cols " ")){:fg :black :bg :white})
 (let[alt-width 2 
- 
- arrow-left(cond(=@cur-altitude max-altitude)"T"
+
+arrow-left(cond(=@cur-altitude max-altitude)"T"
 (>@player-x(inc summit-x))"<"
- :else " ")
- arrow-up-down(cond(=@cur-altitude max-altitude)"O"
+:else " ")
+arrow-up-down(cond(=@cur-altitude max-altitude)"O"
 (<@player-y(dec summit-y))"v"
 (>@player-y(inc summit-y))"^"
- :else " ")
- arrow-right(cond(=@cur-altitude max-altitude)"P"
+:else " ")
+arrow-right(cond(=@cur-altitude max-altitude)"P"
 (<@player-x(dec summit-x))">"
- :else " ")
- 
- 
- string(format(str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+:else " ")
+
+
+string(format(str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
 @cur-energy@cur-altitude max-altitude arrow-left arrow-up-down arrow-right@status-message)]
 (s/put-string@screen 0 status-bar-row string {:fg :black :bg :white})))
 (s/redraw@screen)))
@@ -178,7 +178,7 @@
 (\B :end)(move[-1 1]true)
 (\n\3)(move[1 1]false)
 (\N :page-down)(move[1 1]true)
- nil))
+nil))
 
 (defn game-loop[]
 (render-screen)
@@ -190,18 +190,18 @@
 (dosync(ref-set canvas-cols cols)
 (ref-set canvas-rows rows))
 (recenter)
- 
+
 (s/redraw@screen)
 (render-screen))
 
 (defn -main[& args]
- 
+
 (let[terminal-type(keyword(or(first args)
 (if(re-matches #"Windows.*"(System/getProperty "os.name"))"auto" "unix")))
- options(edn/read-string(or(second args)"{}"))]
+options(edn/read-string(or(second args)"{}"))]
 (dosync(ref-set screen(s/get-screen terminal-type options))
 (s/start@screen)
- 
+
 (s/add-resize-listener@screen handle-resize)
 (let[[cols rows](s/get-size@screen)]
 (ref-set canvas-cols cols)
