@@ -7,6 +7,7 @@ sed -i 's/ref-set/a/g' $target
 sed -i 's/(def a a)/(def a ref-set)/g' $target
 sed -i 's/@screen/@b/g' $target
 sed -i 's/ screen / b /g' $target
+sed -i 's/move /c /g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
 cp stage1.clj $target

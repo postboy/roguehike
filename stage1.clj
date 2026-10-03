@@ -68,7 +68,7 @@
        (a status-message (str "You're fully rested"location"."))
        (a status-message (str "You rest for a while"location"."))))))
 
-(defn move [shift clamber]
+(defn c [shift clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
@@ -95,7 +95,7 @@
                      (< @cur-altitude max-altitude) (a status-message (str "You "verb"."))
                      :else (a status-message (str "You "verb" on top of the mountain."))))))))))
 
-; render center will be in center of the canvas, so move everything accordingly
+; render center will be in center of the canvas, so c everything accordingly
 (defn screen-to-world [screen-x screen-y]
   (let [status-bar-row (dec @canvas-rows)
         canvas-center-x (quot @canvas-cols 2)
@@ -162,22 +162,22 @@
            (dosync (a b nil))) ; hacky way to quit
     \c (recenter)
     (\r \5) (rest-turn)
-    (\h \4) (move [-1 0] false) ; left
-    (:left \H) (move [-1 0] true)
-    (\j \2) (move [0 1] false) ; down
-    (:down \J) (move [0 1] true)
-    (\k \8) (move [0 -1] false) ; up
-    (:up \K) (move [0 -1] true)
-    (\l \6) (move [1 0] false) ; right
-    (:right \L) (move [1 0] true)
-    (\y \7) (move [-1 -1] false) ; up-left
-    (:home \Y) (move [-1 -1] true)
-    (\u \9) (move [1 -1] false) ; up-right
-    (:page-up \U) (move [1 -1] true)
-    (\b \1) (move [-1 1] false) ; down-left
-    (:end \B) (move [-1 1] true)
-    (\n \3) (move [1 1] false) ; down-right
-    (:page-down \N) (move [1 1] true)
+    (\h \4) (c [-1 0] false) ; left
+    (:left \H) (c [-1 0] true)
+    (\j \2) (c [0 1] false) ; down
+    (:down \J) (c [0 1] true)
+    (\k \8) (c [0 -1] false) ; up
+    (:up \K) (c [0 -1] true)
+    (\l \6) (c [1 0] false) ; right
+    (:right \L) (c [1 0] true)
+    (\y \7) (c [-1 -1] false) ; up-left
+    (:home \Y) (c [-1 -1] true)
+    (\u \9) (c [1 -1] false) ; up-right
+    (:page-up \U) (c [1 -1] true)
+    (\b \1) (c [-1 1] false) ; down-left
+    (:end \B) (c [-1 1] true)
+    (\n \3) (c [1 1] false) ; down-right
+    (:page-down \N) (c [1 1] true)
     nil))
 
 (defn game-loop []
