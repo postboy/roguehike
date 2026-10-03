@@ -19,6 +19,7 @@ sed -i 's/ status-message/ g /g' $target
 sed -i 's/@canvas-cols/@h/g' $target
 sed -i 's/ canvas-cols / h /g' $target
 sed -i 's/move /c /g' $target
+sed -i 's/ world-size/ i/g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
 cp stage1.clj $target

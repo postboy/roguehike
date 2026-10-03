@@ -23,10 +23,10 @@
 
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
-(def world-size 150)
+(def i 150)
 
-(def world-map (vec (for [_ (range world-size)]
-                      (vec (for [_ (range world-size)]
+(def world-map (vec (for [_ (range i)]
+                      (vec (for [_ (range i)]
                              (rr/rand-nth-weighted map-symbols))))))
 
 
@@ -69,7 +69,7 @@
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          
-         dest (get-in world-map [(mod x world-size) (mod y world-size)])]
+         dest (get-in world-map [(mod x i) (mod y i)])]
      (if (and (obstacle? dest) (not clamber))
        (a g "Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@d @e] shift)
@@ -98,8 +98,8 @@
         canvas-center-x (quot @h 2)
         canvas-center-y (quot status-bar-row 2)
         
-        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-size)
-        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-size)]
+        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) i)
+        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) i)]
     [corrected-world-x corrected-world-y]))
 
 (defn render-screen []
