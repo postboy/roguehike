@@ -27,16 +27,16 @@
 (def summit-coord 75)
 (def max-altitude 75)
 (def max-energy 100)
-; weird order here so we don't have to bother about it elsewhere
+
 (def world-map (vec (for [_ (range world-size)]
                       (vec (for [_ (range world-size)]
                              (rr/rand-nth-weighted map-symbols))))))
 
-; must be in sync with arrows to summit
+
 (defn get-altitude [x y]
   (max 0 (- max-altitude
-            ; distance to top
-            ; decrement here is required for in-game top to be an area, not a single square
+            
+            
             (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-coord) 2)
                                                   (math/pow (- y summit-coord) 2)))))))))
 
@@ -71,7 +71,7 @@
 (defn c [shift clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
-         ; modular arithmetics to wrap around the map
+         
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
      (if (and (obstacle? dest) (not clamber))
        (a status-message"Can't walk there, only clamber: path is obstructed.")
@@ -90,55 +90,55 @@
                (a render-delta-y new-delta-y)
                (a cur-altitude new-altitude)
                (a cur-energy (- @cur-energy step-cost))
-               ; warn about being outside of the map but allow to go there anyway
+               
                (cond (nil? (get-in world-map [x y])) (a status-message"You are about to leave wilderness. Press q to quit.")
                      (< @cur-altitude max-altitude) (a status-message (str "You "verb"."))
                      :else (a status-message (str "You "verb" on top of the mountain."))))))))))
 
-; render center will be in center of the canvas, so c everything accordingly
+
 (defn screen-to-world [screen-x screen-y]
   (let [status-bar-row (dec @canvas-rows)
         canvas-center-x (quot @canvas-cols 2)
         canvas-center-y (quot status-bar-row 2)
-        ; modular arithmetics to wrap around the map
+        
         corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-size)
         corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-size)]
     [corrected-world-x corrected-world-y]))
 
 (defn render-screen []
-  ;(println (inc @player-x) (inc @player-y))
+  
   (dosync
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @canvas-cols 2)
          canvas-center-y (quot status-bar-row 2)
          shift-x (- @canvas-cols 2)
          shift-y (- status-bar-row 2)]
-     ; when we're stepping on the edge, we need to re-center so we can see what's over the edge
-     ; we can find ourselves over the edge after resize that shrinks a window
+     
+     
      (when (>= 0 (+ canvas-center-x @render-delta-x))
        (a render-center-x (- @render-center-x shift-x))
        (a render-delta-x (+ @render-delta-x shift-x)))
      (when (<= (dec @canvas-cols) (+ canvas-center-x @render-delta-x))
        (a render-center-x (+ @render-center-x shift-x))
        (a render-delta-x (- @render-delta-x shift-x)))
-     ; same logic plus taking status bar into account
+     
      (when (>= 0 (+ canvas-center-y @render-delta-y))
        (a render-center-y (- @render-center-y shift-y))
        (a render-delta-y (+ @render-delta-y shift-y)))
      (when (<= (dec status-bar-row) (+ canvas-center-y @render-delta-y))
        (a render-center-y (+ @render-center-y shift-y))
        (a render-delta-y (- @render-delta-y shift-y)))
-     ; draw the world
+     
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
        (s/put-string @b x y (str (get-in world-map (screen-to-world x y))) {:fg :white :bg :black}))
-     ; draw the player
+     
      (s/put-string @b (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @b (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
-     ; clear and set the status bar
+     
      (s/put-string @b 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
-     (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
-           ; inc/dec to be in sync with get-altitude
+     (let [alt-width 2 
+           
            arrow-left (cond (= @cur-altitude max-altitude) "T"
                             (> @player-x (inc summit-coord)) "<"
                             :else " ")
@@ -149,8 +149,8 @@
            arrow-right (cond (= @cur-altitude max-altitude) "P"
                              (< @player-x (dec summit-coord)) ">"
                              :else " ")
-           ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
-           ; fit in 80 symbols of standard terminal
+           
+           
            string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
                           @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @b 0 status-bar-row string {:fg :black :bg :white})))
@@ -159,49 +159,49 @@
 (defn parse-input []
   (case (s/get-key-blocking @b)
     \q (do (s/stop @b)
-           (dosync (a b nil))) ; hacky way to quit
+           (dosync (a b nil))) 
     \c (recenter)
     (\r \5) (rest-turn)
-    (\h \4) (c [-1 0] false) ; left
+    (\h \4) (c [-1 0] false) 
     (:left \H) (c [-1 0] true)
-    (\j \2) (c [0 1] false) ; down
+    (\j \2) (c [0 1] false) 
     (:down \J) (c [0 1] true)
-    (\k \8) (c [0 -1] false) ; up
+    (\k \8) (c [0 -1] false) 
     (:up \K) (c [0 -1] true)
-    (\l \6) (c [1 0] false) ; right
+    (\l \6) (c [1 0] false) 
     (:right \L) (c [1 0] true)
-    (\y \7) (c [-1 -1] false) ; up-left
+    (\y \7) (c [-1 -1] false) 
     (:home \Y) (c [-1 -1] true)
-    (\u \9) (c [1 -1] false) ; up-right
+    (\u \9) (c [1 -1] false) 
     (:page-up \U) (c [1 -1] true)
-    (\b \1) (c [-1 1] false) ; down-left
+    (\b \1) (c [-1 1] false) 
     (:end \B) (c [-1 1] true)
-    (\n \3) (c [1 1] false) ; down-right
+    (\n \3) (c [1 1] false) 
     (:page-down \N) (c [1 1] true)
     nil))
 
 (defn game-loop []
   (render-screen)
   (parse-input)
-  (when (some? @b) ; hacky way to quit
+  (when (some? @b) 
     (recur)))
 
 (defn handle-resize [cols rows]
   (dosync (a canvas-cols cols)
           (a canvas-rows rows))
   (recenter)
-  ; for some reason, (redraw) inside (render-screen) is not enough
+  
   (s/redraw @b)
   (render-screen))
 
 (defn -main [& args]
-  ; Windows can't live without Swing, but on *nix it's better to use standard terminal
+  
   (let [terminal-type (keyword (or (first args)
                                    (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
         options (edn/read-string (or (second args) "{}"))]
     (dosync (a b (s/get-screen terminal-type options))
             (s/start @b)
-            ; for some reason, this works better than setting :resize-listener argument to get-screen
+            
             (s/add-resize-listener @b handle-resize)
             (let [[cols rows] (s/get-size @b)]
               (a canvas-cols cols)

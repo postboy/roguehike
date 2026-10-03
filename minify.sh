@@ -3,6 +3,7 @@
 # sed -e 's/[^[:alpha:]-]/ /g' src/roguehike/core.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 1
 target=stage1.clj
 cp original.clj $target
+sed -i 's/\(.*\);.*/\1/g' $target
 sed -i 's/ref-set/a/g' $target
 sed -i 's/(def a a)/(def a ref-set)/g' $target
 sed -i 's/@screen/@b/g' $target
@@ -11,7 +12,6 @@ sed -i 's/move /c /g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
 cp stage1.clj $target
-sed -i 's/\(.*\);.*/\1/g' $target
 sed -i 's/ \+/ /g' $target
 sed -i 's/ \\/\\/g' $target
 sed -i 's/ (/(/g' $target
