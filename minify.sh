@@ -8,6 +8,7 @@ sed -i 's/ \+/ /g' stage2.clj
 sed -i 's/ \\/\\/g' stage2.clj
 sed -i 's/ (/(/g' stage2.clj
 sed -i 's/) /)/g' stage2.clj
+sed -i 's/ @/@/g' stage2.clj
 sed -i 's/} /}/g' stage2.clj
 sed -i 's/ \[/\[/g' stage2.clj
 sed -i 's/\] /\]/g' stage2.clj
