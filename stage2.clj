@@ -53,7 +53,7 @@
 (def cur-energy(ref max-energy))
 (def canvas-cols(ref 0))
 (def canvas-rows(ref 0))
-(def screen(ref nil))
+(def b(ref nil))
 
 (defn recenter[]
 (dosync
@@ -133,12 +133,12 @@ shift-y(- status-bar-row 2)]
 
 (doseq[x(range@canvas-cols)
 y(range status-bar-row)]
-(s/put-string@screen x y(str(get-in world-map(screen-to-world x y))){:fg :white :bg :black}))
+(s/put-string@b x y(str(get-in world-map(screen-to-world x y))){:fg :white :bg :black}))
 
-(s/put-string@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i"{:fg :white :bg :black})
-(s/move-cursor@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y))
+(s/put-string@b(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i"{:fg :white :bg :black})
+(s/move-cursor@b(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y))
 
-(s/put-string@screen 0 status-bar-row(apply str(repeat@canvas-cols" ")){:fg :black :bg :white})
+(s/put-string@b 0 status-bar-row(apply str(repeat@canvas-cols" ")){:fg :black :bg :white})
 (let[alt-width 2 
 
 arrow-left(cond(=@cur-altitude max-altitude)"T"
@@ -155,13 +155,13 @@ arrow-right(cond(=@cur-altitude max-altitude)"P"
 
 string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 @cur-energy@cur-altitude max-altitude arrow-left arrow-up-down arrow-right@status-message)]
-(s/put-string@screen 0 status-bar-row string{:fg :black :bg :white})))
-(s/redraw@screen)))
+(s/put-string@b 0 status-bar-row string{:fg :black :bg :white})))
+(s/redraw@b)))
 
 (defn parse-input[]
-(case(s/get-key-blocking@screen)
-\q(do(s/stop@screen)
-(dosync(a screen nil)))
+(case(s/get-key-blocking@b)
+\q(do(s/stop@b)
+(dosync(a b nil)))
 \c(recenter)
 (\r\5)(rest-turn)
 (\h\4)(move[-1 0]false)
@@ -185,7 +185,7 @@ nil))
 (defn game-loop[]
 (render-screen)
 (parse-input)
-(when(some?@screen)
+(when(some?@b)
 (recur)))
 
 (defn handle-resize[cols rows]
@@ -193,7 +193,7 @@ nil))
 (a canvas-rows rows))
 (recenter)
 
-(s/redraw@screen)
+(s/redraw@b)
 (render-screen))
 
 (defn -main[& args]
@@ -201,11 +201,11 @@ nil))
 (let[terminal-type(keyword(or(first args)
 (if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
 options(edn/read-string(or(second args)"{}"))]
-(dosync(a screen(s/get-screen terminal-type options))
-(s/start@screen)
+(dosync(a b(s/get-screen terminal-type options))
+(s/start@b)
 
-(s/add-resize-listener@screen handle-resize)
-(let[[cols rows](s/get-size@screen)]
+(s/add-resize-listener@b handle-resize)
+(let[[cols rows](s/get-size@b)]
 (a canvas-cols cols)
 (a canvas-rows rows)))
 (game-loop)))
