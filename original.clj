@@ -25,7 +25,6 @@
 
 (def world-size 150)
 (def summit-coord 75)
-(def max-altitude 75)
 (def max-energy 100)
 ; weird order here so we don't have to bother about it elsewhere
 (def world-map (vec (for [_ (range world-size)]
@@ -34,7 +33,7 @@
 
 ; must be in sync with arrows to summit
 (defn get-altitude [x y]
-  (max 0 (- max-altitude
+  (max 0 (- 75
             ; distance to top
             ; decrement here is required for in-game top to be an area, not a single square
             (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-coord) 2)
@@ -61,7 +60,7 @@
    (ref-set render-delta-y 0)))
 
 (defn rest-turn []
-  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain""")]
+  (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
     (dosync
      (ref-set cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
@@ -92,7 +91,7 @@
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
                (cond (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude max-altitude) (ref-set status-message (str "You "verb"."))
+                     (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
                      :else (ref-set status-message (str "You "verb" on top of the mountain."))))))))))
 
 ; render center will be in center of the canvas, so move everything accordingly
@@ -139,20 +138,20 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            ; inc/dec to be in sync with get-altitude
-           arrow-left (cond (= @cur-altitude max-altitude) "T"
+           arrow-left (cond (= @cur-altitude 75) "T"
                             (> @player-x (inc summit-coord)) "<"
                             :else " ")
-           arrow-up-down (cond (= @cur-altitude max-altitude) "O"
+           arrow-up-down (cond (= @cur-altitude 75) "O"
                                (< @player-y (dec summit-coord)) "v"
                                (> @player-y (inc summit-coord)) "^"
                                :else " ")
-           arrow-right (cond (= @cur-altitude max-altitude) "P"
+           arrow-right (cond (= @cur-altitude 75) "P"
                              (< @player-x (dec summit-coord)) ">"
                              :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
            string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
-                          @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+                          @cur-energy @cur-altitude 75 arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 

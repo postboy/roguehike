@@ -25,7 +25,6 @@
 
 (def world-size 150)
 (def i 75)
-(def max-altitude 75)
 (def max-energy 100)
 
 (def world-map (vec (for [_ (range world-size)]
@@ -34,7 +33,7 @@
 
 
 (defn get-altitude [x y]
-  (max 0 (- max-altitude
+  (max 0 (- 75
             
             
             (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x i) 2)
@@ -61,7 +60,7 @@
    (a e 0)))
 
 (defn rest-turn []
-  (let [location (if (= @f max-altitude) " on top of the mountain""")]
+  (let [location (if (= @f 75) " on top of the mountain""")]
     (dosync
      (a cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
@@ -92,7 +91,7 @@
                (a cur-energy (- @cur-energy step-cost))
                
                (cond (nil? (get-in world-map [x y])) (a g "You are about to leave wilderness. Press q to quit.")
-                     (< @f max-altitude) (a g  (str "You "verb"."))
+                     (< @f 75) (a g  (str "You "verb"."))
                      :else (a g  (str "You "verb" on top of the mountain."))))))))))
 
 
@@ -139,20 +138,20 @@
      (s/put-string @b 0 status-bar-row (apply str (repeat @h" ")) {:fg :black :bg :white})
      (let [alt-width 2 
            
-           arrow-left (cond (= @f max-altitude) "T"
+           arrow-left (cond (= @f 75) "T"
                             (> @player-x (inc i)) "<"
                             :else " ")
-           arrow-up-down (cond (= @f max-altitude) "O"
+           arrow-up-down (cond (= @f 75) "O"
                                (< @player-y (dec i)) "v"
                                (> @player-y (inc i)) "^"
                                :else " ")
-           arrow-right (cond (= @f max-altitude) "P"
+           arrow-right (cond (= @f 75) "P"
                              (< @player-x (dec i)) ">"
                              :else " ")
            
            
            string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
-                          @cur-energy @f max-altitude arrow-left arrow-up-down arrow-right @g)]
+                          @cur-energy @f 75 arrow-left arrow-up-down arrow-right @g)]
        (s/put-string @b 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @b)))
 
