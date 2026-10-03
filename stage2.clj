@@ -83,7 +83,7 @@ step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 (< new-altitude@cur-altitude)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
 (if(<@cur-energy step-cost)
-(ref-set status-message(str "You're too tired to " verb ". You need a rest."))
+(ref-set status-message(str"You're too tired to " verb ". You need a rest."))
 (do(ref-set player-x x)
 (ref-set player-y y)
 (ref-set render-delta-x new-delta-x)
@@ -92,8 +92,8 @@ step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 (ref-set cur-energy(-@cur-energy step-cost))
 
 (cond(nil?(get-in world-map[x y]))(ref-set status-message"You are about to leave wilderness. Press q to quit.")
-(<@cur-altitude max-altitude)(ref-set status-message(str "You " verb "."))
-:else(ref-set status-message(str "You " verb " on top of the mountain."))))))))))
+(<@cur-altitude max-altitude)(ref-set status-message(str"You " verb "."))
+:else(ref-set status-message(str"You " verb " on top of the mountain."))))))))))
 
 
 (defn screen-to-world[screen-x screen-y]
@@ -151,7 +151,7 @@ arrow-right(cond(=@cur-altitude max-altitude)"P"
 :else" ")
 
 
-string(format(str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+string(format(str"NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
 @cur-energy@cur-altitude max-altitude arrow-left arrow-up-down arrow-right@status-message)]
 (s/put-string@screen 0 status-bar-row string {:fg :black :bg :white})))
 (s/redraw@screen)))

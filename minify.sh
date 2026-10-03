@@ -15,6 +15,7 @@ sed -i 's/} /}/g' $target
 sed -i 's/ \[/\[/g' $target
 sed -i 's/\] /\]/g' $target
 sed -i 's/^ //g' $target
+sed -i 's/(str "/(str"/g' $target
 # stage 3: remove newlines (and bit of excess spaces again)
 target=src/roguehike/core.clj
 tr -d '\n' < stage2.clj > $target
@@ -28,3 +29,4 @@ sed -i 's/} /}/g' $target
 sed -i 's/ \[/\[/g' $target
 sed -i 's/\] /\]/g' $target
 sed -i 's/^ //g' $target
+sed -i 's/(str "/(str"/g' $target
