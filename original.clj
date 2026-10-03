@@ -46,7 +46,7 @@
 (def render-center-y (ref @player-y))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
-(def status-message (ref"You're standing at foot of the mountain."))
+(def status-message (ref "You're standing at foot of the mountain."))
 (def cur-altitude (ref (get-altitude @player-x @player-y)))
 (def cur-energy (ref max-energy))
 (def canvas-cols (ref 0))
