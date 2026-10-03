@@ -141,14 +141,14 @@ y(range status-bar-row)]
 
 arrow-left(cond(=@cur-altitude max-altitude)"T"
 (>@player-x(inc summit-x))"<"
-:else " ")
+:else" ")
 arrow-up-down(cond(=@cur-altitude max-altitude)"O"
 (<@player-y(dec summit-y))"v"
 (>@player-y(inc summit-y))"^"
-:else " ")
+:else" ")
 arrow-right(cond(=@cur-altitude max-altitude)"P"
 (<@player-x(dec summit-x))">"
-:else " ")
+:else" ")
 
 
 string(format(str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
@@ -197,7 +197,7 @@ nil))
 (defn -main[& args]
 
 (let[terminal-type(keyword(or(first args)
-(if(re-matches #"Windows.*"(System/getProperty "os.name"))"auto" "unix")))
+(if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
 options(edn/read-string(or(second args)"{}"))]
 (dosync(ref-set screen(s/get-screen terminal-type options))
 (s/start@screen)
