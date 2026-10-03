@@ -46,7 +46,7 @@
 (def render-center-y (ref @player-y))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
-(def status-message (ref "You're standing at foot of the mountain."))
+(def status-message (ref"You're standing at foot of the mountain."))
 (def cur-altitude (ref (get-altitude @player-x @player-y)))
 (def cur-energy (ref max-energy))
 (def canvas-cols (ref 0))
@@ -61,12 +61,12 @@
    (ref-set render-delta-y 0)))
 
 (defn rest-turn []
-  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain" "")]
+  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain""")]
     (dosync
      (ref-set cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
-       (ref-set status-message (str "You're fully rested" location "."))
-       (ref-set status-message (str "You rest for a while" location "."))))))
+       (ref-set status-message (str"You're fully rested"location"."))
+       (ref-set status-message (str"You rest for a while"location"."))))))
 
 (defn move [shift clamber]
   (dosync
