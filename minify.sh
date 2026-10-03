@@ -1,6 +1,6 @@
 #!/bin/sh
 # stage 1: change identifiers
-# sed -e 's/[^[:alpha:]-]/ /g' src/roguehike/core.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 1
+# sed -e 's/[^[:alpha:]-]/ /g' src/r/c.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 20
 target=stage1.clj
 cp original.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
