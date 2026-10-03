@@ -1,4 +1,4 @@
-(ns roguehike.core
+(ns rh.core
   (:require [lanterna.screen :as s]
             [roul.random :as rr]
             [clojure.math :as math]
