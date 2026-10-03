@@ -23,15 +23,14 @@
 
 (defn obstacle?[square](not(#{\space\.\,\`\*\"\o\w\t}square)))
 
-(def world-cols 150)
-(def world-rows world-cols)
-(def summit-x(quot world-cols 2))
-(def summit-y(quot world-rows 2))
-(def max-altitude(quot(+ world-cols world-rows)4))
+(def world-size 150)
+(def summit-x(quot world-size 2))
+(def summit-y(quot world-size 2))
+(def max-altitude(quot(+ world-size world-size)4))
 (def max-energy 100)
 
-(def world-map(vec(for[_(range world-cols)]
-(vec(for[_(range world-rows)]
+(def world-map(vec(for[_(range world-size)]
+(vec(for[_(range world-size)]
 (rr/rand-nth-weighted map-symbols))))))
 
 
@@ -43,7 +42,7 @@
 (math/pow(- y summit-y)2)))))))))
 
 (def player-x(ref summit-x))
-(def player-y(ref(- world-rows 2)))
+(def player-y(ref(- world-size 2)))
 (def render-center-x(ref@player-x))
 (def render-center-y(ref@player-y))
 (def render-delta-x(ref 0))
@@ -74,7 +73,7 @@
 (dosync
 (let[[x y](mapv +[@player-x@player-y]shift)
 
-dest(get-in world-map[(mod x world-cols)(mod y world-rows)])]
+dest(get-in world-map[(mod x world-size)(mod y world-size)])]
 (if(and(obstacle? dest)(not clamber))
 (a status-message"Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@render-delta-x@render-delta-y]shift)
@@ -103,8 +102,8 @@ step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 canvas-center-x(quot@canvas-cols 2)
 canvas-center-y(quot status-bar-row 2)
 
-corrected-world-x(mod(+(-@render-center-x canvas-center-x)screen-x)world-cols)
-corrected-world-y(mod(+(-@render-center-y canvas-center-y)screen-y)world-rows)]
+corrected-world-x(mod(+(-@render-center-x canvas-center-x)screen-x)world-size)
+corrected-world-y(mod(+(-@render-center-y canvas-center-y)screen-y)world-size)]
 [corrected-world-x corrected-world-y]))
 
 (defn render-screen[]
