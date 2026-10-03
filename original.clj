@@ -59,7 +59,7 @@
    (ref-set render-delta-y 0)))
 
 (defn rest-turn []
-  (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
+  (let [location (if (= 75 @cur-altitude) " on top of the mountain""")]
     (dosync
      (ref-set cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
@@ -90,7 +90,7 @@
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
                (cond (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
+                     (> 75 @cur-altitude) (ref-set status-message (str "You "verb"."))
                      :else (ref-set status-message (str "You "verb" on top of the mountain."))))))))))
 
 ; render center will be in center of the canvas, so move everything accordingly
@@ -137,15 +137,15 @@
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            ; inc/dec to be in sync with get-altitude
-           arrow-left (cond (= @cur-altitude 75) "T"
-                            (> @player-x (inc 75)) "<"
+           arrow-left (cond (= 75 @cur-altitude) "T"
+                            (< 76 @player-x) "<"
                             :else " ")
-           arrow-up-down (cond (= @cur-altitude 75) "O"
-                               (< @player-y (dec 75)) "v"
-                               (> @player-y (inc 75)) "^"
+           arrow-up-down (cond (= 75 @cur-altitude) "O"
+                               (> 74 @player-y) "v"
+                               (< 76 @player-y) "^"
                                :else " ")
-           arrow-right (cond (= @cur-altitude 75) "P"
-                             (< @player-x (dec 75)) ">"
+           arrow-right (cond (= 75 @cur-altitude) "P"
+                             (> 74 @player-x) ">"
                              :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
