@@ -5,6 +5,8 @@
 [clojure.edn :as edn])
 (:gen-class))
 
+(def a ref-set)
+
 (def map-symbols[[\space 150]
 [\. 20][\, 15][\` 15]
 [\* 40]
@@ -55,18 +57,18 @@
 
 (defn recenter[]
 (dosync
-(ref-set render-center-x@player-x)
-(ref-set render-delta-x 0)
-(ref-set render-center-y@player-y)
-(ref-set render-delta-y 0)))
+(a render-center-x@player-x)
+(a render-delta-x 0)
+(a render-center-y@player-y)
+(a render-delta-y 0)))
 
 (defn rest-turn[]
 (let[location(if(=@cur-altitude max-altitude)" on top of the mountain""")]
 (dosync
-(ref-set cur-energy(min max-energy(+@cur-energy 5)))
+(a cur-energy(min max-energy(+@cur-energy 5)))
 (if(=@cur-energy max-energy)
-(ref-set status-message(str"You're fully rested"location"."))
-(ref-set status-message(str"You rest for a while"location"."))))))
+(a status-message(str"You're fully rested"location"."))
+(a status-message(str"You rest for a while"location"."))))))
 
 (defn move[shift clamber]
 (dosync
@@ -74,7 +76,7 @@
 
 dest(get-in world-map[(mod x world-cols)(mod y world-rows)])]
 (if(and(obstacle? dest)(not clamber))
-(ref-set status-message"Can't walk there, only clamber: path is obstructed.")
+(a status-message"Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@render-delta-x@render-delta-y]shift)
 new-altitude(get-altitude x y)
 clamber-modifier(if(obstacle? dest)6 1)
@@ -83,17 +85,17 @@ step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 (< new-altitude@cur-altitude)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
 (if(<@cur-energy step-cost)
-(ref-set status-message(str"You're too tired to "verb". You need a rest."))
-(do(ref-set player-x x)
-(ref-set player-y y)
-(ref-set render-delta-x new-delta-x)
-(ref-set render-delta-y new-delta-y)
-(ref-set cur-altitude new-altitude)
-(ref-set cur-energy(-@cur-energy step-cost))
+(a status-message(str"You're too tired to "verb". You need a rest."))
+(do(a player-x x)
+(a player-y y)
+(a render-delta-x new-delta-x)
+(a render-delta-y new-delta-y)
+(a cur-altitude new-altitude)
+(a cur-energy(-@cur-energy step-cost))
 
-(cond(nil?(get-in world-map[x y]))(ref-set status-message"You are about to leave wilderness. Press q to quit.")
-(<@cur-altitude max-altitude)(ref-set status-message(str"You "verb"."))
-:else(ref-set status-message(str"You "verb" on top of the mountain."))))))))))
+(cond(nil?(get-in world-map[x y]))(a status-message"You are about to leave wilderness. Press q to quit.")
+(<@cur-altitude max-altitude)(a status-message(str"You "verb"."))
+:else(a status-message(str"You "verb" on top of the mountain."))))))))))
 
 
 (defn screen-to-world[screen-x screen-y]
@@ -116,18 +118,18 @@ shift-y(- status-bar-row 2)]
 
 
 (when(>= 0(+ canvas-center-x@render-delta-x))
-(ref-set render-center-x(-@render-center-x shift-x))
-(ref-set render-delta-x(+@render-delta-x shift-x)))
+(a render-center-x(-@render-center-x shift-x))
+(a render-delta-x(+@render-delta-x shift-x)))
 (when(<=(dec@canvas-cols)(+ canvas-center-x@render-delta-x))
-(ref-set render-center-x(+@render-center-x shift-x))
-(ref-set render-delta-x(-@render-delta-x shift-x)))
+(a render-center-x(+@render-center-x shift-x))
+(a render-delta-x(-@render-delta-x shift-x)))
 
 (when(>= 0(+ canvas-center-y@render-delta-y))
-(ref-set render-center-y(-@render-center-y shift-y))
-(ref-set render-delta-y(+@render-delta-y shift-y)))
+(a render-center-y(-@render-center-y shift-y))
+(a render-delta-y(+@render-delta-y shift-y)))
 (when(<=(dec status-bar-row)(+ canvas-center-y@render-delta-y))
-(ref-set render-center-y(+@render-center-y shift-y))
-(ref-set render-delta-y(-@render-delta-y shift-y)))
+(a render-center-y(+@render-center-y shift-y))
+(a render-delta-y(-@render-delta-y shift-y)))
 
 (doseq[x(range@canvas-cols)
 y(range status-bar-row)]
@@ -159,7 +161,7 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 (defn parse-input[]
 (case(s/get-key-blocking@screen)
 \q(do(s/stop@screen)
-(dosync(ref-set screen nil)))
+(dosync(a screen nil)))
 \c(recenter)
 (\r\5)(rest-turn)
 (\h\4)(move[-1 0]false)
@@ -187,8 +189,8 @@ nil))
 (recur)))
 
 (defn handle-resize[cols rows]
-(dosync(ref-set canvas-cols cols)
-(ref-set canvas-rows rows))
+(dosync(a canvas-cols cols)
+(a canvas-rows rows))
 (recenter)
 
 (s/redraw@screen)
@@ -199,11 +201,11 @@ nil))
 (let[terminal-type(keyword(or(first args)
 (if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
 options(edn/read-string(or(second args)"{}"))]
-(dosync(ref-set screen(s/get-screen terminal-type options))
+(dosync(a screen(s/get-screen terminal-type options))
 (s/start@screen)
 
 (s/add-resize-listener@screen handle-resize)
 (let[[cols rows](s/get-size@screen)]
-(ref-set canvas-cols cols)
-(ref-set canvas-rows rows)))
+(a canvas-cols cols)
+(a canvas-rows rows)))
 (game-loop)))

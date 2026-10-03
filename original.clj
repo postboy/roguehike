@@ -5,6 +5,8 @@
             [clojure.edn :as edn])
   (:gen-class))
 
+(def ref-set a)
+
 (def map-symbols [[\space 150]
                   [\. 20] [\, 15] [\` 15]
                   [\* 40]

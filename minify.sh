@@ -1,7 +1,10 @@
 #!/bin/sh
 # stage 1: change identifiers
+# sed -e 's/[^[:alpha:]-]/ /g' original.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 1
 target=stage1.clj
 cp original.clj $target
+sed -i 's/ref-set/a/g' $target
+sed -i 's/(def a a)/(def a ref-set)/g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
 cp stage1.clj $target
