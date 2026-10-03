@@ -24,8 +24,8 @@
 (defn obstacle?[square](not(#{\space\.\,\`\*\"\o\w\t}square)))
 
 (def world-size 150)
-(def summit-coord(quot world-size 2))
-(def max-altitude(quot(+ world-size world-size)4))
+(def summit-coord 75)
+(def max-altitude 75)
 (def max-energy 100)
 
 (def world-map(vec(for[_(range world-size)]
@@ -41,13 +41,13 @@
 (math/pow(- y summit-coord)2)))))))))
 
 (def player-x(ref summit-coord))
-(def player-y(ref(- world-size 2)))
+(def player-y(ref 148))
 (def render-center-x(ref@player-x))
 (def render-center-y(ref@player-y))
 (def render-delta-x(ref 0))
 (def render-delta-y(ref 0))
 (def status-message(ref"You're standing at foot of the mountain."))
-(def cur-altitude(ref(get-altitude@player-x@player-y)))
+(def cur-altitude(ref 3))
 (def cur-energy(ref max-energy))
 (def canvas-cols(ref 0))
 (def canvas-rows(ref 0))
