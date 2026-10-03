@@ -10,3 +10,4 @@ sed -i 's/ (/(/g' src/roguehike/core.clj
 sed -i 's/) /)/g' src/roguehike/core.clj
 sed -i 's/} /}/g' src/roguehike/core.clj
 sed -i 's/ \[/\[/g' src/roguehike/core.clj
+sed -i 's/\] /\]/g' src/roguehike/core.clj
