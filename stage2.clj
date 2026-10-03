@@ -151,7 +151,7 @@ arrow-right(cond(=@cur-altitude max-altitude)"P"
 :else" ")
 
 
-string(format(str"NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 @cur-energy@cur-altitude max-altitude arrow-left arrow-up-down arrow-right@status-message)]
 (s/put-string@screen 0 status-bar-row string {:fg :black :bg :white})))
 (s/redraw@screen)))

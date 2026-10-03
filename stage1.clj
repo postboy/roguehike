@@ -151,7 +151,7 @@
                              :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
-           string (format (str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
+           string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
                           @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
