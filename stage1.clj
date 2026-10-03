@@ -24,7 +24,6 @@
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
 (def world-size 150)
-(def max-energy 100)
 
 (def world-map (vec (for [_ (range world-size)]
                       (vec (for [_ (range world-size)]
@@ -46,7 +45,7 @@
 (def e (ref 0))
 (def g  (ref "You're standing at foot of the mountain."))
 (def f (ref 3))
-(def cur-energy (ref max-energy))
+(def cur-energy (ref 100))
 (def h (ref 0))
 (def canvas-rows (ref 0))
 (def b (ref nil))
@@ -61,8 +60,8 @@
 (defn rest-turn []
   (let [location (if (= 75 @f) " on top of the mountain""")]
     (dosync
-     (a cur-energy (min max-energy (+ @cur-energy 5)))
-     (if (= @cur-energy max-energy)
+     (a cur-energy (min 100 (+ @cur-energy 5)))
+     (if (= @cur-energy 100)
        (a g  (str "You're fully rested"location"."))
        (a g  (str "You rest for a while"location"."))))))
 
