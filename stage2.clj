@@ -133,7 +133,7 @@ shift-y(- status-bar-row 2)]
 y(range status-bar-row)]
 (s/put-string@screen x y(str(get-in world-map(screen-to-world x y))){:fg :white :bg :black}))
 
-(s/put-string@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i" {:fg :white :bg :black})
+(s/put-string@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i"{:fg :white :bg :black})
 (s/move-cursor@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y))
 
 (s/put-string@screen 0 status-bar-row(apply str(repeat@canvas-cols" ")){:fg :black :bg :white})
@@ -153,7 +153,7 @@ arrow-right(cond(=@cur-altitude max-altitude)"P"
 
 string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 @cur-energy@cur-altitude max-altitude arrow-left arrow-up-down arrow-right@status-message)]
-(s/put-string@screen 0 status-bar-row string {:fg :black :bg :white})))
+(s/put-string@screen 0 status-bar-row string{:fg :black :bg :white})))
 (s/redraw@screen)))
 
 (defn parse-input[]

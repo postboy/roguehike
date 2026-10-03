@@ -11,6 +11,7 @@ sed -i 's/ \\/\\/g' $target
 sed -i 's/ (/(/g' $target
 sed -i 's/) /)/g' $target
 sed -i 's/ @/@/g' $target
+sed -i 's/ {/{/g' $target
 sed -i 's/} /}/g' $target
 sed -i 's/ \[/\[/g' $target
 sed -i 's/\] /\]/g' $target
@@ -27,6 +28,7 @@ sed -i 's/ \\/\\/g' $target
 sed -i 's/ (/(/g' $target
 sed -i 's/) /)/g' $target
 sed -i 's/ @/@/g' $target
+sed -i 's/ {/{/g' $target
 sed -i 's/} /}/g' $target
 sed -i 's/ \[/\[/g' $target
 sed -i 's/\] /\]/g' $target
