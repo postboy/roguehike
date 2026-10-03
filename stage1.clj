@@ -46,7 +46,7 @@
 (def render-center-y (ref @player-y))
 (def d (ref 0))
 (def e (ref 0))
-(def status-message (ref "You're standing at foot of the mountain."))
+(def g  (ref "You're standing at foot of the mountain."))
 (def f (ref 3))
 (def cur-energy (ref max-energy))
 (def canvas-cols (ref 0))
@@ -65,8 +65,8 @@
     (dosync
      (a cur-energy (min max-energy (+ @cur-energy 5)))
      (if (= @cur-energy max-energy)
-       (a status-message (str "You're fully rested"location"."))
-       (a status-message (str "You rest for a while"location"."))))))
+       (a g  (str "You're fully rested"location"."))
+       (a g  (str "You rest for a while"location"."))))))
 
 (defn c [shift clamber]
   (dosync
@@ -74,7 +74,7 @@
          
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
      (if (and (obstacle? dest) (not clamber))
-       (a status-message"Can't walk there, only clamber: path is obstructed.")
+       (a g "Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@d @e] shift)
              new-altitude (get-altitude x y)
              clamber-modifier (if (obstacle? dest) 6 1)
@@ -83,7 +83,7 @@
                              (< new-altitude @f) (* clamber-modifier 2)
                              :else (* clamber-modifier 1))]
          (if (< @cur-energy step-cost)
-           (a status-message (str "You're too tired to "verb". You need a rest."))
+           (a g  (str "You're too tired to "verb". You need a rest."))
            (do (a player-x x)
                (a player-y y)
                (a d new-delta-x)
@@ -91,9 +91,9 @@
                (a f new-altitude)
                (a cur-energy (- @cur-energy step-cost))
                
-               (cond (nil? (get-in world-map [x y])) (a status-message"You are about to leave wilderness. Press q to quit.")
-                     (< @f max-altitude) (a status-message (str "You "verb"."))
-                     :else (a status-message (str "You "verb" on top of the mountain."))))))))))
+               (cond (nil? (get-in world-map [x y])) (a g "You are about to leave wilderness. Press q to quit.")
+                     (< @f max-altitude) (a g  (str "You "verb"."))
+                     :else (a g  (str "You "verb" on top of the mountain."))))))))))
 
 
 (defn screen-to-world [screen-x screen-y]
@@ -152,7 +152,7 @@
            
            
            string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
-                          @cur-energy @f max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+                          @cur-energy @f max-altitude arrow-left arrow-up-down arrow-right @g)]
        (s/put-string @b 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @b)))
 

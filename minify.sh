@@ -14,6 +14,8 @@ sed -i 's/@render-delta-y/@e/g' $target
 sed -i 's/ render-delta-y / e /g' $target
 sed -i 's/@cur-altitude/@f/g' $target
 sed -i 's/ cur-altitude / f /g' $target
+sed -i 's/@status-message/@g/g' $target
+sed -i 's/ status-message/ g /g' $target
 sed -i 's/move /c /g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
