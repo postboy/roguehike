@@ -74,7 +74,7 @@
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
      (if (and (obstacle? dest) (not clamber))
-       (ref-set status-message "Can't walk there, only clamber: path is obstructed.")
+       (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
              clamber-modifier (if (obstacle? dest) 6 1)
@@ -91,7 +91,7 @@
                (ref-set cur-altitude new-altitude)
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
-               (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
+               (cond (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
                      (< @cur-altitude max-altitude) (ref-set status-message (str "You " verb "."))
                      :else (ref-set status-message (str "You " verb " on top of the mountain."))))))))))
 
