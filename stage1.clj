@@ -24,7 +24,6 @@
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
 (def world-size 150)
-(def i 75)
 (def max-energy 100)
 
 (def world-map (vec (for [_ (range world-size)]
@@ -36,10 +35,10 @@
   (max 0 (- 75
             
             
-            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x i) 2)
-                                                  (math/pow (- y i) 2)))))))))
+            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
+                                                  (math/pow (- y 75) 2)))))))))
 
-(def player-x (ref i))
+(def player-x (ref 75))
 (def player-y (ref 148))
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
@@ -139,14 +138,14 @@
      (let [alt-width 2 
            
            arrow-left (cond (= @f 75) "T"
-                            (> @player-x (inc i)) "<"
+                            (> @player-x (inc 75)) "<"
                             :else " ")
            arrow-up-down (cond (= @f 75) "O"
-                               (< @player-y (dec i)) "v"
-                               (> @player-y (inc i)) "^"
+                               (< @player-y (dec 75)) "v"
+                               (> @player-y (inc 75)) "^"
                                :else " ")
            arrow-right (cond (= @f 75) "P"
-                             (< @player-x (dec i)) ">"
+                             (< @player-x (dec 75)) ">"
                              :else " ")
            
            
