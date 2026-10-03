@@ -44,8 +44,8 @@
 (def player-y (ref 148))
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
-(def render-delta-x (ref 0))
-(def render-delta-y (ref 0))
+(def d (ref 0))
+(def e (ref 0))
 (def status-message (ref "You're standing at foot of the mountain."))
 (def cur-altitude (ref 3))
 (def cur-energy (ref max-energy))
@@ -56,9 +56,9 @@
 (defn recenter []
   (dosync
    (a render-center-x @player-x)
-   (a render-delta-x 0)
+   (a d 0)
    (a render-center-y @player-y)
-   (a render-delta-y 0)))
+   (a e 0)))
 
 (defn rest-turn []
   (let [location (if (= @cur-altitude max-altitude) " on top of the mountain""")]
@@ -75,7 +75,7 @@
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
      (if (and (obstacle? dest) (not clamber))
        (a status-message"Can't walk there, only clamber: path is obstructed.")
-       (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
+       (let [[new-delta-x new-delta-y] (mapv + [@d @e] shift)
              new-altitude (get-altitude x y)
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (obstacle? dest) "clamber""walk")
@@ -86,8 +86,8 @@
            (a status-message (str "You're too tired to "verb". You need a rest."))
            (do (a player-x x)
                (a player-y y)
-               (a render-delta-x new-delta-x)
-               (a render-delta-y new-delta-y)
+               (a d new-delta-x)
+               (a e new-delta-y)
                (a cur-altitude new-altitude)
                (a cur-energy (- @cur-energy step-cost))
                
@@ -115,26 +115,26 @@
          shift-y (- status-bar-row 2)]
      
      
-     (when (>= 0 (+ canvas-center-x @render-delta-x))
+     (when (>= 0 (+ canvas-center-x @d))
        (a render-center-x (- @render-center-x shift-x))
-       (a render-delta-x (+ @render-delta-x shift-x)))
-     (when (<= (dec @canvas-cols) (+ canvas-center-x @render-delta-x))
+       (a d (+ @d shift-x)))
+     (when (<= (dec @canvas-cols) (+ canvas-center-x @d))
        (a render-center-x (+ @render-center-x shift-x))
-       (a render-delta-x (- @render-delta-x shift-x)))
+       (a d (- @d shift-x)))
      
-     (when (>= 0 (+ canvas-center-y @render-delta-y))
+     (when (>= 0 (+ canvas-center-y @e))
        (a render-center-y (- @render-center-y shift-y))
-       (a render-delta-y (+ @render-delta-y shift-y)))
-     (when (<= (dec status-bar-row) (+ canvas-center-y @render-delta-y))
+       (a e (+ @e shift-y)))
+     (when (<= (dec status-bar-row) (+ canvas-center-y @e))
        (a render-center-y (+ @render-center-y shift-y))
-       (a render-delta-y (- @render-delta-y shift-y)))
+       (a e (- @e shift-y)))
      
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
        (s/put-string @b x y (str (get-in world-map (screen-to-world x y))) {:fg :white :bg :black}))
      
-     (s/put-string @b (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
-     (s/move-cursor @b (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
+     (s/put-string @b (+ canvas-center-x @d) (+ canvas-center-y @e) "i" {:fg :white :bg :black})
+     (s/move-cursor @b (+ canvas-center-x @d) (+ canvas-center-y @e))
      
      (s/put-string @b 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
      (let [alt-width 2 
