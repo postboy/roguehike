@@ -141,14 +141,14 @@
            ; inc/dec to be in sync with get-altitude
            arrow-left (cond (= @cur-altitude max-altitude) "T"
                             (> @player-x (inc summit-x)) "<"
-                            :else" ")
+                            :else " ")
            arrow-up-down (cond (= @cur-altitude max-altitude) "O"
                                (< @player-y (dec summit-y)) "v"
                                (> @player-y (inc summit-y)) "^"
-                               :else" ")
+                               :else " ")
            arrow-right (cond (= @cur-altitude max-altitude) "P"
                              (< @player-x (dec summit-x)) ">"
-                             :else" ")
+                             :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
            string (format (str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
