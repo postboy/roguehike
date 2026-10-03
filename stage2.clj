@@ -78,7 +78,7 @@ dest(get-in world-map[(mod x world-cols)(mod y world-rows)])]
 (let[[new-delta-x new-delta-y](mapv +[@render-delta-x@render-delta-y]shift)
 new-altitude(get-altitude x y)
 clamber-modifier(if(obstacle? dest)6 1)
-verb(if(obstacle? dest)"clamber" "walk")
+verb(if(obstacle? dest)"clamber""walk")
 step-cost(cond(> new-altitude@cur-altitude)(* clamber-modifier 3)
 (< new-altitude@cur-altitude)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
@@ -136,7 +136,7 @@ y(range status-bar-row)]
 (s/put-string@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y)"i" {:fg :white :bg :black})
 (s/move-cursor@screen(+ canvas-center-x@render-delta-x)(+ canvas-center-y@render-delta-y))
 
-(s/put-string@screen 0 status-bar-row(apply str(repeat@canvas-cols " ")){:fg :black :bg :white})
+(s/put-string@screen 0 status-bar-row(apply str(repeat@canvas-cols" ")){:fg :black :bg :white})
 (let[alt-width 2 
 
 arrow-left(cond(=@cur-altitude max-altitude)"T"
