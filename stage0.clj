@@ -139,50 +139,49 @@
 
 (defn -main [& args]
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
-  (let [terminal-type (keyword (or (first args)
-                                   (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
-        options (edn/read-string (or (second args) "{}"))]
-    (dosync (ref-set screen (s/get-screen terminal-type options))
-            (s/start @screen)
-            ; for some reason, this works better than setting :resize-listener argument to get-screen
-            (s/add-resize-listener @screen (fn [cols rows]
-                                             (dosync (ref-set canvas-cols cols)
-                                               (ref-set canvas-rows rows))
-                                             (recenter)
-                                             ; for some reason, (redraw) inside (render-screen) is not enough
-                                             (s/redraw @screen)
-                                             (render-screen)))
-            (let [[cols rows] (s/get-size @screen)]
-              (ref-set canvas-cols cols)
-              (ref-set canvas-rows rows)))
-    (loop []
-      (render-screen)
-      (case (s/get-key-blocking @screen)
-        \q (do (s/stop @screen)
-          (dosync (ref-set screen nil))) ; hacky way to quit
-        \c (recenter)
-        (\r \5) (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
-                  (dosync
-                    (ref-set cur-energy (min 100 (+ @cur-energy 5)))
-                    (if (= @cur-energy 100)
-                      (ref-set status-message (str "You're fully rested"location"."))
-                      (ref-set status-message (str "You rest for a while"location".")))))
-        (\h \4) (move [-1 0] false) ; left
-        (:left \H) (move [-1 0] true)
-        (\j \2) (move [0 1] false) ; down
-        (:down \J) (move [0 1] true)
-        (\k \8) (move [0 -1] false) ; up
-        (:up \K) (move [0 -1] true)
-        (\l \6) (move [1 0] false) ; right
-        (:right \L) (move [1 0] true)
-        (\y \7) (move [-1 -1] false) ; up-left
-        (:home \Y) (move [-1 -1] true)
-        (\u \9) (move [1 -1] false) ; up-right
-        (:page-up \U) (move [1 -1] true)
-        (\b \1) (move [-1 1] false) ; down-left
-        (:end \B) (move [-1 1] true)
-        (\n \3) (move [1 1] false) ; down-right
-        (:page-down \N) (move [1 1] true)
-        nil)
-      (when (some? @screen) ; hacky way to quit
-        (recur)))))
+  (dosync (ref-set screen (s/get-screen (keyword (or (first args)
+                                                     (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
+                                        (edn/read-string (or (second args) "{}"))))
+  (s/start @screen)
+  ; for some reason, this works better than setting :resize-listener argument to get-screen
+  (s/add-resize-listener @screen (fn [cols rows]
+                                   (dosync (ref-set canvas-cols cols)
+                                           (ref-set canvas-rows rows))
+                                   (recenter)
+                                   ; for some reason, (redraw) inside (render-screen) is not enough
+                                   (s/redraw @screen)
+                                   (render-screen)))
+  (let [[cols rows] (s/get-size @screen)]
+    (ref-set canvas-cols cols)
+    (ref-set canvas-rows rows)))
+  (loop []
+    (render-screen)
+    (case (s/get-key-blocking @screen)
+      \q (do (s/stop @screen)
+        (dosync (ref-set screen nil))) ; hacky way to quit
+      \c (recenter)
+      (\r \5) (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
+                (dosync
+                  (ref-set cur-energy (min 100 (+ @cur-energy 5)))
+                  (if (= @cur-energy 100)
+                    (ref-set status-message (str "You're fully rested"location"."))
+                    (ref-set status-message (str "You rest for a while"location".")))))
+      (\h \4) (move [-1 0] false) ; left
+      (:left \H) (move [-1 0] true)
+      (\j \2) (move [0 1] false) ; down
+      (:down \J) (move [0 1] true)
+      (\k \8) (move [0 -1] false) ; up
+      (:up \K) (move [0 -1] true)
+      (\l \6) (move [1 0] false) ; right
+      (:right \L) (move [1 0] true)
+      (\y \7) (move [-1 -1] false) ; up-left
+      (:home \Y) (move [-1 -1] true)
+      (\u \9) (move [1 -1] false) ; up-right
+      (:page-up \U) (move [1 -1] true)
+      (\b \1) (move [-1 1] false) ; down-left
+      (:end \B) (move [-1 1] true)
+      (\n \3) (move [1 1] false) ; down-right
+      (:page-down \N) (move [1 1] true)
+      nil)
+    (when (some? @screen) ; hacky way to quit
+        (recur))))

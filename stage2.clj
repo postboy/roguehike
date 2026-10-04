@@ -139,10 +139,9 @@ y(range status-bar-row)]
 
 (defn -main[& args]
 
-(let[terminal-type(keyword(or(first args)
+(dosync(a b(s/get-screen(keyword(or(first args)
 (if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
-options(edn/read-string(or(second args)"{}"))]
-(dosync(a b(s/get-screen terminal-type options))
+(edn/read-string(or(second args)"{}"))))
 (s/start@b)
 
 (s/add-resize-listener@b(fn[cols rows]
@@ -185,4 +184,4 @@ options(edn/read-string(or(second args)"{}"))]
 (:page-down\N)(c[1 1]true)
 nil)
 (when(some?@b)
-(recur)))))
+(recur))))
