@@ -83,11 +83,11 @@
 (defn render-screen []
   
   (dosync
-   (let [status-bar-row (dec @canvas-rows)
+   (let [z (dec @canvas-rows)
          canvas-center-x (quot @h 2)
-         canvas-center-y (quot status-bar-row 2)
+         canvas-center-y (quot z 2)
          x (- @h 2)
-         y (- status-bar-row 2)]
+         y (- z 2)]
      
      
      (when (>= 0 (+ canvas-center-x @d))
@@ -100,12 +100,12 @@
      (when (>= 0 (+ canvas-center-y @e))
        (a l (- @l y))
        (a e (+ @e y)))
-     (when (<= (dec status-bar-row) (+ canvas-center-y @e))
+     (when (<= (dec z) (+ canvas-center-y @e))
        (a l (+ @l y))
        (a e (- @e y)))
      
      (doseq [x (range @h)
-             y (range status-bar-row)]
+             y (range z)]
        
        
        (s/put-string @b x y (o (get-in world-map
@@ -116,8 +116,8 @@
      (s/put-string @b (+ canvas-center-x @d) (+ canvas-center-y @e) "i" {:fg :white :bg :black})
      (s/move-cursor @b (+ canvas-center-x @d) (+ canvas-center-y @e))
      
-     (s/put-string @b 0 status-bar-row (apply o (repeat @h" ")) {:fg :black :bg :white})
-     (s/put-string @b 0 status-bar-row
+     (s/put-string @b 0 z (apply o (repeat @h" ")) {:fg :black :bg :white})
+     (s/put-string @b 0 z
      
      
      
