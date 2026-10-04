@@ -94,13 +94,9 @@
 
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
-  (let [status-bar-row (dec @canvas-rows)
-        canvas-center-x (quot @canvas-cols 2)
-        canvas-center-y (quot status-bar-row 2)
-        ; modular arithmetics to wrap around the map
-        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-size)
-        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-size)]
-    [corrected-world-x corrected-world-y]))
+  ; modular arithmetics to wrap around the map
+  [(mod (+ (- @render-center-x (quot @canvas-cols 2)) screen-x) world-size)
+  (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) screen-y) world-size)])
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))

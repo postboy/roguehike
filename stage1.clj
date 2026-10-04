@@ -94,13 +94,9 @@
 
 
 (defn screen-to-world [screen-x screen-y]
-  (let [status-bar-row (dec @canvas-rows)
-        canvas-center-x (quot @h 2)
-        canvas-center-y (quot status-bar-row 2)
-        
-        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) i)
-        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) i)]
-    [corrected-world-x corrected-world-y]))
+  
+  [(mod (+ (- @render-center-x (quot @h 2)) screen-x) i)
+  (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) screen-y) i)])
 
 (defn render-screen []
   
