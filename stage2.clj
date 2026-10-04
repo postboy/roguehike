@@ -135,7 +135,27 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 (s/put-string@b 0 status-bar-row string{:fg :black :bg :white})))
 (s/redraw@b)))
 
-(defn game-loop[]
+(defn handle-resize[cols rows]
+(dosync(a h cols)
+(a canvas-rows rows))
+(recenter)
+
+(s/redraw@b)
+(render-screen))
+
+(defn -main[& args]
+
+(let[terminal-type(keyword(or(first args)
+(if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
+options(edn/read-string(or(second args)"{}"))]
+(dosync(a b(s/get-screen terminal-type options))
+(s/start@b)
+
+(s/add-resize-listener@b handle-resize)
+(let[[cols rows](s/get-size@b)]
+(a h cols)
+(a canvas-rows rows)))
+(loop[]
 (render-screen)
 (case(s/get-key-blocking@b)
 \q(do(s/stop@b)
@@ -165,26 +185,4 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 (:page-down\N)(c[1 1]true)
 nil)
 (when(some?@b)
-(recur)))
-
-(defn handle-resize[cols rows]
-(dosync(a h cols)
-(a canvas-rows rows))
-(recenter)
-
-(s/redraw@b)
-(render-screen))
-
-(defn -main[& args]
-
-(let[terminal-type(keyword(or(first args)
-(if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
-options(edn/read-string(or(second args)"{}"))]
-(dosync(a b(s/get-screen terminal-type options))
-(s/start@b)
-
-(s/add-resize-listener@b handle-resize)
-(let[[cols rows](s/get-size@b)]
-(a h cols)
-(a canvas-rows rows)))
-(game-loop)))
+(recur)))))
