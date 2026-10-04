@@ -63,7 +63,7 @@
                                  (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
                                                                     (m/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
-             verb (if (obstacle? dest) "clamber""walk")
+             verb (if (= clamber-modifier 6) "clamber""walk")
              step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
                              (< new-altitude @cur-altitude) (* clamber-modifier 2)
                              :else (* clamber-modifier 1))]

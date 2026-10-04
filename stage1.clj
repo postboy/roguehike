@@ -63,7 +63,7 @@
                                  (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
                                                                     (m/pow (- y 75) 2))))))))
              v (if (p dest) 6 1)
-             z (if (p dest) "clamber""walk")
+             z (if (= v 6) "clamber""walk")
              step-cost (cond (> u @f) (* v 3)
                              (< u @f) (* v 2)
                              :else (* v 1))]
