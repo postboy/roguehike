@@ -17,7 +17,7 @@
 (def r (vec (for [_ (range i)]
                       (vec (for [_ (range i)]
                              (r/rand-nth-weighted
-                                [[\space 150]
+                                [[\space i]
                                 [\. 20] [\, 15] [\` 15]
                                 [\* 40]
                                 [\" 5]
