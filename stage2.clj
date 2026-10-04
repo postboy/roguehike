@@ -30,7 +30,7 @@
 (def player-x(ref 75))
 (def player-y(ref 148))
 (def k(ref@player-x))
-(def render-center-y(ref@player-y))
+(def l(ref@player-y))
 (def d(ref 0))
 (def e(ref 0))
 (def g(ref"You're standing at foot of the mountain."))
@@ -44,7 +44,7 @@
 (dosync
 (a k@player-x)
 (a d 0)
-(a render-center-y@player-y)
+(a l@player-y)
 (a e 0)))
 
 (defn c[shift clamber]
@@ -97,10 +97,10 @@ shift-y(- status-bar-row 2)]
 (a d(-@d shift-x)))
 
 (when(>= 0(+ canvas-center-y@e))
-(a render-center-y(-@render-center-y shift-y))
+(a l(-@l shift-y))
 (a e(+@e shift-y)))
 (when(<=(dec status-bar-row)(+ canvas-center-y@e))
-(a render-center-y(+@render-center-y shift-y))
+(a l(+@l shift-y))
 (a e(-@e shift-y)))
 
 (doseq[x(range@h)
@@ -109,7 +109,7 @@ y(range status-bar-row)]
 
 (s/put-string@b x y(str(get-in world-map
 [(mod(+(-@k(quot@h 2))x)i)
-(mod(+(-@render-center-y(quot(dec@canvas-rows)2))y)i)]
+(mod(+(-@l(quot(dec@canvas-rows)2))y)i)]
 )){:fg :white :bg :black}))
 
 (s/put-string@b(+ canvas-center-x@d)(+ canvas-center-y@e)"i"{:fg :white :bg :black})
