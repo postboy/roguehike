@@ -7,6 +7,8 @@
 
 (def a ref-set)
 (def o str)
+(def r{:fg :white :bg :black})
+(def s{:fg :black :bg :white})
 
 (defn p[square](#{\0\O\W\T\@\=}square))
 
@@ -111,12 +113,12 @@ y(range z)]
 (s/put-string@b x y(o(get-in r
 [(mod(+(-@k(quot@h 2))x)i)
 (mod(+(-@l(quot(dec@q)2))y)i)]
-)){:fg :white :bg :black}))
+))r))
 
-(s/put-string@b(+ u@d)(+ v@e)"i"{:fg :white :bg :black})
+(s/put-string@b(+ u@d)(+ v@e)"i" r)
 (s/move-cursor@b(+ u@d)(+ v@e))
 
-(s/put-string@b 0 z(apply o(repeat@h" ")){:fg :black :bg :white})
+(s/put-string@b 0 z(apply o(repeat@h" "))s)
 (s/put-string@b 0 z
 
 
@@ -135,7 +137,7 @@ y(range z)]
 (if(<@m 74)">"
 " "))
 @g)
-{:fg :black :bg :white})))
+s)))
 (s/redraw@b))
 
 (defn -main[& args]

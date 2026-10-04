@@ -1,7 +1,7 @@
 #!/bin/sh
 # stage 0: hand optimizations in source code
 # stage 1: change identifiers
-# sed -e 's/[^[:alpha:]-]/ /g' src/r/c.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 25
+# sed -e 's/[^[:alpha:]-]/ /g' src/r/c.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 60
 target=stage1.clj
 cp stage0.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
@@ -29,6 +29,8 @@ sed -i 's/@render-center-x/@k/g' $target
 sed -i 's/ render-center-x / k /g' $target
 sed -i 's/@render-center-y/@l/g' $target
 sed -i 's/ render-center-y / l /g' $target
+sed -i 's/normal-colors/r/g' $target
+sed -i 's/inverse-colors/s/g' $target
 sed -i 's/@player-x/@m/g' $target
 sed -i 's/ player-x / m /g' $target
 sed -i 's/@player-y/@n/g' $target

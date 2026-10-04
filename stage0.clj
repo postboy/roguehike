@@ -7,6 +7,8 @@
 
 (def a ref-set)
 (def o str)
+(def normal-colors {:fg :white :bg :black})
+(def inverse-colors {:fg :black :bg :white})
 
 (defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
 
@@ -111,12 +113,12 @@
        (s/put-string @screen x y (str (get-in world-map
          [(mod (+ (- @render-center-x (quot @canvas-cols 2)) x) world-size)
           (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) y) world-size)]
-         )) {:fg :white :bg :black}))
+         )) normal-colors))
      ; draw the player
-     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
+     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" normal-colors)
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
-     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) inverse-colors)
      (s/put-string @screen 0 status-bar-row
      ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
      ; fit in 80 symbols of standard terminal
@@ -135,7 +137,7 @@
                                                               (if (< @player-x 74) ">"
                                                                                    " "))
                                      @status-message)
-                             {:fg :black :bg :white})))
+                             inverse-colors)))
    (s/redraw @screen))
 
 (defn -main [& args]
