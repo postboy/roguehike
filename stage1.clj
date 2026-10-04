@@ -7,27 +7,25 @@
 
 (def a ref-set)
 
-(def map-symbols [[\space 150]
-                  [\. 20] [\, 15] [\` 15]
-                  [\* 40]
-                  [\" 5]
-                  [\o 5]
-                  [\w 5]
-                  [\t 5]
-
-                  [\0 5] [\O 5]
-                  [\W 5]
-                  [\T 5]
-                  [\@ 5]
-                  [\= 1]])
-
 (defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
 
 (def i 150)
-
 (def world-map (vec (for [_ (range i)]
                       (vec (for [_ (range i)]
-                             (rr/rand-nth-weighted map-symbols))))))
+                             (rr/rand-nth-weighted
+                                [[\space 150]
+                                [\. 20] [\, 15] [\` 15]
+                                [\* 40]
+                                [\" 5]
+                                [\o 5]
+                                [\w 5]
+                                [\t 5]
+
+                                [\0 5] [\O 5]
+                                [\W 5]
+                                [\T 5]
+                                [\@ 5]
+                                [\= 1]]))))))
 
 
 (defn get-altitude [x y]
