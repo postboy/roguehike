@@ -52,7 +52,7 @@
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
-     (if (and (obstacle? dest) (not clamber))
+     (if (and (obstacle? dest) (= 0 clamber))
        (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              ; must be in sync with arrows to summit
@@ -166,22 +166,22 @@
                   (if (= @cur-energy 100)
                     (ref-set status-message (str "You're fully rested"location"."))
                     (ref-set status-message (str "You rest for a while"location".")))))
-      (\h \4) (move [-1 0] false) ; left
-      (:left \H) (move [-1 0] true)
-      (\j \2) (move [0 1] false) ; down
-      (:down \J) (move [0 1] true)
-      (\k \8) (move [0 -1] false) ; up
-      (:up \K) (move [0 -1] true)
-      (\l \6) (move [1 0] false) ; right
-      (:right \L) (move [1 0] true)
-      (\y \7) (move [-1 -1] false) ; up-left
-      (:home \Y) (move [-1 -1] true)
-      (\u \9) (move [1 -1] false) ; up-right
-      (:page-up \U) (move [1 -1] true)
-      (\b \1) (move [-1 1] false) ; down-left
-      (:end \B) (move [-1 1] true)
-      (\n \3) (move [1 1] false) ; down-right
-      (:page-down \N) (move [1 1] true)
+      (\h \4) (move [-1 0] 0) ; left
+      (:left \H) (move [-1 0] 1)
+      (\j \2) (move [0 1] 0) ; down
+      (:down \J) (move [0 1] 1)
+      (\k \8) (move [0 -1] 0) ; up
+      (:up \K) (move [0 -1] 1)
+      (\l \6) (move [1 0] 0) ; right
+      (:right \L) (move [1 0] 1)
+      (\y \7) (move [-1 -1] 0) ; up-left
+      (:home \Y) (move [-1 -1] 1)
+      (\u \9) (move [1 -1] 0) ; up-right
+      (:page-up \U) (move [1 -1] 1)
+      (\b \1) (move [-1 1] 0) ; down-left
+      (:end \B) (move [-1 1] 1)
+      (\n \3) (move [1 1] 0) ; down-right
+      (:page-down \N) (move [1 1] 1)
       nil)
     (when (some? @screen) ; hacky way to quit
         (recur))))
