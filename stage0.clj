@@ -135,7 +135,8 @@
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
-(defn parse-input []
+(defn game-loop []
+  (render-screen)
   (case (s/get-key-blocking @screen)
     \q (do (s/stop @screen)
            (dosync (ref-set screen nil))) ; hacky way to quit
@@ -162,11 +163,7 @@
     (:end \B) (move [-1 1] true)
     (\n \3) (move [1 1] false) ; down-right
     (:page-down \N) (move [1 1] true)
-    nil))
-
-(defn game-loop []
-  (render-screen)
-  (parse-input)
+    nil)
   (when (some? @screen) ; hacky way to quit
     (recur)))
 

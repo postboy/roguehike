@@ -135,7 +135,8 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 (s/put-string@b 0 status-bar-row string{:fg :black :bg :white})))
 (s/redraw@b)))
 
-(defn parse-input[]
+(defn game-loop[]
+(render-screen)
 (case(s/get-key-blocking@b)
 \q(do(s/stop@b)
 (dosync(a b nil)))
@@ -162,11 +163,7 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 (:end\B)(c[-1 1]true)
 (\n\3)(c[1 1]false)
 (:page-down\N)(c[1 1]true)
-nil))
-
-(defn game-loop[]
-(render-screen)
-(parse-input)
+nil)
 (when(some?@b)
 (recur)))
 
