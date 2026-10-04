@@ -40,6 +40,7 @@ sed -i 's/canvas-center-y/v/g' $target
 sed -i 's/\[cols /\[x /g' $target
 sed -i 's/ cols/ x/g' $target
 sed -i 's/ rows/ y/g' $target
+sed -i 's/verb/z/g' $target
 sed -i 's/location/z/g' $target
 sed -i 's/status-bar-row/z/g' $target
 sed -i 's/(math/(p/g' $target

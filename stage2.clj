@@ -63,12 +63,12 @@ new-altitude(max 0(- 75
 (max 0(dec(p/round(p/sqrt(+(p/pow(- x 75)2)
 (p/pow(- y 75)2))))))))
 clamber-modifier(if(obstacle? dest)6 1)
-verb(if(obstacle? dest)"clamber""walk")
+z(if(obstacle? dest)"clamber""walk")
 step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (< new-altitude@f)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
 (if(<@j step-cost)
-(a g(o"You're too tired to "verb". You need a rest."))
+(a g(o"You're too tired to "z". You need a rest."))
 (do(a m x)
 (a n y)
 (a d new-delta-x)
@@ -77,8 +77,8 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (a j(-@j step-cost))
 
 (cond(nil?(get-in world-map[x y]))(a g "You are about to leave wilderness. Press q to quit.")
-(<@f 75)(a g(o"You "verb"."))
-:else(a g(o"You "verb" on top of the mountain."))))))))))
+(<@f 75)(a g(o"You "z"."))
+:else(a g(o"You "z" on top of the mountain."))))))))))
 
 (defn render-screen[]
 
