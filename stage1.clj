@@ -38,7 +38,7 @@
 (def f (ref 3))
 (def j (ref 100))
 (def h (ref 0))
-(def canvas-rows (ref 0))
+(def q (ref 0))
 (def b (ref nil))
 
 (defn recenter []
@@ -83,7 +83,7 @@
 (defn render-screen []
   
   (dosync
-   (let [z (dec @canvas-rows)
+   (let [z (dec @q)
          canvas-center-x (quot @h 2)
          canvas-center-y (quot z 2)
          x (- @h 2)
@@ -110,7 +110,7 @@
        
        (s/put-string @b x y (o (get-in world-map
          [(mod (+ (- @k (quot @h 2)) x) i)
-          (mod (+ (- @l (quot (dec @canvas-rows) 2)) y) i)]
+          (mod (+ (- @l (quot (dec @q) 2)) y) i)]
          )) {:fg :white :bg :black}))
      
      (s/put-string @b (+ canvas-center-x @d) (+ canvas-center-y @e) "i" {:fg :white :bg :black})
@@ -147,14 +147,14 @@
   
   (s/add-resize-listener @b (fn [x y]
                                    (dosync (a h x)
-                                           (a canvas-rows y))
+                                           (a q y))
                                    (recenter)
                                    
                                    (s/redraw @b)
                                    (render-screen)))
   (let [[x y] (s/get-size @b)]
     (a h x)
-    (a canvas-rows y)))
+    (a q y)))
   (loop []
     (render-screen)
     (case (s/get-key-blocking @b)
