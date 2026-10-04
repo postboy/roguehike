@@ -1,9 +1,11 @@
-(ns roguehike.core
+(ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as rr]
             [clojure.math :as math]
             [clojure.edn :as edn])
   (:gen-class))
+
+(def a ref-set)
 
 (def map-symbols [[\space 150]
                   [\. 20] [\, 15] [\` 15]
@@ -21,34 +23,29 @@
 
 (defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
 
-(def world-cols 150)
-(def world-rows world-cols)
-(def summit-x (quot world-cols 2))
-(def summit-y (quot world-rows 2))
-(def max-altitude (quot (+ world-cols world-rows) 4))
-(def max-energy 100)
+(def world-size 150)
 ; weird order here so we don't have to bother about it elsewhere
-(def world-map (vec (for [_ (range world-cols)]
-                      (vec (for [_ (range world-rows)]
+(def world-map (vec (for [_ (range world-size)]
+                      (vec (for [_ (range world-size)]
                              (rr/rand-nth-weighted map-symbols))))))
 
 ; must be in sync with arrows to summit
 (defn get-altitude [x y]
-  (max 0 (- max-altitude
+  (max 0 (- 75
             ; distance to top
             ; decrement here is required for in-game top to be an area, not a single square
-            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x summit-x) 2)
-                                                  (math/pow (- y summit-y) 2)))))))))
+            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
+                                                  (math/pow (- y 75) 2)))))))))
 
-(def player-x (ref summit-x))
-(def player-y (ref (- world-rows 2)))
+(def player-x (ref 75))
+(def player-y (ref 148))
 (def render-center-x (ref @player-x))
 (def render-center-y (ref @player-y))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
 (def status-message (ref "You're standing at foot of the mountain."))
-(def cur-altitude (ref (get-altitude @player-x @player-y)))
-(def cur-energy (ref max-energy))
+(def cur-altitude (ref 3))
+(def cur-energy (ref 100))
 (def canvas-cols (ref 0))
 (def canvas-rows (ref 0))
 (def screen (ref nil))
@@ -61,29 +58,29 @@
    (ref-set render-delta-y 0)))
 
 (defn rest-turn []
-  (let [location (if (= @cur-altitude max-altitude) " on top of the mountain" "")]
+  (let [location (if (= 75 @cur-altitude) " on top of the mountain""")]
     (dosync
-     (ref-set cur-energy (min max-energy (+ @cur-energy 5)))
-     (if (= @cur-energy max-energy)
-       (ref-set status-message (str "You're fully rested" location "."))
-       (ref-set status-message (str "You rest for a while" location "."))))))
+     (ref-set cur-energy (min 100 (+ @cur-energy 5)))
+     (if (= @cur-energy 100)
+       (ref-set status-message (str "You're fully rested"location"."))
+       (ref-set status-message (str "You rest for a while"location"."))))))
 
 (defn move [shift clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
-         dest (get-in world-map [(mod x world-cols) (mod y world-rows)])]
+         dest (get-in world-map [(mod x world-size) (mod y world-size)])]
      (if (and (obstacle? dest) (not clamber))
-       (ref-set status-message "Can't walk there, only clamber: path is obstructed.")
+       (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              new-altitude (get-altitude x y)
              clamber-modifier (if (obstacle? dest) 6 1)
-             verb (if (obstacle? dest) "clamber" "walk")
+             verb (if (obstacle? dest) "clamber""walk")
              step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
                              (< new-altitude @cur-altitude) (* clamber-modifier 2)
                              :else (* clamber-modifier 1))]
          (if (< @cur-energy step-cost)
-           (ref-set status-message (str "You're too tired to " verb ". You need a rest."))
+           (ref-set status-message (str "You're too tired to "verb". You need a rest."))
            (do (ref-set player-x x)
                (ref-set player-y y)
                (ref-set render-delta-x new-delta-x)
@@ -91,9 +88,9 @@
                (ref-set cur-altitude new-altitude)
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
-               (cond (nil? (get-in world-map [x y])) (ref-set status-message "You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude max-altitude) (ref-set status-message (str "You " verb "."))
-                     :else (ref-set status-message (str "You " verb " on top of the mountain."))))))))))
+               (cond (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
+                     (> 75 @cur-altitude) (ref-set status-message (str "You "verb"."))
+                     :else (ref-set status-message (str "You "verb" on top of the mountain."))))))))))
 
 ; render center will be in center of the canvas, so move everything accordingly
 (defn screen-to-world [screen-x screen-y]
@@ -101,8 +98,8 @@
         canvas-center-x (quot @canvas-cols 2)
         canvas-center-y (quot status-bar-row 2)
         ; modular arithmetics to wrap around the map
-        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-cols)
-        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-rows)]
+        corrected-world-x (mod (+ (- @render-center-x canvas-center-x) screen-x) world-size)
+        corrected-world-y (mod (+ (- @render-center-y canvas-center-y) screen-y) world-size)]
     [corrected-world-x corrected-world-y]))
 
 (defn render-screen []
@@ -136,23 +133,23 @@
      (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
-     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols " ")) {:fg :black :bg :white})
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
      (let [alt-width 2 ; deliberate hardcode because maximum status message length depends on this
            ; inc/dec to be in sync with get-altitude
-           arrow-left (cond (= @cur-altitude max-altitude) "T"
-                            (> @player-x (inc summit-x)) "<"
+           arrow-left (cond (= 75 @cur-altitude) "T"
+                            (< 76 @player-x) "<"
                             :else " ")
-           arrow-up-down (cond (= @cur-altitude max-altitude) "O"
-                               (< @player-y (dec summit-y)) "v"
-                               (> @player-y (inc summit-y)) "^"
+           arrow-up-down (cond (= 75 @cur-altitude) "O"
+                               (> 74 @player-y) "v"
+                               (< 76 @player-y) "^"
                                :else " ")
-           arrow-right (cond (= @cur-altitude max-altitude) "P"
-                             (< @player-x (dec summit-x)) ">"
+           arrow-right (cond (= 75 @cur-altitude) "P"
+                             (> 74 @player-x) ">"
                              :else " ")
            ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
            ; fit in 80 symbols of standard terminal
-           string (format (str "NRG %3d | ALT %" alt-width "d/%" alt-width "d |%s%s%s| %s")
-                          @cur-energy @cur-altitude max-altitude arrow-left arrow-up-down arrow-right @status-message)]
+           string (format (str "NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
+                          @cur-energy @cur-altitude 75 arrow-left arrow-up-down arrow-right @status-message)]
        (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
    (s/redraw @screen)))
 
@@ -163,21 +160,21 @@
     \c (recenter)
     (\r \5) (rest-turn)
     (\h \4) (move [-1 0] false) ; left
-    (\H :left) (move [-1 0] true)
+    (:left \H) (move [-1 0] true)
     (\j \2) (move [0 1] false) ; down
-    (\J :down) (move [0 1] true)
+    (:down \J) (move [0 1] true)
     (\k \8) (move [0 -1] false) ; up
-    (\K :up) (move [0 -1] true)
+    (:up \K) (move [0 -1] true)
     (\l \6) (move [1 0] false) ; right
-    (\L :right) (move [1 0] true)
+    (:right \L) (move [1 0] true)
     (\y \7) (move [-1 -1] false) ; up-left
-    (\Y :home) (move [-1 -1] true)
+    (:home \Y) (move [-1 -1] true)
     (\u \9) (move [1 -1] false) ; up-right
-    (\U :page-up) (move [1 -1] true)
+    (:page-up \U) (move [1 -1] true)
     (\b \1) (move [-1 1] false) ; down-left
-    (\B :end) (move [-1 1] true)
+    (:end \B) (move [-1 1] true)
     (\n \3) (move [1 1] false) ; down-right
-    (\N :page-down) (move [1 1] true)
+    (:page-down \N) (move [1 1] true)
     nil))
 
 (defn game-loop []
@@ -197,7 +194,7 @@
 (defn -main [& args]
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
   (let [terminal-type (keyword (or (first args)
-                                   (if (re-matches #"Windows.*" (System/getProperty "os.name")) "auto" "unix")))
+                                   (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
         options (edn/read-string (or (second args) "{}"))]
     (dosync (ref-set screen (s/get-screen terminal-type options))
             (s/start @screen)

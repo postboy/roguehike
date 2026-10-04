@@ -1,8 +1,9 @@
 #!/bin/sh
+# stage 0: hand optimizations in source code
 # stage 1: change identifiers
 # sed -e 's/[^[:alpha:]-]/ /g' src/r/c.clj | tr '\n' " " |  tr -s " " | tr " " '\n' | sort | uniq -c | sort -nr | head -n 25
 target=stage1.clj
-cp original.clj $target
+cp stage0.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
 sed -i 's/ref-set/a/g' $target
 sed -i 's/(def a a)/(def a ref-set)/g' $target
