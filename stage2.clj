@@ -57,15 +57,15 @@ dest(get-in world-map[(mod x i)(mod y i)])]
 (a g "Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]shift)
 
-new-altitude(max 0(- 75
+u(max 0(- 75
 
 
 (max 0(dec(p/round(p/sqrt(+(p/pow(- x 75)2)
 (p/pow(- y 75)2))))))))
 clamber-modifier(if(obstacle? dest)6 1)
 z(if(obstacle? dest)"clamber""walk")
-step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
-(< new-altitude@f)(* clamber-modifier 2)
+step-cost(cond(> u@f)(* clamber-modifier 3)
+(< u@f)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
 (if(<@j step-cost)
 (a g(o"You're too tired to "z". You need a rest."))
@@ -73,7 +73,7 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (a n y)
 (a d new-delta-x)
 (a e new-delta-y)
-(a f new-altitude)
+(a f u)
 (a j(-@j step-cost))
 
 (cond(nil?(get-in world-map[x y]))(a g "You are about to leave wilderness. Press q to quit.")
