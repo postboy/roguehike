@@ -92,12 +92,6 @@
                      (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
                      :else (ref-set status-message (str "You "verb" on top of the mountain."))))))))))
 
-; render center will be in center of the canvas, so move everything accordingly
-(defn screen-to-world [screen-x screen-y]
-  ; modular arithmetics to wrap around the map
-  [(mod (+ (- @render-center-x (quot @canvas-cols 2)) screen-x) world-size)
-  (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) screen-y) world-size)])
-
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
   (dosync
@@ -124,7 +118,12 @@
      ; draw the world
      (doseq [x (range @canvas-cols)
              y (range status-bar-row)]
-       (s/put-string @screen x y (str (get-in world-map (screen-to-world x y))) {:fg :white :bg :black}))
+       ; render center will be in center of the canvas, so move everything accordingly
+       ; modular arithmetics to wrap around the map
+       (s/put-string @screen x y (str (get-in world-map
+         [(mod (+ (- @render-center-x (quot @canvas-cols 2)) x) world-size)
+          (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) y) world-size)]
+         )) {:fg :white :bg :black}))
      ; draw the player
      (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" {:fg :white :bg :black})
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))

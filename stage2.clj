@@ -92,12 +92,6 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (<@f 75)(a g(str"You "verb"."))
 :else(a g(str"You "verb" on top of the mountain."))))))))))
 
-
-(defn screen-to-world[screen-x screen-y]
-
-[(mod(+(-@render-center-x(quot@h 2))screen-x)i)
-(mod(+(-@render-center-y(quot(dec@canvas-rows)2))screen-y)i)])
-
 (defn render-screen[]
 
 (dosync
@@ -124,7 +118,12 @@ shift-y(- status-bar-row 2)]
 
 (doseq[x(range@h)
 y(range status-bar-row)]
-(s/put-string@b x y(str(get-in world-map(screen-to-world x y))){:fg :white :bg :black}))
+
+
+(s/put-string@b x y(str(get-in world-map
+[(mod(+(-@render-center-x(quot@h 2))x)i)
+(mod(+(-@render-center-y(quot(dec@canvas-rows)2))y)i)]
+)){:fg :white :bg :black}))
 
 (s/put-string@b(+ canvas-center-x@d)(+ canvas-center-y@e)"i"{:fg :white :bg :black})
 (s/move-cursor@b(+ canvas-center-x@d)(+ canvas-center-y@e))
