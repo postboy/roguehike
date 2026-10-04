@@ -58,7 +58,7 @@
    (a e 0)))
 
 (defn rest-turn []
-  (let [location (if (= 75 @f) " on top of the mountain""")]
+  (let [location (if (= @f 75) " on top of the mountain""")]
     (dosync
      (a cur-energy (min 100 (+ @cur-energy 5)))
      (if (= @cur-energy 100)
@@ -89,7 +89,7 @@
                (a cur-energy (- @cur-energy step-cost))
                
                (cond (nil? (get-in world-map [x y])) (a g "You are about to leave wilderness. Press q to quit.")
-                     (> 75 @f) (a g  (str "You "verb"."))
+                     (< @f 75) (a g  (str "You "verb"."))
                      :else (a g  (str "You "verb" on top of the mountain."))))))))))
 
 
@@ -136,15 +136,15 @@
      (s/put-string @b 0 status-bar-row (apply str (repeat @h" ")) {:fg :black :bg :white})
      (let [alt-width 2 
            
-           arrow-left (cond (= 75 @f) "T"
-                            (< 76 @player-x) "<"
+           arrow-left (cond (= @f 75) "T"
+                            (> @player-x 76) "<"
                             :else " ")
-           arrow-up-down (cond (= 75 @f) "O"
-                               (> 74 @player-y) "v"
-                               (< 76 @player-y) "^"
+           arrow-up-down (cond (= @f 75) "O"
+                               (< @player-y 74) "v"
+                               (> @player-y 76) "^"
                                :else " ")
-           arrow-right (cond (= 75 @f) "P"
-                             (> 74 @player-x) ">"
+           arrow-right (cond (= @f 75) "P"
+                             (< @player-x 74) ">"
                              :else " ")
            
            
