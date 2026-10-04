@@ -33,6 +33,7 @@ sed -i 's/@player-x/@m/g' $target
 sed -i 's/ player-x / m /g' $target
 sed -i 's/@player-y/@n/g' $target
 sed -i 's/ player-y / n /g' $target
+sed -i 's/ world-map/ r/g' $target
 sed -i 's/shift-x/x/g' $target
 sed -i 's/shift-y/y/g' $target
 sed -i 's/canvas-center-x/u/g' $target

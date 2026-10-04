@@ -11,7 +11,7 @@
 (defn obstacle?[square](#{\0\O\W\T\@\=}square))
 
 (def i 150)
-(def world-map(vec(for[_(range i)]
+(def r(vec(for[_(range i)]
 (vec(for[_(range i)]
 (rr/rand-nth-weighted
 [[\space 150]
@@ -52,7 +52,7 @@
 (dosync
 (let[[x y](mapv +[@m@n]shift)
 
-dest(get-in world-map[(mod x i)(mod y i)])]
+dest(get-in r[(mod x i)(mod y i)])]
 (if(and(obstacle? dest)(= 0 clamber))
 (a g "Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]shift)
@@ -76,7 +76,7 @@ step-cost(cond(> u@f)(* clamber-modifier 3)
 (a f u)
 (a j(-@j step-cost))
 
-(cond(nil?(get-in world-map[x y]))(a g "You are about to leave wilderness. Press q to quit.")
+(cond(nil?(get-in r[x y]))(a g "You are about to leave wilderness. Press q to quit.")
 (<@f 75)(a g(o"You "z"."))
 :else(a g(o"You "z" on top of the mountain."))))))))))
 
@@ -108,7 +108,7 @@ y(- z 2)]
 y(range z)]
 
 
-(s/put-string@b x y(o(get-in world-map
+(s/put-string@b x y(o(get-in r
 [(mod(+(-@k(quot@h 2))x)i)
 (mod(+(-@l(quot(dec@q)2))y)i)]
 )){:fg :white :bg :black}))
