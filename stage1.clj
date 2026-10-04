@@ -62,11 +62,11 @@
                                  
                                  (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
                                                                     (m/pow (- y 75) 2))))))))
-             clamber-modifier (if (obstacle? dest) 6 1)
+             v (if (obstacle? dest) 6 1)
              z (if (obstacle? dest) "clamber""walk")
-             step-cost (cond (> u @f) (* clamber-modifier 3)
-                             (< u @f) (* clamber-modifier 2)
-                             :else (* clamber-modifier 1))]
+             step-cost (cond (> u @f) (* v 3)
+                             (< u @f) (* v 2)
+                             :else (* v 1))]
          (if (< @j step-cost)
            (a g  (o "You're too tired to "z". You need a rest."))
            (do (a m x)
