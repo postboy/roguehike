@@ -137,14 +137,6 @@
                              {:fg :black :bg :white})))
    (s/redraw @b))
 
-(defn handle-resize [cols rows]
-  (dosync (a h cols)
-          (a canvas-rows rows))
-  (recenter)
-  
-  (s/redraw @b)
-  (render-screen))
-
 (defn -main [& args]
   
   (let [terminal-type (keyword (or (first args)
@@ -153,7 +145,13 @@
     (dosync (a b (s/get-screen terminal-type options))
             (s/start @b)
             
-            (s/add-resize-listener @b handle-resize)
+            (s/add-resize-listener @b (fn [cols rows]
+                                             (dosync (a h cols)
+                                               (a canvas-rows rows))
+                                             (recenter)
+                                             
+                                             (s/redraw @b)
+                                             (render-screen)))
             (let [[cols rows] (s/get-size @b)]
               (a h cols)
               (a canvas-rows rows)))

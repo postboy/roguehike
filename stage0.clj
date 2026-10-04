@@ -137,14 +137,6 @@
                              {:fg :black :bg :white})))
    (s/redraw @screen))
 
-(defn handle-resize [cols rows]
-  (dosync (ref-set canvas-cols cols)
-          (ref-set canvas-rows rows))
-  (recenter)
-  ; for some reason, (redraw) inside (render-screen) is not enough
-  (s/redraw @screen)
-  (render-screen))
-
 (defn -main [& args]
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
   (let [terminal-type (keyword (or (first args)
@@ -153,7 +145,13 @@
     (dosync (ref-set screen (s/get-screen terminal-type options))
             (s/start @screen)
             ; for some reason, this works better than setting :resize-listener argument to get-screen
-            (s/add-resize-listener @screen handle-resize)
+            (s/add-resize-listener @screen (fn [cols rows]
+                                             (dosync (ref-set canvas-cols cols)
+                                               (ref-set canvas-rows rows))
+                                             (recenter)
+                                             ; for some reason, (redraw) inside (render-screen) is not enough
+                                             (s/redraw @screen)
+                                             (render-screen)))
             (let [[cols rows] (s/get-size @screen)]
               (ref-set canvas-cols cols)
               (ref-set canvas-rows rows)))
