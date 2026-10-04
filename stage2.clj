@@ -8,7 +8,7 @@
 (def a ref-set)
 (def o str)
 
-(defn obstacle?[square](#{\0\O\W\T\@\=}square))
+(defn p[square](#{\0\O\W\T\@\=}square))
 
 (def i 150)
 (def r(vec(for[_(range i)]
@@ -53,7 +53,7 @@
 (let[[x y](mapv +[@m@n]shift)
 
 dest(get-in r[(mod x i)(mod y i)])]
-(if(and(obstacle? dest)(= 0 clamber))
+(if(and(p dest)(= 0 clamber))
 (a g "Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]shift)
 
@@ -62,8 +62,8 @@ u(max 0(- 75
 
 (max 0(dec(m/round(m/sqrt(+(m/pow(- x 75)2)
 (m/pow(- y 75)2))))))))
-v(if(obstacle? dest)6 1)
-z(if(obstacle? dest)"clamber""walk")
+v(if(p dest)6 1)
+z(if(p dest)"clamber""walk")
 step-cost(cond(> u@f)(* v 3)
 (< u@f)(* v 2)
 :else(* v 1))]
