@@ -145,16 +145,16 @@
                                         (edn/read-string (or (second args) "{}"))))
   (s/start @b)
   
-  (s/add-resize-listener @b (fn [cols rows]
-                                   (dosync (a h cols)
-                                           (a canvas-rows rows))
+  (s/add-resize-listener @b (fn [x y]
+                                   (dosync (a h x)
+                                           (a canvas-rows y))
                                    (recenter)
                                    
                                    (s/redraw @b)
                                    (render-screen)))
-  (let [[cols rows] (s/get-size @b)]
-    (a h cols)
-    (a canvas-rows rows)))
+  (let [[x y] (s/get-size @b)]
+    (a h x)
+    (a canvas-rows y)))
   (loop []
     (render-screen)
     (case (s/get-key-blocking @b)
