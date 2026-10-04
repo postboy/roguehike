@@ -1,6 +1,6 @@
 (ns r.c
   (:require [lanterna.screen :as s]
-            [roul.random :as rr]
+            [roul.random :as r]
             [clojure.math :as math]
             [clojure.edn :as edn])
   (:gen-class))
@@ -13,7 +13,7 @@
 (def world-size 150)
 (def world-map (vec (for [_ (range world-size)]
                       (vec (for [_ (range world-size)]
-                             (rr/rand-nth-weighted
+                             (r/rand-nth-weighted
                                 [[\space 150]
                                 [\. 20] [\, 15] [\` 15]
                                 [\* 40]

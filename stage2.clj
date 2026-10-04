@@ -1,6 +1,6 @@
 (ns r.c
 (:require[lanterna.screen :as s]
-[roul.random :as rr]
+[roul.random :as r]
 [clojure.math :as p]
 [clojure.edn :as edn])
 (:gen-class))
@@ -13,7 +13,7 @@
 (def i 150)
 (def r(vec(for[_(range i)]
 (vec(for[_(range i)]
-(rr/rand-nth-weighted
+(r/rand-nth-weighted
 [[\space 150]
 [\. 20][\, 15][\` 15]
 [\* 40]
