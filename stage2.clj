@@ -27,14 +27,6 @@
 [\@ 5]
 [\= 1]]))))))
 
-
-(defn get-altitude[x y]
-(max 0(- 75
-
-
-(max 0(dec(math/round(math/sqrt(+(math/pow(- x 75)2)
-(math/pow(- y 75)2)))))))))
-
 (def player-x(ref 75))
 (def player-y(ref 148))
 (def render-center-x(ref@player-x))
@@ -71,7 +63,12 @@ dest(get-in world-map[(mod x i)(mod y i)])]
 (if(and(obstacle? dest)(not clamber))
 (a g "Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]shift)
-new-altitude(get-altitude x y)
+
+new-altitude(max 0(- 75
+
+
+(max 0(dec(math/round(math/sqrt(+(math/pow(- x 75)2)
+(math/pow(- y 75)2))))))))
 clamber-modifier(if(obstacle? dest)6 1)
 verb(if(obstacle? dest)"clamber""walk")
 step-cost(cond(> new-altitude@f)(* clamber-modifier 3)

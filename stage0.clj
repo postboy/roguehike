@@ -27,14 +27,6 @@
                                 [\@ 5]
                                 [\= 1]]))))))
 
-; must be in sync with arrows to summit
-(defn get-altitude [x y]
-  (max 0 (- 75
-            ; distance to top
-            ; decrement here is required for in-game top to be an area, not a single square
-            (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
-                                                  (math/pow (- y 75) 2)))))))))
-
 (def player-x (ref 75))
 (def player-y (ref 148))
 (def render-center-x (ref @player-x))
@@ -71,7 +63,12 @@
      (if (and (obstacle? dest) (not clamber))
        (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
-             new-altitude (get-altitude x y)
+             ; must be in sync with arrows to summit
+             new-altitude (max 0 (- 75
+                                 ; distance to top
+                                 ; decrement here is required for in-game top to be an area, not a single square
+                                 (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
+                                                                    (math/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (obstacle? dest) "clamber""walk")
              step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
