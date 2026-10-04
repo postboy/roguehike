@@ -161,12 +161,12 @@ y(range z)]
 \q(do(s/stop@b)
 (dosync(a b nil)))
 \c(recenter)
-(\r\5)(let[location(if(=@f 75)" on top of the mountain""")]
+(\r\5)(let[z(if(=@f 75)" on top of the mountain""")]
 (dosync
 (a j(min 100(+@j 5)))
 (if(=@j 100)
-(a g(o"You're fully rested"location"."))
-(a g(o"You rest for a while"location".")))))
+(a g(o"You're fully rested"z"."))
+(a g(o"You rest for a while"z".")))))
 (\h\4)(c[-1 0]0)
 (:left\H)(c[-1 0]1)
 (\j\2)(c[0 1]0)
