@@ -44,7 +44,7 @@ sed -i 's/} /}/g' $target
 sed -i 's/ \[/\[/g' $target
 sed -i 's/\] /\]/g' $target
 sed -i 's/^ //g' $target
-sed -i 's/(str "/(str"/g' $target
+sed -i 's/(\([[:alpha:]]*\) "/(\1"/g' $target
 sed -i 's/(ref "/(ref"/g' $target
 sed -i 's/:else " "/:else" "/g' $target
 # stage 3: remove newlines (and bit of excess spaces again)
