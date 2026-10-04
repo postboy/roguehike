@@ -35,6 +35,8 @@ sed -i 's/@player-y/@n/g' $target
 sed -i 's/ player-y / n /g' $target
 sed -i 's/shift-x/x/g' $target
 sed -i 's/shift-y/y/g' $target
+sed -i 's/canvas-center-x/u/g' $target
+sed -i 's/canvas-center-y/v/g' $target
 sed -i 's/\[cols /\[x /g' $target
 sed -i 's/ cols/ x/g' $target
 sed -i 's/ rows/ y/g' $target

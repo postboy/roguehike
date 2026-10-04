@@ -84,23 +84,23 @@
   
   (dosync
    (let [z (dec @q)
-         canvas-center-x (quot @h 2)
-         canvas-center-y (quot z 2)
+         u (quot @h 2)
+         v (quot z 2)
          x (- @h 2)
          y (- z 2)]
      
      
-     (when (>= 0 (+ canvas-center-x @d))
+     (when (>= 0 (+ u @d))
        (a k (- @k x))
        (a d (+ @d x)))
-     (when (<= (dec @h) (+ canvas-center-x @d))
+     (when (<= (dec @h) (+ u @d))
        (a k (+ @k x))
        (a d (- @d x)))
      
-     (when (>= 0 (+ canvas-center-y @e))
+     (when (>= 0 (+ v @e))
        (a l (- @l y))
        (a e (+ @e y)))
-     (when (<= (dec z) (+ canvas-center-y @e))
+     (when (<= (dec z) (+ v @e))
        (a l (+ @l y))
        (a e (- @e y)))
      
@@ -113,8 +113,8 @@
           (mod (+ (- @l (quot (dec @q) 2)) y) i)]
          )) {:fg :white :bg :black}))
      
-     (s/put-string @b (+ canvas-center-x @d) (+ canvas-center-y @e) "i" {:fg :white :bg :black})
-     (s/move-cursor @b (+ canvas-center-x @d) (+ canvas-center-y @e))
+     (s/put-string @b (+ u @d) (+ v @e) "i" {:fg :white :bg :black})
+     (s/move-cursor @b (+ u @d) (+ v @e))
      
      (s/put-string @b 0 z (apply o (repeat @h" ")) {:fg :black :bg :white})
      (s/put-string @b 0 z
