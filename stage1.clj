@@ -21,7 +21,7 @@
                   [\@ 5]
                   [\= 1]])
 
-(defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
+(defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
 
 (def i 150)
 

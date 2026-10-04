@@ -21,7 +21,7 @@
                   [\@ 5]
                   [\= 1]])
 
-(defn obstacle? [square] (not (#{\space \. \, \` \* \" \o \w \t} square)))
+(defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
 
 (def world-size 150)
 ; weird order here so we don't have to bother about it elsewhere
