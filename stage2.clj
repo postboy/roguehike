@@ -116,8 +116,7 @@ y(range status-bar-row)]
 (s/move-cursor@b(+ canvas-center-x@d)(+ canvas-center-y@e))
 
 (s/put-string@b 0 status-bar-row(apply str(repeat@h" ")){:fg :black :bg :white})
-(let[alt-width 2 
-
+(let[
 arrow-left(cond(=@f 75)"T"
 (>@player-x 76)"<"
 :else" ")
@@ -130,7 +129,8 @@ arrow-right(cond(=@f 75)"P"
 :else" ")
 
 
-string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
+	 
+string(format(str"NRG %3d | ALT %2d/%2d |%s%s%s| %s")
 @cur-energy@f 75 arrow-left arrow-up-down arrow-right@g)]
 (s/put-string@b 0 status-bar-row string{:fg :black :bg :white})))
 (s/redraw@b)))
