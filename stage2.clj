@@ -7,6 +7,7 @@
 
 (def a ref-set)
 (def o str)
+(def t s/put-string)
 (def r{:fg :white :bg :black})
 (def s{:fg :black :bg :white})
 
@@ -110,16 +111,16 @@ y(- z 2)]
 y(range z)]
 
 
-(s/put-string@b x y(o(get-in r
+(t@b x y(o(get-in r
 [(mod(+(-@k(quot@h 2))x)i)
 (mod(+(-@l(quot(dec@q)2))y)i)]
 ))r))
 
-(s/put-string@b(+ u@d)(+ v@e)"i" r)
+(t@b(+ u@d)(+ v@e)"i" r)
 (s/move-cursor@b(+ u@d)(+ v@e))
 
-(s/put-string@b 0 z(apply o(repeat@h" "))s)
-(s/put-string@b 0 z
+(t@b 0 z(apply o(repeat@h" "))s)
+(t@b 0 z
 
 
 

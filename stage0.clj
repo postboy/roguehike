@@ -7,6 +7,7 @@
 
 (def a ref-set)
 (def o str)
+(def t s/put-string)
 (def normal-colors {:fg :white :bg :black})
 (def inverse-colors {:fg :black :bg :white})
 

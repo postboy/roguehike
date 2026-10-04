@@ -5,8 +5,9 @@
 target=stage1.clj
 cp stage0.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
-sed -i 's/(ref-set/(a/g' $target
-sed -i 's/(str/(o/g' $target
+sed -i 's/(ref-set /(a /g' $target
+sed -i 's/(s\/put-string /(t /g' $target
+sed -i 's/(str /(o /g' $target
 sed -i 's/ str / o /g' $target
 sed -i 's/@screen/@b/g' $target
 sed -i 's/ screen / b /g' $target
