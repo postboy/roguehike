@@ -1,8 +1,8 @@
 (ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as r]
-            [clojure.math :as p]
-            [clojure.edn :as edn])
+            [clojure.math :as m]
+            [clojure.edn :as e])
   (:gen-class))
 
 (def a ref-set)
@@ -60,8 +60,8 @@
              u (max 0 (- 75
                                  
                                  
-                                 (max 0 (dec (p/round (p/sqrt (+ (p/pow (- x 75) 2)
-                                                                    (p/pow (- y 75) 2))))))))
+                                 (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
+                                                                    (m/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
              z (if (obstacle? dest) "clamber""walk")
              step-cost (cond (> u @f) (* clamber-modifier 3)
@@ -142,7 +142,7 @@
   
   (dosync (a b (s/get-screen (keyword (or (first args)
                                                      (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
-                                        (edn/read-string (or (second args) "{}"))))
+                                        (e/read-string (or (second args) "{}"))))
   (s/start @b)
   
   (s/add-resize-listener @b (fn [x y]

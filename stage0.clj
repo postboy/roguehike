@@ -1,8 +1,8 @@
 (ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as r]
-            [clojure.math :as math]
-            [clojure.edn :as edn])
+            [clojure.math :as m]
+            [clojure.edn :as e])
   (:gen-class))
 
 (def a ref-set)
@@ -60,8 +60,8 @@
              new-altitude (max 0 (- 75
                                  ; distance to top
                                  ; decrement here is required for in-game top to be an area, not a single square
-                                 (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
-                                                                    (math/pow (- y 75) 2))))))))
+                                 (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
+                                                                    (m/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (obstacle? dest) "clamber""walk")
              step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
@@ -142,7 +142,7 @@
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
   (dosync (ref-set screen (s/get-screen (keyword (or (first args)
                                                      (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
-                                        (edn/read-string (or (second args) "{}"))))
+                                        (e/read-string (or (second args) "{}"))))
   (s/start @screen)
   ; for some reason, this works better than setting :resize-listener argument to get-screen
   (s/add-resize-listener @screen (fn [cols rows]
