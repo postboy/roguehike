@@ -47,14 +47,6 @@
 (a render-center-y@player-y)
 (a e 0)))
 
-(defn rest-turn[]
-(let[location(if(=@f 75)" on top of the mountain""")]
-(dosync
-(a cur-energy(min 100(+@cur-energy 5)))
-(if(=@cur-energy 100)
-(a g(str"You're fully rested"location"."))
-(a g(str"You rest for a while"location"."))))))
-
 (defn c[shift clamber]
 (dosync
 (let[[x y](mapv +[@player-x@player-y]shift)
@@ -148,7 +140,12 @@ string(format(str"NRG %3d | ALT %"alt-width"d/%"alt-width"d |%s%s%s| %s")
 \q(do(s/stop@b)
 (dosync(a b nil)))
 \c(recenter)
-(\r\5)(rest-turn)
+(\r\5)(let[location(if(=@f 75)" on top of the mountain""")]
+(dosync
+(a cur-energy(min 100(+@cur-energy 5)))
+(if(=@cur-energy 100)
+(a g(str"You're fully rested"location"."))
+(a g(str"You rest for a while"location".")))))
 (\h\4)(c[-1 0]false)
 (:left\H)(c[-1 0]true)
 (\j\2)(c[0 1]false)

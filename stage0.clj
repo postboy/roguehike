@@ -47,14 +47,6 @@
    (ref-set render-center-y @player-y)
    (ref-set render-delta-y 0)))
 
-(defn rest-turn []
-  (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
-    (dosync
-     (ref-set cur-energy (min 100 (+ @cur-energy 5)))
-     (if (= @cur-energy 100)
-       (ref-set status-message (str "You're fully rested"location"."))
-       (ref-set status-message (str "You rest for a while"location"."))))))
-
 (defn move [shift clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
@@ -148,7 +140,12 @@
     \q (do (s/stop @screen)
            (dosync (ref-set screen nil))) ; hacky way to quit
     \c (recenter)
-    (\r \5) (rest-turn)
+    (\r \5) (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
+                 (dosync
+                   (ref-set cur-energy (min 100 (+ @cur-energy 5)))
+                   (if (= @cur-energy 100)
+                     (ref-set status-message (str "You're fully rested"location"."))
+                     (ref-set status-message (str "You rest for a while"location".")))))
     (\h \4) (move [-1 0] false) ; left
     (:left \H) (move [-1 0] true)
     (\j \2) (move [0 1] false) ; down
