@@ -86,23 +86,23 @@
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @h 2)
          canvas-center-y (quot status-bar-row 2)
-         shift-x (- @h 2)
-         shift-y (- status-bar-row 2)]
+         x (- @h 2)
+         y (- status-bar-row 2)]
      
      
      (when (>= 0 (+ canvas-center-x @d))
-       (a k (- @k shift-x))
-       (a d (+ @d shift-x)))
+       (a k (- @k x))
+       (a d (+ @d x)))
      (when (<= (dec @h) (+ canvas-center-x @d))
-       (a k (+ @k shift-x))
-       (a d (- @d shift-x)))
+       (a k (+ @k x))
+       (a d (- @d x)))
      
      (when (>= 0 (+ canvas-center-y @e))
-       (a l (- @l shift-y))
-       (a e (+ @e shift-y)))
+       (a l (- @l y))
+       (a e (+ @e y)))
      (when (<= (dec status-bar-row) (+ canvas-center-y @e))
-       (a l (+ @l shift-y))
-       (a e (- @e shift-y)))
+       (a l (+ @l y))
+       (a e (- @e y)))
      
      (doseq [x (range @h)
              y (range status-bar-row)]
