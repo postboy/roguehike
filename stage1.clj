@@ -35,7 +35,7 @@
 (def e (ref 0))
 (def g  (ref "You're standing at foot of the mountain."))
 (def f (ref 3))
-(def cur-energy (ref 100))
+(def j (ref 100))
 (def h (ref 0))
 (def canvas-rows (ref 0))
 (def b (ref nil))
@@ -66,14 +66,14 @@
              step-cost (cond (> new-altitude @f) (* clamber-modifier 3)
                              (< new-altitude @f) (* clamber-modifier 2)
                              :else (* clamber-modifier 1))]
-         (if (< @cur-energy step-cost)
+         (if (< @j step-cost)
            (a g  (str "You're too tired to "verb". You need a rest."))
            (do (a player-x x)
                (a player-y y)
                (a d new-delta-x)
                (a e new-delta-y)
                (a f new-altitude)
-               (a cur-energy (- @cur-energy step-cost))
+               (a j (- @j step-cost))
                
                (cond (nil? (get-in world-map [x y])) (a g "You are about to leave wilderness. Press q to quit.")
                      (< @f 75) (a g  (str "You "verb"."))
@@ -121,7 +121,7 @@
      
      
                              (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
-                                     @cur-energy @f 75
+                                     @j @f 75
                                      
                                      (cond (= @f 75) "T"
                                            (> @player-x 76) "<"
@@ -162,8 +162,8 @@
       \c (recenter)
       (\r \5) (let [location (if (= @f 75) " on top of the mountain""")]
                 (dosync
-                  (a cur-energy (min 100 (+ @cur-energy 5)))
-                  (if (= @cur-energy 100)
+                  (a j (min 100 (+ @j 5)))
+                  (if (= @j 100)
                     (a g  (str "You're fully rested"location"."))
                     (a g  (str "You rest for a while"location".")))))
       (\h \4) (c [-1 0] 0) 
