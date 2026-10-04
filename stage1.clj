@@ -1,7 +1,7 @@
 (ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as rr]
-            [clojure.math :as math]
+            [clojure.math :as p]
             [clojure.edn :as edn])
   (:gen-class))
 
@@ -60,8 +60,8 @@
              new-altitude (max 0 (- 75
                                  
                                  
-                                 (max 0 (dec (math/round (math/sqrt (+ (math/pow (- x 75) 2)
-                                                                    (math/pow (- y 75) 2))))))))
+                                 (max 0 (dec (p/round (p/sqrt (+ (p/pow (- x 75) 2)
+                                                                    (p/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (obstacle? dest) "clamber""walk")
              step-cost (cond (> new-altitude @f) (* clamber-modifier 3)

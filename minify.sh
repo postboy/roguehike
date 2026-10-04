@@ -33,6 +33,8 @@ sed -i 's/@player-y/@n/g' $target
 sed -i 's/ player-y / n /g' $target
 sed -i 's/shift-x/x/g' $target
 sed -i 's/shift-y/y/g' $target
+sed -i 's/(math/(p/g' $target
+sed -i 's/ math/ p/g' $target
 sed -i 's/move /c /g' $target
 sed -i 's/ world-size/ i/g' $target
 # stage 2: remove excess spaces
