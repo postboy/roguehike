@@ -46,6 +46,7 @@ sed -i 's/verb/z/g' $target
 sed -i 's/location/z/g' $target
 sed -i 's/status-bar-row/z/g' $target
 sed -i 's/new-altitude/u/g' $target
+sed -i 's/step-cost/w/g' $target
 sed -i 's/move /c /g' $target
 sed -i 's/obstacle? /p /g' $target
 sed -i 's/ world-size/ i/g' $target
