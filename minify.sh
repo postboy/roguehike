@@ -21,6 +21,8 @@ sed -i 's/@canvas-cols/@h/g' $target
 sed -i 's/ canvas-cols / h /g' $target
 sed -i 's/@cur-energy/@j/g' $target
 sed -i 's/ cur-energy / j /g' $target
+sed -i 's/@render-center-x/@k/g' $target
+sed -i 's/ render-center-x / k /g' $target
 sed -i 's/move /c /g' $target
 sed -i 's/ world-size/ i/g' $target
 # stage 2: remove excess spaces

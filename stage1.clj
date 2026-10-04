@@ -29,7 +29,7 @@
 
 (def player-x (ref 75))
 (def player-y (ref 148))
-(def render-center-x (ref @player-x))
+(def k (ref @player-x))
 (def render-center-y (ref @player-y))
 (def d (ref 0))
 (def e (ref 0))
@@ -42,7 +42,7 @@
 
 (defn recenter []
   (dosync
-   (a render-center-x @player-x)
+   (a k @player-x)
    (a d 0)
    (a render-center-y @player-y)
    (a e 0)))
@@ -90,10 +90,10 @@
      
      
      (when (>= 0 (+ canvas-center-x @d))
-       (a render-center-x (- @render-center-x shift-x))
+       (a k (- @k shift-x))
        (a d (+ @d shift-x)))
      (when (<= (dec @h) (+ canvas-center-x @d))
-       (a render-center-x (+ @render-center-x shift-x))
+       (a k (+ @k shift-x))
        (a d (- @d shift-x)))
      
      (when (>= 0 (+ canvas-center-y @e))
@@ -108,7 +108,7 @@
        
        
        (s/put-string @b x y (str (get-in world-map
-         [(mod (+ (- @render-center-x (quot @h 2)) x) i)
+         [(mod (+ (- @k (quot @h 2)) x) i)
           (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) y) i)]
          )) {:fg :white :bg :black}))
      
