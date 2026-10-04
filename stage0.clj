@@ -6,6 +6,7 @@
   (:gen-class))
 
 (def a ref-set)
+(def o str)
 
 (defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
 

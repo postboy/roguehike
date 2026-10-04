@@ -6,6 +6,7 @@
 (:gen-class))
 
 (def a ref-set)
+(def o str)
 
 (defn obstacle?[square](#{\0\O\W\T\@\=}square))
 
@@ -67,7 +68,7 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (< new-altitude@f)(* clamber-modifier 2)
 :else(* clamber-modifier 1))]
 (if(<@j step-cost)
-(a g(str"You're too tired to "verb". You need a rest."))
+(a g(o"You're too tired to "verb". You need a rest."))
 (do(a m x)
 (a n y)
 (a d new-delta-x)
@@ -76,8 +77,8 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 (a j(-@j step-cost))
 
 (cond(nil?(get-in world-map[x y]))(a g "You are about to leave wilderness. Press q to quit.")
-(<@f 75)(a g(str"You "verb"."))
-:else(a g(str"You "verb" on top of the mountain."))))))))))
+(<@f 75)(a g(o"You "verb"."))
+:else(a g(o"You "verb" on top of the mountain."))))))))))
 
 (defn render-screen[]
 
@@ -107,7 +108,7 @@ shift-y(- status-bar-row 2)]
 y(range status-bar-row)]
 
 
-(s/put-string@b x y(str(get-in world-map
+(s/put-string@b x y(o(get-in world-map
 [(mod(+(-@k(quot@h 2))x)i)
 (mod(+(-@l(quot(dec@canvas-rows)2))y)i)]
 )){:fg :white :bg :black}))
@@ -115,12 +116,12 @@ y(range status-bar-row)]
 (s/put-string@b(+ canvas-center-x@d)(+ canvas-center-y@e)"i"{:fg :white :bg :black})
 (s/move-cursor@b(+ canvas-center-x@d)(+ canvas-center-y@e))
 
-(s/put-string@b 0 status-bar-row(apply str(repeat@h" ")){:fg :black :bg :white})
+(s/put-string@b 0 status-bar-row(apply o(repeat@h" ")){:fg :black :bg :white})
 (s/put-string@b 0 status-bar-row
 
 
 
-(format(str"NRG %3d | ALT %2d/%2d |%s%s%s| %s")
+(format(o"NRG %3d | ALT %2d/%2d |%s%s%s| %s")
 @j@f 75
 
 (cond(=@f 75)"T"
@@ -164,8 +165,8 @@ y(range status-bar-row)]
 (dosync
 (a j(min 100(+@j 5)))
 (if(=@j 100)
-(a g(str"You're fully rested"location"."))
-(a g(str"You rest for a while"location".")))))
+(a g(o"You're fully rested"location"."))
+(a g(o"You rest for a while"location".")))))
 (\h\4)(c[-1 0]0)
 (:left\H)(c[-1 0]1)
 (\j\2)(c[0 1]0)

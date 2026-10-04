@@ -7,6 +7,8 @@ cp stage0.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
 sed -i 's/ref-set/a/g' $target
 sed -i 's/(def a a)/(def a ref-set)/g' $target
+sed -i 's/(str/(o/g' $target
+sed -i 's/ str / o /g' $target
 sed -i 's/@screen/@b/g' $target
 sed -i 's/ screen / b /g' $target
 sed -i 's/@render-delta-x/@d/g' $target
