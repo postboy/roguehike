@@ -27,9 +27,9 @@
 [\@ 5]
 [\= 1]]))))))
 
-(def player-x(ref 75))
+(def m(ref 75))
 (def player-y(ref 148))
-(def k(ref@player-x))
+(def k(ref@m))
 (def l(ref@player-y))
 (def d(ref 0))
 (def e(ref 0))
@@ -42,14 +42,14 @@
 
 (defn recenter[]
 (dosync
-(a k@player-x)
+(a k@m)
 (a d 0)
 (a l@player-y)
 (a e 0)))
 
 (defn c[shift clamber]
 (dosync
-(let[[x y](mapv +[@player-x@player-y]shift)
+(let[[x y](mapv +[@m@player-y]shift)
 
 dest(get-in world-map[(mod x i)(mod y i)])]
 (if(and(obstacle? dest)(= 0 clamber))
@@ -68,7 +68,7 @@ step-cost(cond(> new-altitude@f)(* clamber-modifier 3)
 :else(* clamber-modifier 1))]
 (if(<@j step-cost)
 (a g(str"You're too tired to "verb". You need a rest."))
-(do(a player-x x)
+(do(a m x)
 (a player-y y)
 (a d new-delta-x)
 (a e new-delta-y)
@@ -124,14 +124,14 @@ y(range status-bar-row)]
 @j@f 75
 
 (cond(=@f 75)"T"
-(>@player-x 76)"<"
+(>@m 76)"<"
 :else" ")
 (cond(=@f 75)"O"
 (<@player-y 74)"v"
 (>@player-y 76)"^"
 :else" ")
 (cond(=@f 75)"P"
-(<@player-x 74)">"
+(<@m 74)">"
 :else" ")
 @g)
 {:fg :black :bg :white})))
