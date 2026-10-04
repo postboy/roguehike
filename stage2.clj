@@ -184,5 +184,5 @@ y(range z)]
 (\n\3)(c[1 1]0)
 (:page-down\N)(c[1 1]1)
 nil)
-(when(some?@b)
+(if(some?@b)
 (recur))))

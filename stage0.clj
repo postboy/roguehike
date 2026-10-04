@@ -184,5 +184,5 @@
       (\n \3) (move [1 1] 0) ; down-right
       (:page-down \N) (move [1 1] 1)
       nil)
-    (when (some? @screen) ; hacky way to quit
+    (if (some? @screen) ; hacky way to quit
         (recur))))
