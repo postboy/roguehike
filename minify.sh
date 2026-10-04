@@ -27,6 +27,8 @@ sed -i 's/@render-center-y/@l/g' $target
 sed -i 's/ render-center-y / l /g' $target
 sed -i 's/@player-x/@m/g' $target
 sed -i 's/ player-x / m /g' $target
+sed -i 's/@player-y/@n/g' $target
+sed -i 's/ player-y / n /g' $target
 sed -i 's/move /c /g' $target
 sed -i 's/ world-size/ i/g' $target
 # stage 2: remove excess spaces

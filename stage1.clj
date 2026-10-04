@@ -28,9 +28,9 @@
                                 [\= 1]]))))))
 
 (def m (ref 75))
-(def player-y (ref 148))
+(def n (ref 148))
 (def k (ref @m))
-(def l (ref @player-y))
+(def l (ref @n))
 (def d (ref 0))
 (def e (ref 0))
 (def g  (ref "You're standing at foot of the mountain."))
@@ -44,12 +44,12 @@
   (dosync
    (a k @m)
    (a d 0)
-   (a l @player-y)
+   (a l @n)
    (a e 0)))
 
 (defn c [shift clamber]
   (dosync
-   (let [[x y] (mapv + [@m @player-y] shift)
+   (let [[x y] (mapv + [@m @n] shift)
          
          dest (get-in world-map [(mod x i) (mod y i)])]
      (if (and (obstacle? dest) (= 0 clamber))
@@ -69,7 +69,7 @@
          (if (< @j step-cost)
            (a g  (str "You're too tired to "verb". You need a rest."))
            (do (a m x)
-               (a player-y y)
+               (a n y)
                (a d new-delta-x)
                (a e new-delta-y)
                (a f new-altitude)
@@ -127,8 +127,8 @@
                                            (> @m 76) "<"
                                            :else " ")
                                      (cond (= @f 75) "O"
-                                           (< @player-y 74) "v"
-                                           (> @player-y 76) "^"
+                                           (< @n 74) "v"
+                                           (> @n 76) "^"
                                            :else " ")
                                      (cond (= @f 75) "P"
                                            (< @m 74) ">"
