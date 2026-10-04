@@ -64,9 +64,9 @@
                                                                     (m/pow (- y 75) 2))))))))
              v (if (p dest) 6 1)
              z (if (= v 6) "clamber""walk")
-             w (cond (> u @f) (* v 3)
-                             (< u @f) (* v 2)
-                             :else (* v 1))]
+             w (if (> u @f) (* v 3)
+                                                          (if (< u @f) (* v 2)
+                                                                                             v))]
          (if (< @j w)
            (a g  (o "You're too tired to "z". You need a rest."))
            (do (a m x)
@@ -76,9 +76,9 @@
                (a f u)
                (a j (- @j w))
                
-               (cond (nil? (get-in r [x y])) (a g "You are about to leave wilderness. Press q to quit.")
-                     (< @f 75) (a g  (o "You "z"."))
-                     :else (a g  (o "You "z" on top of the mountain."))))))))))
+               (if (nil? (get-in r [x y])) (a g "You are about to leave wilderness. Press q to quit.")
+                                                   (if (< @f 75) (a g  (o "You "z"."))
+                                                                            (a g  (o "You "z" on top of the mountain.")))))))))))
 
 (defn render-screen []
   
@@ -124,16 +124,16 @@
                              (format (o "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
                                      @j @f 75
                                      
-                                     (cond (= @f 75) "T"
-                                           (> @m 76) "<"
-                                           :else " ")
-                                     (cond (= @f 75) "O"
-                                           (< @n 74) "v"
-                                           (> @n 76) "^"
-                                           :else " ")
-                                     (cond (= @f 75) "P"
-                                           (< @m 74) ">"
-                                           :else " ")
+                                     (if (= @f 75) "T"
+                                                              (if (> @m 76) "<"
+                                                                                   " "))
+                                     (if (= @f 75) "O"
+                                                              (if (< @n 74) "v"
+                                                                                   (if (> @n 76) "^"
+                                                                                                        " ")))
+                                     (if (= @f 75) "P"
+                                                              (if (< @m 74) ">"
+                                                                                   " "))
                                      @g)
                              {:fg :black :bg :white})))
    (s/redraw @b))

@@ -64,9 +64,9 @@
                                                                     (m/pow (- y 75) 2))))))))
              clamber-modifier (if (obstacle? dest) 6 1)
              verb (if (= clamber-modifier 6) "clamber""walk")
-             step-cost (cond (> new-altitude @cur-altitude) (* clamber-modifier 3)
-                             (< new-altitude @cur-altitude) (* clamber-modifier 2)
-                             :else (* clamber-modifier 1))]
+             step-cost (if (> new-altitude @cur-altitude) (* clamber-modifier 3)
+                                                          (if (< new-altitude @cur-altitude) (* clamber-modifier 2)
+                                                                                             clamber-modifier))]
          (if (< @cur-energy step-cost)
            (ref-set status-message (str "You're too tired to "verb". You need a rest."))
            (do (ref-set player-x x)
@@ -76,9 +76,9 @@
                (ref-set cur-altitude new-altitude)
                (ref-set cur-energy (- @cur-energy step-cost))
                ; warn about being outside of the map but allow to go there anyway
-               (cond (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
-                     (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
-                     :else (ref-set status-message (str "You "verb" on top of the mountain."))))))))))
+               (if (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
+                                                   (if (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
+                                                                            (ref-set status-message (str "You "verb" on top of the mountain.")))))))))))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
@@ -124,16 +124,16 @@
                              (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
                                      @cur-energy @cur-altitude 75
                                      ; inc/dec to be in sync with get-altitude
-                                     (cond (= @cur-altitude 75) "T"
-                                           (> @player-x 76) "<"
-                                           :else " ")
-                                     (cond (= @cur-altitude 75) "O"
-                                           (< @player-y 74) "v"
-                                           (> @player-y 76) "^"
-                                           :else " ")
-                                     (cond (= @cur-altitude 75) "P"
-                                           (< @player-x 74) ">"
-                                           :else " ")
+                                     (if (= @cur-altitude 75) "T"
+                                                              (if (> @player-x 76) "<"
+                                                                                   " "))
+                                     (if (= @cur-altitude 75) "O"
+                                                              (if (< @player-y 74) "v"
+                                                                                   (if (> @player-y 76) "^"
+                                                                                                        " ")))
+                                     (if (= @cur-altitude 75) "P"
+                                                              (if (< @player-x 74) ">"
+                                                                                   " "))
                                      @status-message)
                              {:fg :black :bg :white})))
    (s/redraw @screen))
