@@ -116,24 +116,26 @@
      (s/move-cursor @b (+ canvas-center-x @d) (+ canvas-center-y @e))
      
      (s/put-string @b 0 status-bar-row (apply str (repeat @h" ")) {:fg :black :bg :white})
-     (let [
-           arrow-left (cond (= @f 75) "T"
-                            (> @player-x 76) "<"
-                            :else " ")
-           arrow-up-down (cond (= @f 75) "O"
-                               (< @player-y 74) "v"
-                               (> @player-y 76) "^"
-                               :else " ")
-           arrow-right (cond (= @f 75) "P"
-                             (< @player-x 74) ">"
-                             :else " ")
-           
-           
-	   
-           string (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
-                          @cur-energy @f 75 arrow-left arrow-up-down arrow-right @g)]
-       (s/put-string @b 0 status-bar-row string {:fg :black :bg :white})))
-   (s/redraw @b)))
+     (s/put-string @b 0 status-bar-row
+     
+     
+     
+                             (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
+                                     @cur-energy @f 75
+                                     
+                                     (cond (= @f 75) "T"
+                                           (> @player-x 76) "<"
+                                           :else " ")
+                                     (cond (= @f 75) "O"
+                                           (< @player-y 74) "v"
+                                           (> @player-y 76) "^"
+                                           :else " ")
+                                     (cond (= @f 75) "P"
+                                           (< @player-x 74) ">"
+                                           :else " ")
+                                     @g)
+                             {:fg :black :bg :white})))
+   (s/redraw @b))
 
 (defn handle-resize [cols rows]
   (dosync (a h cols)

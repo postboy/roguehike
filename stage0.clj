@@ -116,24 +116,26 @@
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
      (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) {:fg :black :bg :white})
-     (let [; inc/dec to be in sync with get-altitude
-           arrow-left (cond (= @cur-altitude 75) "T"
-                            (> @player-x 76) "<"
-                            :else " ")
-           arrow-up-down (cond (= @cur-altitude 75) "O"
-                               (< @player-y 74) "v"
-                               (> @player-y 76) "^"
-                               :else " ")
-           arrow-right (cond (= @cur-altitude 75) "P"
-                             (< @player-x 74) ">"
-                             :else " ")
-           ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
-           ; fit in 80 symbols of standard terminal
-	   ; 2 is deliberate hardcode because maximum status message length depends on this
-           string (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
-                          @cur-energy @cur-altitude 75 arrow-left arrow-up-down arrow-right @status-message)]
-       (s/put-string @screen 0 status-bar-row string {:fg :black :bg :white})))
-   (s/redraw @screen)))
+     (s/put-string @screen 0 status-bar-row
+     ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
+     ; fit in 80 symbols of standard terminal
+     ; 2 is deliberate hardcode because maximum status message length depends on this
+                             (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
+                                     @cur-energy @cur-altitude 75
+                                     ; inc/dec to be in sync with get-altitude
+                                     (cond (= @cur-altitude 75) "T"
+                                           (> @player-x 76) "<"
+                                           :else " ")
+                                     (cond (= @cur-altitude 75) "O"
+                                           (< @player-y 74) "v"
+                                           (> @player-y 76) "^"
+                                           :else " ")
+                                     (cond (= @cur-altitude 75) "P"
+                                           (< @player-x 74) ">"
+                                           :else " ")
+                                     @status-message)
+                             {:fg :black :bg :white})))
+   (s/redraw @screen))
 
 (defn handle-resize [cols rows]
   (dosync (ref-set canvas-cols cols)
