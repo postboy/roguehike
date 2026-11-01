@@ -10,6 +10,7 @@
 (def t s/put-string)
 (def normal-colors {:fg :white :bg :black})
 (def inverse-colors {:fg :black :bg :white})
+(def A range)
 
 (def obstacle? #{\0 \O \W \T \@ \=})
 

@@ -10,12 +10,13 @@
 (def t s/put-string)
 (def r{:fg :white :bg :black})
 (def s{:fg :black :bg :white})
+(def A range)
 
 (def p #{\0\O\W\T\@\=})
 
 (def i 150)
-(def r(vec(for[_(range i)]
-(vec(for[_(range i)]
+(def r(vec(for[_(A i)]
+(vec(for[_(A i)]
 (r/rand-nth-weighted
 [[\space i]
 [\. 20][\, 15][\` 15]
@@ -107,8 +108,8 @@ y(- z 2)]
 (a l(+@l y))
 (a e(-@e y)))
 
-(doseq[x(range@h)
-y(range z)]
+(doseq[x(A@h)
+y(A z)]
 
 
 (t@b x y(o(get-in r
