@@ -38,7 +38,6 @@
 (def render-center-y (ref @player-y))
 (def render-delta-x (ref 0))
 (def render-delta-y (ref 0))
-(def status-message (ref "You're standing at foot of the mountain."))
 (def cur-altitude (ref 3))
 (def cur-energy (ref 100))
 (def canvas-cols (ref 0))
@@ -57,8 +56,7 @@
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
-     (if (and (obstacle? dest) (= 0 only-clamber))
-       (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
+     (if (not (and (obstacle? dest) (= 0 only-clamber)))
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              ; must be in sync with arrows to summit
              new-altitude (max 0 (- 75
@@ -71,18 +69,13 @@
              step-cost (if (> new-altitude @cur-altitude) (* clamber-modifier 3)
                                                           (if (< new-altitude @cur-altitude) (* clamber-modifier 2)
                                                                                              clamber-modifier))]
-         (if (< @cur-energy step-cost)
-           (ref-set status-message (str "You're too tired to "verb". You need a rest."))
+         (if (>= @cur-energy step-cost)
            (do (ref-set player-x x)
                (ref-set player-y y)
                (ref-set render-delta-x new-delta-x)
                (ref-set render-delta-y new-delta-y)
                (ref-set cur-altitude new-altitude)
-               (ref-set cur-energy (- @cur-energy step-cost))
-               ; warn about being outside of the map but allow to go there anyway
-               (if (nil? (get-in world-map [x y])) (ref-set status-message"You are about to leave wilderness. Press q to quit.")
-                                                   (if (< @cur-altitude 75) (ref-set status-message (str "You "verb"."))
-                                                                            (ref-set status-message (str "You "verb" on top of the mountain.")))))))))))
+               (ref-set cur-energy (- @cur-energy step-cost)))))))))
 
 (defn render-screen []
   ;(println (inc @player-x) (inc @player-y))
@@ -125,7 +118,7 @@
      ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
      ; fit in 80 symbols of standard terminal
      ; 2 is deliberate hardcode because maximum status message length depends on this
-                             (format (str "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
+                             (format (str "NRG %3d | ALT %2d/%2d |%s%s%s")
                                      @cur-energy @cur-altitude 75
                                      ; inc/dec to be in sync with get-altitude
                                      (if (= @cur-altitude 75) "T"
@@ -137,8 +130,7 @@
                                                                                                         " ")))
                                      (if (= @cur-altitude 75) "P"
                                                               (if (< @player-x 74) ">"
-                                                                                   " "))
-                                     @status-message))))
+                                                                                   " "))))))
    (s/redraw @screen))
 
 (defn -main []
@@ -163,10 +155,7 @@
         (dosync (ref-set screen nil))) ; hacky way to quit
       \r (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
                 (dosync
-                  (ref-set cur-energy (min 100 (+ @cur-energy 5)))
-                  (if (= @cur-energy 100)
-                    (ref-set status-message (str "You're fully rested"location"."))
-                    (ref-set status-message (str "You rest for a while"location".")))))
+                  (ref-set cur-energy (min 100 (+ @cur-energy 5)))))
       \h (move [-1 0] 0) ; left
       \H (move [-1 0] 1)
       \j (move [0 1] 0) ; down

@@ -38,7 +38,6 @@
 (def l (J @n))
 (def d (J 0))
 (def e (J 0))
-(def g (J "You're standing at foot of the mountain."))
 (def f (J 3))
 (def j (J 100))
 (def h (J 0))
@@ -57,8 +56,7 @@
    (let [[x y] (mapv + [@m @n] C)
          
          E (K r [(mod x i) (mod y i)])]
-     (if (and (p E) (= 0 D))
-       (a g"Can't walk there, only clamber: path is obstructed.")
+     (if (not (and (p E) (= 0 D)))
        (let [[F G] (mapv + [@d @e] C)
              
              u (max 0 (- 75
@@ -71,18 +69,13 @@
              w (if (> u @f) (* v 3)
                                                           (if (< u @f) (* v 2)
                                                                                              v))]
-         (if (< @j w)
-           (a g (o "You're too tired to "z". You need a rest."))
+         (if (>= @j w)
            (do (a m x)
                (a n y)
                (a d F)
                (a e G)
                (a f u)
-               (a j (- @j w))
-               
-               (if (nil? (K r [x y])) (a g"You are about to leave wilderness. Press q to quit.")
-                                                   (if (< @f 75) (a g (o "You "z"."))
-                                                                            (a g (o "You "z" on top of the mountain.")))))))))))
+               (a j (- @j w)))))))))
 
 (defn H []
   
@@ -125,7 +118,7 @@
      
      
      
-                             (format (o "NRG %3d | ALT %2d/%2d |%s%s%s| %s")
+                             (format (o "NRG %3d | ALT %2d/%2d |%s%s%s")
                                      @j @f 75
                                      
                                      (if (= @f 75) "T"
@@ -137,8 +130,7 @@
                                                                                                         " ")))
                                      (if (= @f 75) "P"
                                                               (if (< @m 74) ">"
-                                                                                   " "))
-                                     @g))))
+                                                                                   " "))))))
    (s/redraw @b))
 
 (defn -main []
@@ -163,10 +155,7 @@
         (dosync (a b nil))) 
       \r (let [z (if (= @f 75) " on top of the mountain""")]
                 (dosync
-                  (a j (min 100 (+ @j 5)))
-                  (if (= @j 100)
-                    (a g (o "You're fully rested"z"."))
-                    (a g (o "You rest for a while"z".")))))
+                  (a j (min 100 (+ @j 5)))))
       \h (c [-1 0] 0) 
       \H (c [-1 0] 1)
       \j (c [0 1] 0) 
