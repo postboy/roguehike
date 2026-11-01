@@ -117,19 +117,8 @@ y(A z)]
 
 
 
-(format(o"NRG %3d | ALT %2d/%2d |%s%s%s")
-@j@f 75
-
-(if(=@f 75)"T"
-(if(>@m 76)"<"
-" "))
-(if(=@f 75)"O"
-(if(<@n 74)"v"
-(if(>@n 76)"^"
-" ")))
-(if(=@f 75)"P"
-(if(<@m 74)">"
-" "))))))
+(format(o"NRG %3d | ALT %2d/%2d")
+@j@f 75))))
 (s/redraw@b))
 
 (defn -main[]
