@@ -161,29 +161,28 @@
     (case (s/get-key-blocking @screen)
       \q (do (s/stop @screen)
         (dosync (ref-set screen nil))) ; hacky way to quit
-      \c (recenter)
-      (\r \5) (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
+      \r (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
                 (dosync
                   (ref-set cur-energy (min 100 (+ @cur-energy 5)))
                   (if (= @cur-energy 100)
                     (ref-set status-message (str "You're fully rested"location"."))
                     (ref-set status-message (str "You rest for a while"location".")))))
-      (\h \4) (move [-1 0] 0) ; left
-      (:left \H) (move [-1 0] 1)
-      (\j \2) (move [0 1] 0) ; down
-      (:down \J) (move [0 1] 1)
-      (\k \8) (move [0 -1] 0) ; up
-      (:up \K) (move [0 -1] 1)
-      (\l \6) (move [1 0] 0) ; right
-      (:right \L) (move [1 0] 1)
-      (\y \7) (move [-1 -1] 0) ; up-left
-      (:home \Y) (move [-1 -1] 1)
-      (\u \9) (move [1 -1] 0) ; up-right
-      (:page-up \U) (move [1 -1] 1)
-      (\b \1) (move [-1 1] 0) ; down-left
-      (:end \B) (move [-1 1] 1)
-      (\n \3) (move [1 1] 0) ; down-right
-      (:page-down \N) (move [1 1] 1)
+      \h (move [-1 0] 0) ; left
+      \H (move [-1 0] 1)
+      \j (move [0 1] 0) ; down
+      \J (move [0 1] 1)
+      \k (move [0 -1] 0) ; up
+      \K (move [0 -1] 1)
+      \l (move [1 0] 0) ; right
+      \L (move [1 0] 1)
+      \y (move [-1 -1] 0) ; up-left
+      \Y (move [-1 -1] 1)
+      \u (move [1 -1] 0) ; up-right
+      \U (move [1 -1] 1)
+      \b (move [-1 1] 0) ; down-left
+      \B (move [-1 1] 1)
+      \n (move [1 1] 0) ; down-right
+      \N (move [1 1] 1)
       nil)
     (if (some? @screen) ; hacky way to quit
         (recur))))
