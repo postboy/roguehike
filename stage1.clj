@@ -59,7 +59,7 @@
          E (get-in r [(mod x i) (mod y i)])]
      (if (and (p E) (= 0 D))
        (a g"Can't walk there, only clamber: path is obstructed.")
-       (let [[F new-delta-y] (mapv + [@d @e] C)
+       (let [[F G] (mapv + [@d @e] C)
              
              u (max 0 (- 75
                                  
@@ -76,7 +76,7 @@
            (do (a m x)
                (a n y)
                (a d F)
-               (a e new-delta-y)
+               (a e G)
                (a f u)
                (a j (- @j w))
                
