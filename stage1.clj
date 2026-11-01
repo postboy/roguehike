@@ -12,6 +12,7 @@
 (def s {:fg :black :bg :white})
 (def A range)
 (def J ref)
+(def K get-in)
 
 (def p #{\0 \O \W \T \@ \=})
 
@@ -57,7 +58,7 @@
   (dosync
    (let [[x y] (mapv + [@m @n] C)
          
-         E (get-in r [(mod x i) (mod y i)])]
+         E (K r [(mod x i) (mod y i)])]
      (if (and (p E) (= 0 D))
        (a g"Can't walk there, only clamber: path is obstructed.")
        (let [[F G] (mapv + [@d @e] C)
@@ -81,7 +82,7 @@
                (a f u)
                (a j (- @j w))
                
-               (if (nil? (get-in r [x y])) (a g"You are about to leave wilderness. Press q to quit.")
+               (if (nil? (K r [x y])) (a g"You are about to leave wilderness. Press q to quit.")
                                                    (if (< @f 75) (a g (o "You "z"."))
                                                                             (a g (o "You "z" on top of the mountain.")))))))))))
 
@@ -113,7 +114,7 @@
              y (A z)]
        
        
-       (t @b x y (o (get-in r
+       (t @b x y (o (K r
          [(mod (+ (- @k (quot @h 2)) x) i)
           (mod (+ (- @l (quot (dec @q) 2)) y) i)]
          )) r))

@@ -12,6 +12,7 @@
 (def inverse-colors {:fg :black :bg :white})
 (def A range)
 (def J ref)
+(def K get-in)
 
 (def obstacle? #{\0 \O \W \T \@ \=})
 
