@@ -117,8 +117,8 @@ y(A z)]
 
 
 
-(format(o"NRG %3d | ALT %2d/%2d")
-@j@f 75))))
+(format(o"NRG %d | ALT %d/75")
+@j@f))))
 (s/redraw@b))
 
 (defn -main[]

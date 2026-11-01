@@ -117,8 +117,8 @@
      ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
      ; fit in 80 symbols of standard terminal
      ; 2 is deliberate hardcode because maximum status message length depends on this
-                             (format (str "NRG %3d | ALT %2d/%2d")
-                                     @cur-energy @cur-altitude 75))))
+                             (format (str "NRG %d | ALT %d/75")
+                                     @cur-energy @cur-altitude))))
    (s/redraw @screen))
 
 (defn -main []
