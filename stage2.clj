@@ -45,7 +45,7 @@
 (def q(ref 0))
 (def b(ref nil))
 
-(defn recenter[]
+(defn B[]
 (dosync
 (a k@m)
 (a d 0)
@@ -152,7 +152,7 @@ s)))
 (s/add-resize-listener@b(fn[x y]
 (dosync(a h x)
 (a q y))
-(recenter)
+(B)
 
 (s/redraw@b)
 (render-screen)))
@@ -164,7 +164,7 @@ s)))
 (case(s/get-key-blocking@b)
 \q(do(s/stop@b)
 (dosync(a b nil)))
-\c(recenter)
+\c(B)
 (\r\5)(let[z(if(=@f 75)" on top of the mountain""")]
 (dosync
 (a j(min 100(+@j 5)))

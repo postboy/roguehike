@@ -7,6 +7,7 @@ cp stage0.clj $target
 sed -i 's/\(.*\);.*/\1/g' $target
 sed -i 's/(ref-set /(a /g' $target
 sed -i 's/(range /(A /g' $target
+sed -i 's/recenter/B/g' $target
 sed -i 's/(s\/put-string /(t /g' $target
 sed -i 's/(str /(o /g' $target
 sed -i 's/ str / o /g' $target
