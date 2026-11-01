@@ -11,7 +11,7 @@
 (def r{:fg :white :bg :black})
 (def s{:fg :black :bg :white})
 
-(defn p[A](#{\0\O\W\T\@\=}A))
+(def p #{\0\O\W\T\@\=})
 
 (def i 150)
 (def r(vec(for[_(range i)]

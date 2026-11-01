@@ -11,7 +11,7 @@
 (def normal-colors {:fg :white :bg :black})
 (def inverse-colors {:fg :black :bg :white})
 
-(defn obstacle? [square] (#{\0 \O \W \T \@ \=} square))
+(def obstacle? #{\0 \O \W \T \@ \=})
 
 (def world-size 150)
 (def world-map (vec (for [_ (range world-size)]
