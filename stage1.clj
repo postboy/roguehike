@@ -84,7 +84,7 @@
                                                    (if (< @f 75) (a g (o "You "z"."))
                                                                             (a g (o "You "z" on top of the mountain.")))))))))))
 
-(defn render-screen []
+(defn H []
   
   (dosync
    (let [z (dec @q)
@@ -155,12 +155,12 @@
                                    (B)
                                    
                                    (s/redraw @b)
-                                   (render-screen)))
+                                   (H)))
   (let [[x y] (s/get-size @b)]
     (a h x)
     (a q y)))
   (loop []
-    (render-screen)
+    (H)
     (case (s/get-key-blocking @b)
       \q (do (s/stop @b)
         (dosync (a b nil))) 
