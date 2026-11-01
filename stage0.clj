@@ -1,8 +1,7 @@
 (ns r.c
   (:require [lanterna.screen :as s]
             [roul.random :as r]
-            [clojure.math :as m]
-            [clojure.edn :as e])
+            [clojure.math :as m])
   (:gen-class))
 
 (def a ref-set)
