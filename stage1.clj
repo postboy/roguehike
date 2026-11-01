@@ -11,6 +11,7 @@
 (def r {:fg :white :bg :black})
 (def s {:fg :black :bg :white})
 (def A range)
+(def J ref)
 
 (def p #{\0 \O \W \T \@ \=})
 
@@ -32,18 +33,18 @@
                                 [\@ 5]
                                 [\= 1]]))))))
 
-(def m (ref 75))
-(def n (ref 148))
-(def k (ref @m))
-(def l (ref @n))
-(def d (ref 0))
-(def e (ref 0))
-(def g (ref "You're standing at foot of the mountain."))
-(def f (ref 3))
-(def j (ref 100))
-(def h (ref 0))
-(def q (ref 0))
-(def b (ref nil))
+(def m (J 75))
+(def n (J 148))
+(def k (J @m))
+(def l (J @n))
+(def d (J 0))
+(def e (J 0))
+(def g (J "You're standing at foot of the mountain."))
+(def f (J 3))
+(def j (J 100))
+(def h (J 0))
+(def q (J 0))
+(def b (J nil))
 
 (defn B []
   (dosync

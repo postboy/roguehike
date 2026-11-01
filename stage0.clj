@@ -11,6 +11,7 @@
 (def normal-colors {:fg :white :bg :black})
 (def inverse-colors {:fg :black :bg :white})
 (def A range)
+(def J ref)
 
 (def obstacle? #{\0 \O \W \T \@ \=})
 
