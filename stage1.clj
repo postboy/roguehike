@@ -52,14 +52,14 @@
    (a l @n)
    (a e 0)))
 
-(defn c [shift clamber]
+(defn c [C clamber]
   (dosync
-   (let [[x y] (mapv + [@m @n] shift)
+   (let [[x y] (mapv + [@m @n] C)
          
          dest (get-in r [(mod x i) (mod y i)])]
      (if (and (p dest) (= 0 clamber))
        (a g"Can't walk there, only clamber: path is obstructed.")
-       (let [[new-delta-x new-delta-y] (mapv + [@d @e] shift)
+       (let [[new-delta-x new-delta-y] (mapv + [@d @e] C)
              
              u (max 0 (- 75
                                  
