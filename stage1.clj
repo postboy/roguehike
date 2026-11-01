@@ -11,7 +11,7 @@
 (def r {:fg :white :bg :black})
 (def s {:fg :black :bg :white})
 
-(defn p [square] (#{\0 \O \W \T \@ \=} square))
+(defn p [A] (#{\0 \O \W \T \@ \=} A))
 
 (def i 150)
 (def r (vec (for [_ (range i)]
