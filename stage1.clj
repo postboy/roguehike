@@ -65,7 +65,6 @@
                                  (max 0 (dec (m/round (m/sqrt (+ (m/pow (- x 75) 2)
                                                                  (m/pow (- y 75) 2))))))))
              v (if (p E) 6 1)
-             z (if (= v 6) "clamber""walk")
              w (if (> u @f) (* v 3)
                                                           (if (< u @f) (* v 2)
                                                                                              v))]
