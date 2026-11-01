@@ -8,8 +8,6 @@
 (def a ref-set)
 (def o str)
 (def t s/put-string)
-(def r {:fg :white :bg :black})
-(def s {:fg :black :bg :white})
 (def A range)
 (def J ref)
 (def K get-in)
@@ -117,12 +115,12 @@
        (t @b x y (o (K r
          [(mod (+ (- @k (quot @h 2)) x) i)
           (mod (+ (- @l (quot (dec @q) 2)) y) i)]
-         )) r))
+         ))))
      
-     (t @b (+ u @d) (+ v @e) "i" r)
+     (t @b (+ u @d) (+ v @e) "i")
      (s/move-cursor @b (+ u @d) (+ v @e))
      
-     (t @b 0 z (apply o (repeat @h" ")) s)
+     (t @b 0 z (apply o (repeat @h" ")))
      (t @b 0 z
      
      
@@ -140,15 +138,12 @@
                                      (if (= @f 75) "P"
                                                               (if (< @m 74) ">"
                                                                                    " "))
-                                     @g)
-                             s)))
+                                     @g))))
    (s/redraw @b))
 
-(defn -main [& I]
+(defn -main []
   
-  (dosync (a b (s/get-screen (keyword (or (first I)
-                                                     (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
-                                        (e/read-string (or (second I) "{}"))))
+  (dosync (a b (s/get-screen))
   (s/start @b)
   
   (s/add-resize-listener @b (fn [x y]

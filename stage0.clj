@@ -8,8 +8,6 @@
 (def a ref-set)
 (def o str)
 (def t s/put-string)
-(def normal-colors {:fg :white :bg :black})
-(def inverse-colors {:fg :black :bg :white})
 (def A range)
 (def J ref)
 (def K get-in)
@@ -117,12 +115,12 @@
        (s/put-string @screen x y (str (get-in world-map
          [(mod (+ (- @render-center-x (quot @canvas-cols 2)) x) world-size)
           (mod (+ (- @render-center-y (quot (dec @canvas-rows) 2)) y) world-size)]
-         )) normal-colors))
+         ))))
      ; draw the player
-     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i" normal-colors)
+     (s/put-string @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y) "i")
      (s/move-cursor @screen (+ canvas-center-x @render-delta-x) (+ canvas-center-y @render-delta-y))
      ; clear and set the status bar
-     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")) inverse-colors)
+     (s/put-string @screen 0 status-bar-row (apply str (repeat @canvas-cols" ")))
      (s/put-string @screen 0 status-bar-row
      ; "NRG 100 | ALT 50/50 | ^ | ", so status message should be shorter than 55 symbols to
      ; fit in 80 symbols of standard terminal
@@ -140,15 +138,12 @@
                                      (if (= @cur-altitude 75) "P"
                                                               (if (< @player-x 74) ">"
                                                                                    " "))
-                                     @status-message)
-                             inverse-colors)))
+                                     @status-message))))
    (s/redraw @screen))
 
-(defn -main [& args]
+(defn -main []
   ; Windows can't live without Swing, but on *nix it's better to use standard terminal
-  (dosync (ref-set screen (s/get-screen (keyword (or (first args)
-                                                     (if (re-matches #"Windows.*" (System/getProperty"os.name")) "auto""unix")))
-                                        (e/read-string (or (second args) "{}"))))
+  (dosync (ref-set screen (s/get-screen))
   (s/start @screen)
   ; for some reason, this works better than setting :resize-listener argument to get-screen
   (s/add-resize-listener @screen (fn [cols rows]
