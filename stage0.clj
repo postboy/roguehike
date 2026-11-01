@@ -52,12 +52,12 @@
    (ref-set render-center-y @player-y)
    (ref-set render-delta-y 0)))
 
-(defn move [shift clamber]
+(defn move [shift only-clamber]
   (dosync
    (let [[x y] (mapv + [@player-x @player-y] shift)
          ; modular arithmetics to wrap around the map
          dest (get-in world-map [(mod x world-size) (mod y world-size)])]
-     (if (and (obstacle? dest) (= 0 clamber))
+     (if (and (obstacle? dest) (= 0 only-clamber))
        (ref-set status-message"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@render-delta-x @render-delta-y] shift)
              ; must be in sync with arrows to summit
