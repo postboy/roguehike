@@ -19,7 +19,7 @@ sed -i 's/ render-delta-y / e /g' $target
 sed -i 's/@cur-altitude/@f/g' $target
 sed -i 's/ cur-altitude / f /g' $target
 sed -i 's/@status-message/@g/g' $target
-sed -i 's/ status-message/ g /g' $target
+sed -i 's/ status-message/ g/g' $target
 sed -i 's/@canvas-cols/@h/g' $target
 sed -i 's/ canvas-cols / h /g' $target
 sed -i 's/@canvas-rows/@q/g' $target

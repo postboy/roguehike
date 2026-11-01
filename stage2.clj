@@ -58,7 +58,7 @@
 
 dest(get-in r[(mod x i)(mod y i)])]
 (if(and(p dest)(= 0 clamber))
-(a g "Can't walk there, only clamber: path is obstructed.")
+(a g"Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]shift)
 
 u(max 0(- 75
@@ -80,7 +80,7 @@ v))]
 (a f u)
 (a j(-@j w))
 
-(if(nil?(get-in r[x y]))(a g "You are about to leave wilderness. Press q to quit.")
+(if(nil?(get-in r[x y]))(a g"You are about to leave wilderness. Press q to quit.")
 (if(<@f 75)(a g(o"You "z"."))
 (a g(o"You "z" on top of the mountain.")))))))))))
 

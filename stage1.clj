@@ -38,7 +38,7 @@
 (def l (ref @n))
 (def d (ref 0))
 (def e (ref 0))
-(def g  (ref "You're standing at foot of the mountain."))
+(def g (ref "You're standing at foot of the mountain."))
 (def f (ref 3))
 (def j (ref 100))
 (def h (ref 0))
@@ -58,7 +58,7 @@
          
          dest (get-in r [(mod x i) (mod y i)])]
      (if (and (p dest) (= 0 clamber))
-       (a g "Can't walk there, only clamber: path is obstructed.")
+       (a g"Can't walk there, only clamber: path is obstructed.")
        (let [[new-delta-x new-delta-y] (mapv + [@d @e] shift)
              
              u (max 0 (- 75
@@ -72,7 +72,7 @@
                                                           (if (< u @f) (* v 2)
                                                                                              v))]
          (if (< @j w)
-           (a g  (o "You're too tired to "z". You need a rest."))
+           (a g (o "You're too tired to "z". You need a rest."))
            (do (a m x)
                (a n y)
                (a d new-delta-x)
@@ -80,9 +80,9 @@
                (a f u)
                (a j (- @j w))
                
-               (if (nil? (get-in r [x y])) (a g "You are about to leave wilderness. Press q to quit.")
-                                                   (if (< @f 75) (a g  (o "You "z"."))
-                                                                            (a g  (o "You "z" on top of the mountain.")))))))))))
+               (if (nil? (get-in r [x y])) (a g"You are about to leave wilderness. Press q to quit.")
+                                                   (if (< @f 75) (a g (o "You "z"."))
+                                                                            (a g (o "You "z" on top of the mountain.")))))))))))
 
 (defn render-screen []
   
@@ -169,8 +169,8 @@
                 (dosync
                   (a j (min 100 (+ @j 5)))
                   (if (= @j 100)
-                    (a g  (o "You're fully rested"z"."))
-                    (a g  (o "You rest for a while"z".")))))
+                    (a g (o "You're fully rested"z"."))
+                    (a g (o "You rest for a while"z".")))))
       (\h \4) (c [-1 0] 0) 
       (:left \H) (c [-1 0] 1)
       (\j \2) (c [0 1] 0) 
