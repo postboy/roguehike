@@ -142,11 +142,11 @@ y(A z)]
 s)))
 (s/redraw@b))
 
-(defn -main[& args]
+(defn -main[& I]
 
-(dosync(a b(s/get-screen(keyword(or(first args)
+(dosync(a b(s/get-screen(keyword(or(first I)
 (if(re-matches #"Windows.*"(System/getProperty"os.name"))"auto""unix")))
-(e/read-string(or(second args)"{}"))))
+(e/read-string(or(second I)"{}"))))
 (s/start@b)
 
 (s/add-resize-listener@b(fn[x y]
