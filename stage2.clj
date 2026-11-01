@@ -56,8 +56,8 @@
 (dosync
 (let[[x y](mapv +[@m@n]C)
 
-dest(get-in r[(mod x i)(mod y i)])]
-(if(and(p dest)(= 0 D))
+E(get-in r[(mod x i)(mod y i)])]
+(if(and(p E)(= 0 D))
 (a g"Can't walk there, only clamber: path is obstructed.")
 (let[[new-delta-x new-delta-y](mapv +[@d@e]C)
 
@@ -66,7 +66,7 @@ u(max 0(- 75
 
 (max 0(dec(m/round(m/sqrt(+(m/pow(- x 75)2)
 (m/pow(- y 75)2))))))))
-v(if(p dest)6 1)
+v(if(p E)6 1)
 z(if(= v 6)"clamber""walk")
 w(if(> u@f)(* v 3)
 (if(< u@f)(* v 2)
