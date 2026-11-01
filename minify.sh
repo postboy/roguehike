@@ -58,6 +58,7 @@ sed -i 's/ 150]/ i]/g' $target
 sed -i 's/shift/C/g' $target
 sed -i 's/only-clamber/D/g' $target
 sed -i 's/dest/E/g' $target
+sed -i 's/new-delta-x/F/g' $target
 # stage 2: remove excess spaces
 target=stage2.clj
 cp stage1.clj $target

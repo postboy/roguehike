@@ -59,7 +59,7 @@
 E(get-in r[(mod x i)(mod y i)])]
 (if(and(p E)(= 0 D))
 (a g"Can't walk there, only clamber: path is obstructed.")
-(let[[new-delta-x new-delta-y](mapv +[@d@e]C)
+(let[[F new-delta-y](mapv +[@d@e]C)
 
 u(max 0(- 75
 
@@ -75,7 +75,7 @@ v))]
 (a g(o"You're too tired to "z". You need a rest."))
 (do(a m x)
 (a n y)
-(a d new-delta-x)
+(a d F)
 (a e new-delta-y)
 (a f u)
 (a j(-@j w))
