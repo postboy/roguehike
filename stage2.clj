@@ -140,9 +140,7 @@ y(A z)]
 (case(s/get-key-blocking@b)
 \q(do(s/stop@b)
 (dosync(a b nil)))
-\r(let[z(if(=@f 75)" on top of the mountain""")]
-(dosync
-(a j(min 100(+@j 5)))))
+\r(dosync(a j(min 100(+@j 5))))
 \h(c[-1 0]0)
 \H(c[-1 0]1)
 \j(c[0 1]0)

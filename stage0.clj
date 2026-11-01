@@ -140,9 +140,7 @@
     (case (s/get-key-blocking @screen)
       \q (do (s/stop @screen)
         (dosync (ref-set screen nil))) ; hacky way to quit
-      \r (let [location (if (= @cur-altitude 75) " on top of the mountain""")]
-                (dosync
-                  (ref-set cur-energy (min 100 (+ @cur-energy 5)))))
+      \r (dosync (ref-set cur-energy (min 100 (+ @cur-energy 5))))
       \h (move [-1 0] 0) ; left
       \H (move [-1 0] 1)
       \j (move [0 1] 0) ; down
