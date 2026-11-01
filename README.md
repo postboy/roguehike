@@ -40,6 +40,8 @@ And don't forget: mountains are always worth climbing!
 
 First optional argument is terminal type to launch the game in: auto, swing, text, unix, cygwin. Default on *nix: unix, default on Windows: auto.
 
+Second optional argument is [map described here](https://multimud.github.io/clojure-lanterna/4-reference#lanternascreenget-screen) for fine-grained control over spawned terminal. Default: {}.
+
 ## Building
 
 Requires Leiningen.
@@ -51,6 +53,8 @@ To run:
 To build a release jar (pick up standalone one):
 
     lein uberjar
+
+You can find minified version of roguehike 0.5 source code in "minification" branch. It's less than 3 kilobytes without sacrificing any functionality.
 
 ## Inspiration
 
