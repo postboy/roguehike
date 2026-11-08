@@ -10,7 +10,7 @@ You are standing at foot of the mountain. If you ascend the mountain and then re
 
 Status bar is located at the bottom of the screen. It shows your current energy in percents of your maximum energy, current and maximum altitude on this terrain, direction to the summit, and status message. Direction: < means "summit is on the west from you", > means "on the east", ^ means "on the north", v means "on the south". Everything apart status bar is a map shown via top-down view with north on top of the screen.
 
-Use **numpad (1-4, 6-9)** or **vi keys (hjklyubn)** for walking. Add **shift** modifier to this keys to clamber. Press **5** or **r** to rest. Press **c** to redraw the screen placing user in its center. Press **q** to quit.
+Use **numpad (1-4, 6-9)** or **vi keys (hjklyubn)** for walking. Add **shift** modifier to this keys to clamber (it would produce HJKLYUBN or arrows plus Home, PgUp, End, PgDn). Note that adding shift to numpad keys don't work as expected in GNOME. Press **5** or **r** to rest. Press **c** to redraw the screen placing user in its center. Press **q** to quit.
 
 "i" symbol on the screen is you, hiker. Other used symbols and their meanings are:
 
