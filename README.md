@@ -38,19 +38,21 @@ And don't forget: mountains are always worth climbing!
 
 ## Running
 
+See [Releases page](https://github.com/postboy/roguehike/releases) for pre-built executables. Executables require JRE to run ([download](https://www.java.com/en/download)).
+
 First optional argument is terminal type to launch the game in: auto, swing, text, unix, cygwin. Default on *nix: unix, default on Windows: auto.
 
 Second optional argument is [map described here](https://multimud.github.io/clojure-lanterna/4-reference#lanternascreenget-screen) for fine-grained control over spawned terminal. Default: {}.
 
 ## Building
 
-Requires Leiningen.
+Requires Leiningen ([download](https://leiningen.org)).
 
 To run:
 
     lein run
 
-To build a release jar (pick up standalone one):
+To build a release standalone jar:
 
     lein uberjar
 
