@@ -106,7 +106,6 @@
     [corrected-world-x corrected-world-y]))
 
 (defn render-screen []
-  ;(println (inc @player-x) (inc @player-y))
   (dosync
    (let [status-bar-row (dec @canvas-rows)
          canvas-center-x (quot @canvas-cols 2)
