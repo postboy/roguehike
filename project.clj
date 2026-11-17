@@ -1,4 +1,4 @@
-(defproject roguehike "0.5"
+(defproject roguehike "0.6"
   :description "A minimalistic roguelike hiking game. Go climb a mountain here!"
   :url "https://github.com/postboy/roguehike"
   :license {:name "MIT/X11"}
